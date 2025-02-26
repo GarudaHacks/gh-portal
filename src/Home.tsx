@@ -1,4 +1,3 @@
-import React from 'react'
 import Sidebar from './components/Sidebar'
 import { signOut } from 'firebase/auth';
 import { auth } from './utils/firebase';
