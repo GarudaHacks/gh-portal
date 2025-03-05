@@ -4,9 +4,10 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Schedule from "./pages/Schedule";
-import Ticket from "./pages/Ticket";
+import Ticket from "./pages/Ticketing";
 import Mentorship from "./pages/Mentorship";
 import Faq from "./pages/Faq";
+import Ticketing from "./pages/Ticketing";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 	const { user } = useAuth();
@@ -42,7 +43,7 @@ function App() {
 						path="/ticket"
 						element={
 							<ProtectedRoute>
-								<Ticket />
+								<Ticketing />
 							</ProtectedRoute>
 						}
 					/>

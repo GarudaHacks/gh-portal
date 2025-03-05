@@ -1,16 +1,21 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../utils/firebase";
 // @ts-ignore
 import { useAuth } from "../context/AuthContext";
+import SidebarTab from "./SidebarTab";
+
 function Sidebar() {
+
+  	const location = useLocation();
+
 	const [showMenu, setShowMenu] = useState(false);
 	const user = useAuth();
 
-	const isActive = (path: string): boolean => {
-		return location.pathname === path;
-	};
+	const isActive = (path: string) => {
+		return path === location.pathname;
+	}
 
 	const navigate = useNavigate();
 
@@ -24,120 +29,27 @@ function Sidebar() {
 	};
 
 	return (
-		<div className="min-h-screen bg-[#9F3737] w-xs flex flex-col justify-between">
+		<div className="min-h-screen bg-[#9F3737] min-w-[15rem] w-[15rem] flex flex-col justify-between">
 			<div className="p-6">
 				<div className="text-[#FFF7F2]">
-					<img
-						src="/images/logo/gh_logo.svg"
-						width={40}
-						height={60}
-						className="mb-4"
-					/>
+					<Link to="/home">
+						<img
+							src="/images/logo/gh_logo.svg"
+							width={40}
+							height={60}
+							className="mb-4"
+						/>
+					</Link>
 				</div>
 			</div>
 
 			<div className="flex-1">
-				<nav className="px-4 py-2">
-					<Link
-						to="/home"
-						className={`p-2 rounded-lg flex items-center ${
-							isActive("/home") ? "bg-[#920B0B]" : "hover:bg-[#B25F5F]"
-						}`}
-					>
-						<img
-							src="/images/icons/cottage.svg"
-							width={20}
-							height={20}
-							className="mr-2"
-						/>
-						<span
-							className={`text-lg ${
-								isActive("/home") ? "font-semibold" : "font-normal"
-							}`}
-						>
-							Home
-						</span>
-					</Link>
-					<Link
-						to="/schedule"
-						className={`p-2 rounded-lg flex items-center ${
-							isActive("/schedule") ? "bg-[#920B0B]" : "hover:bg-[#B25F5F]"
-						}`}
-					>
-						<img
-							src="/images/icons/calendar_month.svg"
-							width={20}
-							height={20}
-							className="mr-2"
-						/>
-						<span
-							className={`text-lg ${
-								isActive("/schedule") ? "font-semibold" : "font-normal"
-							}`}
-						>
-							Schedule
-						</span>
-					</Link>
-					<Link
-						to="/ticket"
-						className={`p-2 rounded-lg flex items-center ${
-							isActive("/ticket") ? "bg-[#920B0B]" : "hover:bg-[#B25F5F]"
-						}`}
-					>
-						<img
-							src="/images/icons/confirmation_number.svg"
-							width={20}
-							height={20}
-							className="mr-2"
-						/>
-						<span
-							className={`text-lg ${
-								isActive("/ticket") ? "font-semibold" : "font-normal"
-							}`}
-						>
-							Ticket
-						</span>
-					</Link>
-					<Link
-						to="/mentorship"
-						className={`p-2 rounded-lg flex items-center ${
-							isActive("/mentorship") ? "bg-[#920B0B]" : "hover:bg-[#B25F5F]"
-						}`}
-					>
-						<img
-							src="/images/icons/group_search.svg"
-							width={20}
-							height={20}
-							className="mr-2"
-						/>
-						<span
-							className={`text-lg ${
-								isActive("/mentorship") ? "font-semibold" : "font-normal"
-							}`}
-						>
-							Mentorship
-						</span>
-					</Link>
-					<Link
-						to="/faq"
-						className={`p-2 rounded-lg flex items-center ${
-							isActive("/faq") ? "bg-[#920B0B]" : "hover:bg-[#B25F5F]"
-						}`}
-					>
-						<img
-							src="/images/icons/contact_support.svg"
-							width={20}
-							height={20}
-							className="mr-2"
-						/>
-						<span
-							className={`text-lg ${
-								isActive("/faq") ? "font-semibold" : "font-normal"
-							}`}
-						>
-							FAQ
-						</span>
-					</Link>
+				<nav className="py-2">
+					<SidebarTab name="Home" iconUrl="/images/icons/cottage.svg" active={isActive("/home")} />
+					<SidebarTab name="Schedule" iconUrl="/images/icons/calendar_month.svg" active={isActive("/schedule")} />
+					<SidebarTab name="Ticket" iconUrl="/images/icons/confirmation_number.svg" active={isActive("/ticket")} />
+					<SidebarTab name="Mentorship" iconUrl="/images/icons/group_search.svg" active={isActive("/mentorship")} />
+					<SidebarTab name="FAQ" iconUrl="/images/icons/contact_support.svg" active={isActive("/faq")} />
 				</nav>
 			</div>
 
