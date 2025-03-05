@@ -1,16 +1,13 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../utils/firebase";
+import SidebarLink from "./SidebarLink";
 // @ts-ignore
 import { useAuth } from "../context/AuthContext";
 function Sidebar() {
 	const [showMenu, setShowMenu] = useState(false);
 	const user = useAuth();
-
-	const isActive = (path: string): boolean => {
-		return location.pathname === path;
-	};
 
 	const navigate = useNavigate();
 
@@ -22,6 +19,34 @@ function Sidebar() {
 			console.error("Logout failed:", error);
 		}
 	};
+
+	const sidebarLinks = [
+		{
+			to: "/home",
+			iconSrc: "/images/icons/cottage.svg",
+			label: "Home",
+		},
+		{
+			to: "/schedule",
+			iconSrc: "/images/icons/calendar_month.svg",
+			label: "Schedule",
+		},
+		{
+			to: "/ticket",
+			iconSrc: "/images/icons/confirmation_number.svg",
+			label: "Ticket",
+		},
+		{
+			to: "/mentorship",
+			iconSrc: "/images/icons/group_search.svg",
+			label: "Mentorship",
+		},
+		{
+			to: "/faq",
+			iconSrc: "/images/icons/contact_support.svg",
+			label: "FAQ",
+		},
+	];
 
 	return (
 		<div className="min-h-screen bg-[#9F3737] w-xs flex flex-col justify-between">
@@ -38,106 +63,14 @@ function Sidebar() {
 
 			<div className="flex-1">
 				<nav className="px-4 py-2">
-					<Link
-						to="/home"
-						className={`p-2 rounded-lg flex items-center ${
-							isActive("/home") ? "bg-[#920B0B]" : "hover:bg-[#B25F5F]"
-						}`}
-					>
-						<img
-							src="/images/icons/cottage.svg"
-							width={20}
-							height={20}
-							className="mr-2"
+					{sidebarLinks.map((link) => (
+						<SidebarLink
+							key={link.to}
+							to={link.to}
+							iconSrc={link.iconSrc}
+							label={link.label}
 						/>
-						<span
-							className={`text-lg ${
-								isActive("/home") ? "font-semibold" : "font-normal"
-							}`}
-						>
-							Home
-						</span>
-					</Link>
-					<Link
-						to="/schedule"
-						className={`p-2 rounded-lg flex items-center ${
-							isActive("/schedule") ? "bg-[#920B0B]" : "hover:bg-[#B25F5F]"
-						}`}
-					>
-						<img
-							src="/images/icons/calendar_month.svg"
-							width={20}
-							height={20}
-							className="mr-2"
-						/>
-						<span
-							className={`text-lg ${
-								isActive("/schedule") ? "font-semibold" : "font-normal"
-							}`}
-						>
-							Schedule
-						</span>
-					</Link>
-					<Link
-						to="/ticket"
-						className={`p-2 rounded-lg flex items-center ${
-							isActive("/ticket") ? "bg-[#920B0B]" : "hover:bg-[#B25F5F]"
-						}`}
-					>
-						<img
-							src="/images/icons/confirmation_number.svg"
-							width={20}
-							height={20}
-							className="mr-2"
-						/>
-						<span
-							className={`text-lg ${
-								isActive("/ticket") ? "font-semibold" : "font-normal"
-							}`}
-						>
-							Ticket
-						</span>
-					</Link>
-					<Link
-						to="/mentorship"
-						className={`p-2 rounded-lg flex items-center ${
-							isActive("/mentorship") ? "bg-[#920B0B]" : "hover:bg-[#B25F5F]"
-						}`}
-					>
-						<img
-							src="/images/icons/group_search.svg"
-							width={20}
-							height={20}
-							className="mr-2"
-						/>
-						<span
-							className={`text-lg ${
-								isActive("/mentorship") ? "font-semibold" : "font-normal"
-							}`}
-						>
-							Mentorship
-						</span>
-					</Link>
-					<Link
-						to="/faq"
-						className={`p-2 rounded-lg flex items-center ${
-							isActive("/faq") ? "bg-[#920B0B]" : "hover:bg-[#B25F5F]"
-						}`}
-					>
-						<img
-							src="/images/icons/contact_support.svg"
-							width={20}
-							height={20}
-							className="mr-2"
-						/>
-						<span
-							className={`text-lg ${
-								isActive("/faq") ? "font-semibold" : "font-normal"
-							}`}
-						>
-							FAQ
-						</span>
-					</Link>
+					))}
 				</nav>
 			</div>
 
@@ -161,15 +94,13 @@ function Sidebar() {
 				</div>
 				<div className="relative">
 					<div
-						className={`
-              absolute bottom-5 left-20 w-48 bg-white rounded-md shadow-lg py-1 z-10 
-              transition-all duration-200 ease-in-out origin-bottom-right
-              ${
+						className={`absolute bottom-5 left-20 w-48 bg-white rounded-md shadow-lg py-1 z-10 transition-all duration-200 ease-in-out origin-bottom-right
+							${
 								showMenu
 									? "transform scale-100 opacity-100"
 									: "transform scale-95 opacity-0 pointer-events-none"
 							}
-            `}
+						`}
 					>
 						<button
 							onClick={handleLogout}
