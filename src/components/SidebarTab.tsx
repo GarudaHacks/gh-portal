@@ -1,17 +1,25 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 interface SidebarTabProps {
     name: string,
     iconUrl: string,
-    active?: boolean
 }
 
-function SidebarTab({ name, iconUrl, active }:SidebarTabProps) {
+function SidebarTab({ name, iconUrl }:SidebarTabProps) {
+
+    const location = useLocation();
+
+    const isActive = (path: string): boolean => {
+		return location.pathname === path;
+	};
+
+    const path = "/" + name.toLowerCase();
+
   return (
     <Link
-        to={"/" + name.toLowerCase()}
+        to={path}
         className={`px-4 py-3 flex items-center ${
-            active ? "bg-[#920B0B]" : "hover:bg-[#B25F5F]"
+            isActive(path) ? "bg-[#920B0B]" : "hover:bg-[#B25F5F]"
         }`}
     >
         <img
@@ -22,7 +30,7 @@ function SidebarTab({ name, iconUrl, active }:SidebarTabProps) {
         />
         <span
             className={`text-lg ${
-                active ? "font-semibold" : "font-normal"
+                isActive(path) ? "font-semibold" : "font-normal"
             }`}
         >
             {name}

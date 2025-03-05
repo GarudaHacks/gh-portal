@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../utils/firebase";
 // @ts-ignore
@@ -7,8 +7,6 @@ import { useAuth } from "../context/AuthContext";
 import SidebarTab from "./SidebarTab";
 
 function Sidebar() {
-
-  	const location = useLocation();
 
 	const [showMenu, setShowMenu] = useState(false);
 	const user = useAuth();
@@ -40,7 +38,7 @@ function Sidebar() {
 			</div>
 
 			<div className="flex-1">
-				<nav className="py-2 text-[#FFF7F2]">
+				<nav className="py-2">
 					<SidebarTab name="Home" iconUrl="/images/icons/cottage.svg" />
 					<SidebarTab name="Schedule" iconUrl="/images/icons/calendar_month.svg" />
 					<SidebarTab name="Ticket" iconUrl="/images/icons/confirmation_number.svg" />
