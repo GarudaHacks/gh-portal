@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../utils/firebase";
@@ -44,7 +44,7 @@ function Sidebar() {
 			</div>
 
 			<div className="flex-1">
-				<nav className="py-2">
+				<nav className="py-2 text-[#FFF7F2]">
 					<SidebarTab name="Home" iconUrl="/images/icons/cottage.svg" active={isActive("/home")} />
 					<SidebarTab name="Schedule" iconUrl="/images/icons/calendar_month.svg" active={isActive("/schedule")} />
 					<SidebarTab name="Ticket" iconUrl="/images/icons/confirmation_number.svg" active={isActive("/ticket")} />

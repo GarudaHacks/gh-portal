@@ -13,7 +13,7 @@ function Page({ title, description, children }:PageProps) {
         <Sidebar />
         <div className="w-full">
           <PageHeader title={title} description={description} />
-          <div className="px-4 py-4">
+          <div className="px-10 py-4">
               {children}
           </div>
         </div>
