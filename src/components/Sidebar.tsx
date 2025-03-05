@@ -13,10 +13,6 @@ function Sidebar() {
 	const [showMenu, setShowMenu] = useState(false);
 	const user = useAuth();
 
-	const isActive = (path: string) => {
-		return path === location.pathname;
-	}
-
 	const navigate = useNavigate();
 
 	const handleLogout = async () => {
@@ -45,11 +41,11 @@ function Sidebar() {
 
 			<div className="flex-1">
 				<nav className="py-2 text-[#FFF7F2]">
-					<SidebarTab name="Home" iconUrl="/images/icons/cottage.svg" active={isActive("/home")} />
-					<SidebarTab name="Schedule" iconUrl="/images/icons/calendar_month.svg" active={isActive("/schedule")} />
-					<SidebarTab name="Ticket" iconUrl="/images/icons/confirmation_number.svg" active={isActive("/ticket")} />
-					<SidebarTab name="Mentorship" iconUrl="/images/icons/group_search.svg" active={isActive("/mentorship")} />
-					<SidebarTab name="FAQ" iconUrl="/images/icons/contact_support.svg" active={isActive("/faq")} />
+					<SidebarTab name="Home" iconUrl="/images/icons/cottage.svg" />
+					<SidebarTab name="Schedule" iconUrl="/images/icons/calendar_month.svg" />
+					<SidebarTab name="Ticket" iconUrl="/images/icons/confirmation_number.svg" />
+					<SidebarTab name="Mentorship" iconUrl="/images/icons/group_search.svg" />
+					<SidebarTab name="FAQ" iconUrl="/images/icons/contact_support.svg" />
 				</nav>
 			</div>
 
@@ -73,15 +69,13 @@ function Sidebar() {
 				</div>
 				<div className="relative">
 					<div
-						className={`
-              absolute bottom-5 left-20 w-48 bg-white rounded-md shadow-lg py-1 z-10 
-              transition-all duration-200 ease-in-out origin-bottom-right
-              ${
+						className={`absolute bottom-5 left-20 w-48 bg-white rounded-md shadow-lg py-1 z-10 transition-all duration-200 ease-in-out origin-bottom-right
+							${
 								showMenu
 									? "transform scale-100 opacity-100"
 									: "transform scale-95 opacity-0 pointer-events-none"
 							}
-            `}
+						`}
 					>
 						<button
 							onClick={handleLogout}
