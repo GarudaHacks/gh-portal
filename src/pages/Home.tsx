@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 // @ts-ignore
 import { useAuth } from "../context/AuthContext";
 import PageHeader from "../components/PageHeader";
-
 function Home() {
 	const user = useAuth();
 
