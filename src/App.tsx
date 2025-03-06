@@ -6,6 +6,7 @@ import Schedule from "./pages/Schedule";
 import Mentorship from "./pages/Mentorship";
 import Faq from "./pages/Faq";
 import Ticketing from "./pages/Ticketing";
+import Application from "./pages/Application";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 	const { user } = useAuth();
@@ -20,6 +21,14 @@ function App() {
 					<Route
 						path="/auth"
 						element={<Auth />}
+					/>
+					<Route
+						path="/application"
+						element={
+							<ProtectedRoute>
+								<Application />
+							</ProtectedRoute>
+						}
 					/>
 					<Route
 						path="/home"
