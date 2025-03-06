@@ -18,7 +18,7 @@ function SidebarTab({ name, iconUrl }:SidebarTabProps) {
   return (
     <Link
         to={path}
-        className={`px-4 py-3 flex items-center ${
+        className={`px-4 py-3 flex items-center text-white ${
             isActive(path) ? "bg-[#920B0B]" : "hover:bg-[#B25F5F]"
         }`}
     >
