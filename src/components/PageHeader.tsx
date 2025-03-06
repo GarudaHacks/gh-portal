@@ -1,18 +1,17 @@
 interface PageHeaderProps {
-	pageTitle?: string;
-	pageDescription?: string;
+    title: string, 
+    description: string,
 }
 
-const PageHeader: React.FC<PageHeaderProps> = ({
-	pageTitle,
-	pageDescription,
-}) => {
-	return (
-		<div className="p-10 pb-4 border-b">
-			<h1 className="text-2xl font-semibold">{pageTitle}</h1>
-			<p className="text-sm">{pageDescription}</p>
-		</div>
-	);
-};
+function PageHeader({ title, description }: PageHeaderProps) {
+  return (
+    <div className="w-full p-10 pb-4 border-b-1 text-[#A83E36]">
+        <h1 className="text-[28px] font-semibold">{title}</h1>
+        <p className="text-sm">
+            {description}
+        </p>
+    </div>
+  )
+}
 
-export default PageHeader;
+export default PageHeader

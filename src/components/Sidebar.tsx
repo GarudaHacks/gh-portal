@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../utils/firebase";
-import SidebarLink from "./SidebarLink";
 // @ts-ignore
 import { useAuth } from "../context/AuthContext";
+import SidebarTab from "./SidebarTab";
+
 function Sidebar() {
+
 	const [showMenu, setShowMenu] = useState(false);
 	const user = useAuth();
 
@@ -20,57 +22,28 @@ function Sidebar() {
 		}
 	};
 
-	const sidebarLinks = [
-		{
-			to: "/home",
-			iconSrc: "/images/icons/cottage.svg",
-			label: "Home",
-		},
-		{
-			to: "/schedule",
-			iconSrc: "/images/icons/calendar_month.svg",
-			label: "Schedule",
-		},
-		{
-			to: "/ticket",
-			iconSrc: "/images/icons/confirmation_number.svg",
-			label: "Ticket",
-		},
-		{
-			to: "/mentorship",
-			iconSrc: "/images/icons/group_search.svg",
-			label: "Mentorship",
-		},
-		{
-			to: "/faq",
-			iconSrc: "/images/icons/contact_support.svg",
-			label: "FAQ",
-		},
-	];
-
 	return (
-		<div className="min-h-screen bg-[#9F3737] w-xs flex flex-col justify-between">
+		<div className="min-h-screen bg-[#9F3737] min-w-[15rem] w-[15rem] flex flex-col justify-between">
 			<div className="p-6">
 				<div className="text-[#FFF7F2]">
-					<img
-						src="/images/logo/gh_logo.svg"
-						width={40}
-						height={60}
-						className="mb-4"
-					/>
+					<Link to="/home">
+						<img
+							src="/images/logo/gh_logo.svg"
+							width={40}
+							height={60}
+							className="mb-4"
+						/>
+					</Link>
 				</div>
 			</div>
 
 			<div className="flex-1">
-				<nav className="px-4 py-2">
-					{sidebarLinks.map((link) => (
-						<SidebarLink
-							key={link.to}
-							to={link.to}
-							iconSrc={link.iconSrc}
-							label={link.label}
-						/>
-					))}
+				<nav className="py-2">
+					<SidebarTab name="Home" iconUrl="/images/icons/cottage.svg" />
+					<SidebarTab name="Schedule" iconUrl="/images/icons/calendar_month.svg" />
+					<SidebarTab name="Ticket" iconUrl="/images/icons/confirmation_number.svg" />
+					<SidebarTab name="Mentorship" iconUrl="/images/icons/group_search.svg" />
+					<SidebarTab name="FAQ" iconUrl="/images/icons/contact_support.svg" />
 				</nav>
 			</div>
 

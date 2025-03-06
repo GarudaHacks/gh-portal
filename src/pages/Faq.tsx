@@ -1,16 +1,9 @@
-import Sidebar from "../components/Sidebar";
-import PageHeader from "../components/PageHeader";
+import Page from "../components/Page";
 function Faq() {
 	return (
-		<div className="flex">
-			<Sidebar />
-			<div className="flex-1 bg-[#FFF7F2] text-[#9F3737]">
-				<PageHeader
-					pageTitle="FAQ"
-					pageDescription="More on logistics, general hacker questions, and beyond."
-				/>
-			</div>
-		</div>
+		<Page title="Frequently Asked Questions" description="More on logistics and general hacker questions">
+			FAQ section
+		</Page>
 	);
 }
 
