@@ -1,8 +1,6 @@
-import Sidebar from "../components/Sidebar";
 import { useState, useEffect } from "react";
 // @ts-ignore
 import { useAuth } from "../context/AuthContext";
-import PageHeader from "../components/PageHeader";
 import Page from "../components/Page";
 function Home() {
 	const user = useAuth();
