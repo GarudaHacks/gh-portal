@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 // @ts-ignore
 import { useAuth } from "../context/AuthContext";
 import PageHeader from "../components/PageHeader";
+import Page from "../components/Page";
 function Home() {
 	const user = useAuth();
 
@@ -53,10 +54,8 @@ function Home() {
 	}, []);
 
 	return (
-		<div className="flex">
-			<Sidebar />
+		<Page title="Home" description="View all important announcements and events here.">
 			<div className="flex-1 bg-[#FFF7F2] text-[#9F3737]">
-				<PageHeader title="Home" description="View all important announcements and events here."/>
 
 				<div className="p-10 pt-4 pb-4">
 					<div className="flex justify-between items-center mb-6 text-[28px] font-semibold">
@@ -161,7 +160,7 @@ function Home() {
 					</div>
 				</div>
 			</div>
-		</div>
+		</Page>
 	);
 }
 
