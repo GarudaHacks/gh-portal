@@ -20,7 +20,7 @@ function Home() {
 
 	useEffect(() => {
 		// Hackathon end date & time
-		const hackathonEndTime = new Date("2025-03-17T10:14:00").getTime();
+		const hackathonEndTime = new Date("2025-07-16T10:24:00").getTime();
 
 		const updateTimer = () => {
 			const now = new Date().getTime();
