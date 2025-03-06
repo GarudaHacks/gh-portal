@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-// @ts-ignore
 import { useAuth } from "../context/AuthContext";
 import Page from "../components/Page";
 function Home() {

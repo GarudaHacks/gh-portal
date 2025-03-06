@@ -1,5 +1,4 @@
 import Auth from "./components/Auth";
-// @ts-ignore
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
