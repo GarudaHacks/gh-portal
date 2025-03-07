@@ -4,3 +4,11 @@ export interface ApplicationQuestion {
   type: string;
   options?: string[];
 }
+
+export enum APPLICATION_STATUS {
+  DRAFT = "draft",
+  SUBMITTED = "submitted",
+  WAITLISTED = "waitlisted",
+  REJECTED = "rejected",
+  ACCPETED = "accepted"
+}

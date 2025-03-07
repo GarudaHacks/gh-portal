@@ -5,6 +5,10 @@ import ApplicationProfile from "@/components/ApplicationProfile";
 import ApplicationInquiry from "@/components/ApplicationInquiry";
 import ApplicationAdditionalQuestion from "@/components/ApplicationAdditionalQuestion";
 import ApplicationSubmitted from "@/components/ApplicationSubmitted";
+import { useAuth } from "@/context/AuthContext";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { db } from "@/utils/firebase";
+import { APPLICATION_STATUS } from "@/types/application";
 
 export enum APPLICATION_STATES {
   INTRO = "Intro",
@@ -29,6 +33,8 @@ export interface LocalApplicationState {
 }
 
 function Application() {
+  const { user } = useAuth();
+
   const [applicationState, setApplicationState] = useState(
     APPLICATION_STATES.INTRO
   );
@@ -65,7 +71,7 @@ function Application() {
   };
 
   // handle submit
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // remove data for security
     if (localApplicationState)
       setLocalApplicationState({ ...localApplicationState, data: {} });
@@ -73,6 +79,18 @@ function Application() {
     // TODO: submit form data to backend
     setApplicationState(APPLICATION_STATES.SUBMITTED);
     console.log(localApplicationState);
+
+    // temporarily update user state into "submitted" using firebase
+    // assuming the user is saved to db already
+    if (user) {
+      const ref = doc(db, "users", user.uid);
+      const userSnap = await getDoc(ref);
+
+      await setDoc(ref, {
+        ...userSnap.data(),
+        status: APPLICATION_STATUS.SUBMITTED,
+      });
+    }
   };
 
   const toNextState = () => {
