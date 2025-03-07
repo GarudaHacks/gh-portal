@@ -1,7 +1,7 @@
 import { ApplicationQuestion } from "@/types/application";
 import { Button } from "./ui/button";
 import { renderQuestion } from "@/lib/application-utils";
-import { APPLICATION_STATES } from "@/pages/Application";
+import { APPLICATION_STATES, LocalApplicationState } from "@/pages/Application";
 
 const dummies: ApplicationQuestion[] = [
   {
@@ -27,14 +27,21 @@ const dummies: ApplicationQuestion[] = [
 ];
 
 export default function ApplicationAdditionalQuestion({
+  localApplicationState,
   applicationState,
-  onNextClick,
   onPrevClick,
+  onFormChange,
+  onSubmit
 }: {
+  localApplicationState: LocalApplicationState;
   applicationState: APPLICATION_STATES;
-  onNextClick: () => void;
   onPrevClick: () => void;
+  onFormChange: (questionId: string, type: string, response: any) => void;
+  onSubmit: () => void;
 }) {
+  const handleInputChange = (question: ApplicationQuestion, value: any) => {
+    onFormChange(question.id, question.type, value);
+  };
   return (
     <div className="p-4 flex flex-col items-center gap-4 lg:gap-6 w-full">
       <Button
@@ -55,14 +62,14 @@ export default function ApplicationAdditionalQuestion({
       </h1>
       <div className="w-full py-4 flex flex-col gap-4">
         {dummies.map((q, index) => (
-          <div key={index}>{renderQuestion(q)}</div>
+          <div key={index}>{renderQuestion(q, localApplicationState, handleInputChange)}</div>
         ))}
       </div>
 
       <Button
         className="w-full lg:w-fit place-self-end font-semibold"
         size="lg"
-        onClick={onNextClick}
+        onClick={onSubmit}
       >
         Submit
       </Button>
