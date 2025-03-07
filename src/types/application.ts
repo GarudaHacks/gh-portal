@@ -10,5 +10,5 @@ export enum APPLICATION_STATUS {
   SUBMITTED = "submitted",
   WAITLISTED = "waitlisted",
   REJECTED = "rejected",
-  ACCPETED = "accepted"
+  ACCEPTED = "accepted"
 }

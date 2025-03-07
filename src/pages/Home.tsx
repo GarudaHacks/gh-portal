@@ -88,7 +88,7 @@ function Home() {
         <HomeStatusNotRsvpd />
       ) : null}
 
-      {userApplicationStatus === APPLICATION_STATUS.ACCPETED ? (
+      {userApplicationStatus === APPLICATION_STATUS.ACCEPTED ? (
         <div className="flex-1 bg-background text-secondary">
           <div className="p-10 pt-4 pb-4">
             <div className="flex justify-between items-center mb-6 text-[28px] font-semibold">
