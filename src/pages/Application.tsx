@@ -38,8 +38,11 @@ function Application() {
   const [applicationState, setApplicationState] = useState(
     APPLICATION_STATES.INTRO
   );
-  const [localApplicationState, setLocalApplicationState] =
-    useState<LocalApplicationState | null>(null);
+  const [localApplicationState, setLocalApplicationState] = useState<LocalApplicationState>({
+    latestState: APPLICATION_STATES.INTRO,
+    data: {},
+    lastUpdated: new Date()
+  });
 
   // save local application state to local storage
   const saveLocalApplicationState = () => {
@@ -119,8 +122,6 @@ function Application() {
         APPLICATION_STATES_ARRAY.includes(json.latestState)
       ) {
         setApplicationState(json.latestState);
-      } else {
-        setApplicationState(APPLICATION_STATES.INTRO); // if no latest state found, then set state to INTRO
       }
     } else {
       setLocalApplicationState({
