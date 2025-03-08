@@ -9,6 +9,8 @@ import { useAuth } from "@/context/AuthContext";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import { APPLICATION_STATUS } from "@/types/application";
+import { useNavigate } from "react-router-dom";
+import { Loader, Loader2 } from "lucide-react";
 
 export enum APPLICATION_STATES {
   INTRO = "Intro",
@@ -34,6 +36,8 @@ export interface LocalApplicationState {
 
 function Application() {
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
 
   const [applicationState, setApplicationState] = useState(
     APPLICATION_STATES.INTRO
@@ -111,6 +115,22 @@ function Application() {
   };
 
   useEffect(() => {
+    // check from db whether user.status is "submitted"
+    // if yes, redirect to home page
+    const checkUserSubmitted = async () => {
+      if (user) {
+        const ref = doc(db, "users", user.uid);
+        const userSnap = await getDoc(ref);
+        if (userSnap.exists()) {
+          const userData = userSnap.data();
+          if (userData.status === APPLICATION_STATUS.SUBMITTED) {
+            navigate("/")
+          }
+        }
+      }
+    };
+    checkUserSubmitted();
+
     const localApplicationStateJson = localStorage.getItem(
       "localApplicationState"
     );
@@ -130,11 +150,18 @@ function Application() {
         lastUpdated: new Date(),
       });
     }
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {
     saveLocalApplicationState();
   }, [localApplicationState, applicationState]);
+
+  if (isLoading) {
+    return <div className="h-screen w-screen flex items-center justify-center">
+      <Loader2 className="animate-spin"/>
+    </div>;
+  }
 
   return (
     <div className="">
