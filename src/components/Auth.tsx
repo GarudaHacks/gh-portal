@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-// @ts-ignore
 import { useAuth } from "../context/AuthContext";
 import {
   signInWithEmailAndPassword,
