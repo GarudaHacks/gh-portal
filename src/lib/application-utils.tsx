@@ -25,7 +25,9 @@ export function renderQuestion(
           {applicationQuestion.text}
         </Label>
         <Input
+          className="bg-white"
           value={value}
+          placeholder={`Your answer...`}
           onChange={(e) => onChange?.(applicationQuestion, e.target.value)}
         />
       </div>
@@ -37,6 +39,8 @@ export function renderQuestion(
           {applicationQuestion.text}
         </Label>
         <Input
+          className="bg-white"
+          placeholder="0"
           type="number"
           value={value}
           onChange={(e) => onChange?.(applicationQuestion, e.target.value)}
@@ -50,6 +54,7 @@ export function renderQuestion(
           {applicationQuestion.text}
         </Label>
         <Input
+          className="bg-white"
           type="file"
           accept="application/pdf"
           onChange={(e) => {
@@ -74,7 +79,7 @@ export function renderQuestion(
           {applicationQuestion.text}
         </Label>
         <Textarea
-          className="border p-2 w-full h-40 resize-none lg:resize-y"
+          className="border p-2 w-full h-40 resize-none lg:resize-y bg-white"
           placeholder="Your response here..."
           value={value}
           onChange={(e) => onChange?.(applicationQuestion, e.target.value)}
@@ -91,7 +96,7 @@ export function renderQuestion(
           defaultValue={value}
           onValueChange={(value) => onChange?.(applicationQuestion, value)}
         >
-          <SelectTrigger className="border p-2 w-full">
+          <SelectTrigger className="border p-2 w-full bg-white">
             <SelectValue placeholder="Select one..." />
           </SelectTrigger>
           <SelectContent>
