@@ -20,10 +20,16 @@ export const auth = getAuth(app);
 auth.useDeviceLanguage();
 
 // Initialize Firebase emulators
-if (import.meta.env.VITE_USE_FIREBASE_EMULATORS === 'true') {
-  const { connectFirestoreEmulator } = await import('firebase/firestore');
-  const { connectAuthEmulator } = await import('firebase/auth');
+if (import.meta.env.VITE_USE_FIREBASE_EMULATORS === "true") {
+  (async () => {
+    try {
+      const { connectFirestoreEmulator } = await import("firebase/firestore");
+      const { connectAuthEmulator } = await import("firebase/auth");
 
-  connectFirestoreEmulator(db, 'localhost', 8080);
-  connectAuthEmulator(auth, 'http://localhost:9099');
+      connectFirestoreEmulator(db, "localhost", 8080);
+      connectAuthEmulator(auth, "http://localhost:9099");
+    } catch (error) {
+      console.error("Failed to initialize Firebase emulators:", error);
+    }
+  })();
 }
