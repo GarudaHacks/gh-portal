@@ -29,7 +29,7 @@ export const calculateEventPosition = (
 
   return {
     left: minutesFromStart * minuteWidth,
-    width: Math.max(eventDurationMinutes * minuteWidth, 150), // Ensure minimum width
+    width: Math.max(eventDurationMinutes * minuteWidth, 150),
   };
 };
 

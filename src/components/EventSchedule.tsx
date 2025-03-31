@@ -9,7 +9,7 @@ import EventCard from "./EventCard";
 import TimelineHeader from "./TimelineHeader";
 import DayIndicator from "./DayIndicator";
 import EventTypeLegend from "./EventTypeLegend";
-import { sampleEvents } from "../data/sampleEvents"; // You'll need to create this file with the event data
+import { sampleEvents } from "../data/sampleEvents";
 
 /**
  * EventSchedule component displays a responsive schedule for a hackathon
@@ -33,13 +33,11 @@ const EventSchedule = () => {
 			(1000 * 60 * 60)
 	);
 
-	// Create array of days for the event
 	const eventDays = useMemo(() => {
 		const days = [];
 		const startDay = new Date(hackathonStartDate);
 		const endDay = new Date(hackathonEndDate);
 
-		// Loop through each day of the event
 		for (
 			let day = new Date(startDay);
 			day <= endDay;
@@ -58,18 +56,14 @@ const EventSchedule = () => {
 	const [scrollPosition, setScrollPosition] = useState<number>(0);
 	const [dayChangeThreshold, setDayChangeThreshold] = useState<number>(0);
 
-	// Refs for DOM elements
 	const popupRef = useRef<HTMLDivElement | null>(null);
 	const eventCardRefs = useRef<Record<number, HTMLDivElement | null>>({});
 	const timelineRef = useRef<HTMLDivElement | null>(null);
 
-	// Check if we're in mobile view
 	const isMobile = windowWidth <= 768;
 
-	// All events for the schedule
 	const allEvents = sampleEvents;
 
-	// Memoized organized events
 	const organizedTimeSlots = useMemo(
 		() => organizeEventsIntoTimeSlots(allEvents),
 		[allEvents]
@@ -89,26 +83,21 @@ const EventSchedule = () => {
 	 */
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
-			// Only proceed if an event is currently expanded
 			if (expandedEventId === null) return;
 
-			// Check if click target is outside both the popup and all event cards
 			const isOutsidePopup =
 				!popupRef.current ||
 				!(popupRef.current as HTMLElement).contains(event.target as Node);
 
-			// Check if click is on any event card
 			const isOnEventCard = Object.values(eventCardRefs.current).some(
 				(ref) => ref && (ref as HTMLElement).contains(event.target as Node)
 			);
 
-			// If click is outside popup and not on any event card, close the expanded event
 			if (isOutsidePopup && !isOnEventCard) {
 				setExpandedEventId(null);
 			}
 		};
 
-		// Use mousedown for better user experience
 		document.addEventListener("mousedown", handleClickOutside);
 		return () => {
 			document.removeEventListener("mousedown", handleClickOutside);
@@ -119,7 +108,7 @@ const EventSchedule = () => {
 	 * Determine the time range to display for the schedule
 	 */
 	const determineTimeRange = (): { start: number; totalHours: number } => {
-		const startHour = 8; // 8 AM Saturday
+		const startHour = 8;
 		return { start: startHour, totalHours: totalHours };
 	};
 	const { totalHours: totalHackathonHours } = determineTimeRange();
@@ -185,13 +174,13 @@ const EventSchedule = () => {
 
 		// Calculate day boundaries in pixels, accounting for first day
 		const dayBoundaries = eventDays.map((day, index) => {
-			if (index === 0) return 0; // First day starts at position 0
+			if (index === 0) return 0;
 
 			const dayStartTime = new Date(day.date);
 			const hoursSinceStart =
 				index === 1
-					? hoursPerDay - firstDayStartHour // First boundary is at (24 - 8) = 16 hours
-					: hoursPerDay - firstDayStartHour + (index - 1) * hoursPerDay; // Subsequent days
+					? hoursPerDay - firstDayStartHour
+					: hoursPerDay - firstDayStartHour + (index - 1) * hoursPerDay;
 
 			return hoursSinceStart * HOUR_WIDTH;
 		});
@@ -385,7 +374,7 @@ const EventSchedule = () => {
 					ref={timelineRef}
 					onScroll={handleScroll}
 				>
-					{/* Time markers - only show on desktop */}
+					{/* Time markers*/}
 					{!isMobile && (
 						<TimelineHeader
 							hourMarkers={hourMarkers}
@@ -411,7 +400,7 @@ const EventSchedule = () => {
 								  )}px`,
 						}}
 					>
-						{/* Vertical time grid lines for better readability */}
+						{/* Vertical time grid lines */}
 						{!isMobile && (
 							<div
 								className="absolute inset-0"
