@@ -1,5 +1,4 @@
 import Auth from "./components/Auth";
-// @ts-ignore
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
@@ -7,6 +6,7 @@ import Schedule from "./pages/Schedule";
 import Mentorship from "./pages/Mentorship";
 import Faq from "./pages/Faq";
 import Ticketing from "./pages/Ticketing";
+import Application from "./pages/Application";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 	const { user } = useAuth();
@@ -21,6 +21,14 @@ function App() {
 					<Route
 						path="/auth"
 						element={<Auth />}
+					/>
+					<Route
+						path="/application"
+						element={
+							<ProtectedRoute>
+								<Application />
+							</ProtectedRoute>
+						}
 					/>
 					<Route
 						path="/home"
