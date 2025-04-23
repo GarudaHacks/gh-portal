@@ -176,7 +176,6 @@ const EventSchedule = () => {
 		const dayBoundaries = eventDays.map((day, index) => {
 			if (index === 0) return 0;
 
-			const dayStartTime = new Date(day.date);
 			const hoursSinceStart =
 				index === 1
 					? hoursPerDay - firstDayStartHour
