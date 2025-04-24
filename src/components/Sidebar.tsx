@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../utils/firebase";
-// @ts-ignore
 import { useAuth } from "../context/AuthContext";
 import SidebarTab from "./SidebarTab";
 
