@@ -2,6 +2,7 @@ import PageHeader from "./PageHeader";
 import Sidebar from "./Sidebar";
 import { useState, useEffect } from "react";
 
+
 interface PageProps {
 	title: string;
 	description: string;
@@ -34,6 +35,7 @@ function Page({ title, description, children }: PageProps) {
 					isMobile ? "pl-0" : "md:pl-[0rem]"
 				} ${isMobile && sidebarOpen ? "filter blur-sm" : ""}`}
 			>
+
 				<PageHeader
 					title={title}
 					description={description}
