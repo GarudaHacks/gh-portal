@@ -10,7 +10,7 @@ import {
 } from "firebase/auth";
 import {auth, db} from "../utils/firebase";
 
-import googleIcon from "/assets/google-icon.svg"
+
 import ghLogo from "/images/logo/gh_logo.svg"
 import {doc, getDoc, setDoc} from "firebase/firestore";
 import AuthLoginComponent from "@/components/AuthLoginComponent.tsx";
@@ -20,7 +20,7 @@ type FormData = {
   password: string;
 };
 
-const getAuthErrorMessage = (error: any) => {
+export const getAuthErrorMessage = (error: any) => {
   const errorCode = error.code || "";
   switch (errorCode) {
     case "auth/email-already-in-use":

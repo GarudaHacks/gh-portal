@@ -18,12 +18,22 @@ export interface AuthContextType {
       user?: User | null;
     } | null;
   }>;
+  loginWithGoogle: (idToken: string) => Promise<{
+    error: {
+      message: string;
+    } | null;
+    data: {
+      message: string | null;
+      user?: User | null;
+    } | null;
+  }>;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
   loginWithEmailPassword: async () => ({error: null, data: null}),
+  loginWithGoogle: async () => ({error: null, data: null}),
 });
 
 export const AuthProvider = ({children}: { children: ReactNode }) => {
@@ -42,6 +52,7 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
           email: credentials.email,
           password: credentials.password
         }),
+        credentials: "include",
       });
 
       const data = await response.json();
@@ -63,8 +74,43 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
     }
   };
 
+  const loginWithGoogle = async (idToken: string) => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/auth/session-login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id_token: idToken
+        }),
+        credentials: "include"
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        console.log("API ERROR:", data);
+        return {error: {message: data.message || "Login failed"}, data: null};
+      }
+
+
+      setUser(data.user || data);
+      console.log("USER SET")
+      console.log("USER SET")
+      return {error: null, data: {message: "Login successful", user: data.user || data}};
+    } catch (e) {
+      console.error("Login with Google", e);
+      return {error: {message: "Login failed"}, data: null};
+    } finally {
+      setLoading(false);
+    }
+
+  }
+
   return (
-    <AuthContext.Provider value={{user, loading, loginWithEmailPassword}}>
+    <AuthContext.Provider value={{user, loading, loginWithEmailPassword, loginWithGoogle}}>
       {!loading && children}
     </AuthContext.Provider>
   );
