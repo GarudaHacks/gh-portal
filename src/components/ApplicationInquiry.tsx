@@ -3,34 +3,8 @@ import { Button } from "./ui/button";
 import { renderQuestion } from "@/lib/application-utils";
 import { APPLICATION_STATES, LocalApplicationState } from "@/pages/Application";
 import { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
 
-// const dummies: ApplicationQuestion[] = [
-//   {
-//     id: "inquiry0",
-//     text: "How many hackathons have you been to before?",
-//     type: "number",
-//   },
-//   {
-//     id: "inquiry1",
-//     text: "What roles would you like to take in a hackathon?",
-//     type: "string",
-//   },
-//   {
-//     id: "inquiry2",
-//     text: "Please upload your resume.",
-//     type: "file",
-//   },
-//   {
-//     id: "inquiry3",
-//     text: "What motivates you to build in Garuda Hacks? Please provide a response within 150 words.",
-//     type: "textarea",
-//   },
-//   {
-//     id: "inquiry4",
-//     text: "Share an interesting project you've previously worked on. It doesn't have to be technical! Please provide a response within 150 words.",
-//     type: "textarea",
-//   },
-// ];
 
 export default function ApplicationInquiry({
   localApplicationState,
@@ -83,7 +57,10 @@ export default function ApplicationInquiry({
   };
 
   if (isLoading) {
-    return <div>Loading questions...</div>;
+    return <div className="">
+      <Loader2 className="w-10 h-10 animate-spin" />
+      <p className="text-lg">Loading...</p>
+    </div>;
   }
 
   return (

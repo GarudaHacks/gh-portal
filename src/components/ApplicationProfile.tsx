@@ -3,6 +3,7 @@ import {Button} from "./ui/button";
 import {renderQuestion} from "@/lib/application-utils";
 import {APPLICATION_STATES, LocalApplicationState} from "@/pages/Application";
 import {useEffect, useState} from "react";
+import { Loader2 } from "lucide-react";
 
 export default function ApplicationProfile({
   localApplicationState,
@@ -52,7 +53,10 @@ export default function ApplicationProfile({
   };
 
   if (isLoading) {
-    return <div>Loading questions...</div>;
+    return <div className="">
+      <Loader2 className="w-10 h-10 animate-spin" />
+      <p className="text-lg">Loading...</p>
+    </div>;
   }
 
   if (error) {
