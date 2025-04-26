@@ -1,6 +1,5 @@
 import React, {createContext, ReactNode, useContext, useState} from "react";
-import {User} from "firebase/auth";
-import {api} from "@/utils/api.ts";
+import {User} from "@/model/User.ts";
 
 export interface LoginCredentials {
   email: string;
@@ -10,48 +9,57 @@ export interface LoginCredentials {
 export interface AuthContextType {
   user: User | null;
   loading: boolean;
-  loginWithEmailPassword: (credentials: LoginCredentials) => Promise<boolean>;
+  loginWithEmailPassword: (credentials: LoginCredentials) => Promise<{
+    error: {
+      message: string;
+    } | null;
+    data: {
+      message: string | null;
+      user?: User | null;
+    } | null;
+  }>;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
-  loginWithEmailPassword: async () => false
+  loginWithEmailPassword: async () => ({error: null, data: null}),
 });
 
-export const AuthProvider = ({children}: { children: ReactNode }): JSX.Element => {
+export const AuthProvider = ({children}: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-  //     setUser(currentUser);
-  //     setLoading(false);
-  //   });
-  //   return () => unsubscribe();
-  // }, []);
-
-  const loginWithEmailPassword = async (credentials: LoginCredentials): Promise<boolean> => {
+  const loginWithEmailPassword = async (credentials: LoginCredentials) => {
+    setLoading(true);
     try {
-      const response = await api.post(`auth/login`, {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          'Content-Type': "application/json",
+        },
+        body: JSON.stringify({
           email: credentials.email,
-          password: credentials.password,
+          password: credentials.password
+        }),
       });
 
-      console.log(response);
+      const data = await response.json();
 
-      // if (response) {
-      //   // Manually set the user based on the response
-      //   setUser({
-      //     uid: authResponse.userId,
-      //     email: credentials.email,
-      //   } as User);
-      //   return true;
-      // }
-      return true;
+      if (!response.ok) {
+        console.log("API ERROR:", data);
+        return {error: {message: data.message || "Login failed"}, data: null};
+      }
+
+      setUser(data.user || data);
+      console.log("USER SET")
+      console.log("USER SET")
+      return {error: null, data: {message: "Login successful", user: data.user || data}};
     } catch (e) {
       console.error("Login error:", e);
-      return false;
+      return {error: {message: "Login failed"}, data: null};
+    } finally {
+      setLoading(false);
     }
   };
 
