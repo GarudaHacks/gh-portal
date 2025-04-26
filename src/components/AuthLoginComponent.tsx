@@ -13,6 +13,7 @@ import { auth, db } from "@/utils/firebase.ts";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { getAuthErrorMessage } from "@/components/Auth.tsx";
 import googleIcon from "/assets/google-icon.svg"
+import toast from "react-hot-toast"
 
 const formSchema = z.object({
   email: z.string().email().nonempty("Email is required"),
@@ -45,9 +46,10 @@ export default function AuthLoginComponent() {
       if (error) {
         setError(error.message || "Login failed");
         return;
+      } else {
+        toast.success("Successfully logged in!");
+        navigate("/home");
       }
-
-      navigate("/home");
     } catch (err) {
       setError("An unexpected error occurred");
       console.error(err);
@@ -56,7 +58,6 @@ export default function AuthLoginComponent() {
 
   const handleGoogleLogin = async () => {
     try {
-      console.log("login with Google")
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
@@ -69,21 +70,22 @@ export default function AuthLoginComponent() {
       if (!userDoc.exists()) {
         await setDoc(userRef, {
           email: user.email,
-          displayName: user.displayName,  
-          photoURL: user.photoURL,
+          displayName: user.displayName,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()
         });
       }
 
       const token = await user.getIdToken()
-      const { error, data } = await loginWithGoogle(token);
+      const { error } = await loginWithGoogle(token);
 
       if (error) {
-        setError(error.message || "Login failed");
+        setError(error.message || "Sign Up failed");
+      } else {
+        toast.success("Successfully logged in!");
+        await auth.signOut()
+        navigate("/home");
       }
-
-      await auth.signOut()
 
       navigate("/home");
     } catch (error: any) {

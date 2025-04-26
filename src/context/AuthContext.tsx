@@ -1,8 +1,14 @@
-import React, {createContext, ReactNode, useContext, useEffect, useState} from "react";
-import {User} from "@/model/User.ts";
+import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { User } from "@/model/User.ts";
 import Cookies from "js-cookie";
 
 export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface RegisterCredentials {
+  displayName: string;
   email: string;
   password: string;
 }
@@ -11,6 +17,15 @@ export interface AuthContextType {
   user: User | null;
   loading: boolean;
   loginWithEmailPassword: (credentials: LoginCredentials) => Promise<{
+    error: {
+      message: string;
+    } | null;
+    data: {
+      message: string | null;
+      user?: User | null;
+    } | null;
+  }>;
+  signUpWithEmailPassword: (credentials: RegisterCredentials) => Promise<{
     error: {
       message: string;
     } | null;
@@ -42,12 +57,13 @@ export interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
-  loginWithEmailPassword: async () => ({error: null, data: null}),
-  loginWithGoogle: async () => ({error: null, data: null}),
-  signOut: async () => ({error: null, data: null}),
+  loginWithEmailPassword: async () => ({ error: null, data: null }),
+  signUpWithEmailPassword: async () => ({ error: null, data: null }),
+  loginWithGoogle: async () => ({ error: null, data: null }),
+  signOut: async () => ({ error: null, data: null }),
 });
 
-export const AuthProvider = ({children}: { children: ReactNode }) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -62,7 +78,7 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
           },
           credentials: "include",
         });
-        
+
         const data = await response.json();
 
         if (response.ok) {
@@ -102,14 +118,46 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
       const data = await response.json();
 
       if (!response.ok) {
-        return {error: {message: data.message || "Login failed"}, data: null};
+        return { error: { message: data.message || "Login failed" }, data: null };
       }
 
       setUser(data.user || data);
-      return {error: null, data: {message: "Login successful", user: data.user || data}};
+      return { error: null, data: { message: "Login successful", user: data.user || data } };
     } catch (e) {
       console.error("Login error:", e);
-      return {error: {message: "Login failed"}, data: null};
+      return { error: { message: "Login failed" }, data: null };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signUpWithEmailPassword = async (credentials: RegisterCredentials) => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          'Content-Type': "application/json",
+        },
+        body: JSON.stringify({
+          name: credentials.displayName,
+          email: credentials.email,
+          password: credentials.password
+        }),
+        credentials: "include",
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return { error: { message: data.message || "Signup failed" }, data: null };
+      }
+
+      setUser(data.user || data);
+      return { error: null, data: { message: "Signup successful", user: data.user || data } };
+    } catch (e) {
+      console.error("Signup error:", e);
+      return { error: { message: "Signup failed" }, data: null };
     } finally {
       setLoading(false);
     }
@@ -133,15 +181,15 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
 
       if (!response.ok) {
         console.log("API ERROR:", data);
-        return {error: {message: data.message || "Login failed"}, data: null};
+        return { error: { message: data.message || "Login failed" }, data: null };
       }
 
       setUser(data.user || data);
       console.log("USER SET")
-      return {error: null, data: {message: "Login successful", user: data.user || data}};
+      return { error: null, data: { message: "Login successful", user: data.user || data } };
     } catch (e) {
       console.error("Login with Google", e);
-      return {error: {message: "Login failed"}, data: null};
+      return { error: { message: "Login failed" }, data: null };
     } finally {
       setLoading(false);
     }
@@ -162,13 +210,13 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
 
       if (!response.ok) {
         console.log("API ERROR:", data);
-        return {error: {message: data.message || "Logout failed"}, data: null};
+        return { error: { message: data.message || "Logout failed" }, data: null };
       }
-      return {error: null, data: {message: "Logout successful", user: data.user || data}};
+      return { error: null, data: { message: "Logout successful", user: data.user || data } };
     } catch (e) {
       console.error("Login error:", e);
       setUser(null);
-      return {error: {message: "Login failed"}, data: null};
+      return { error: { message: "Login failed" }, data: null };
     } finally {
       setUser(null);
       setLoading(false);
@@ -176,7 +224,7 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
   }
 
   return (
-    <AuthContext.Provider value={{user, loading, loginWithEmailPassword, loginWithGoogle, signOut}}>
+    <AuthContext.Provider value={{ user, loading, loginWithEmailPassword, loginWithGoogle, signUpWithEmailPassword, signOut }}>
       {!loading && children}
     </AuthContext.Provider>
   );

@@ -14,6 +14,7 @@ import {auth, db} from "../utils/firebase";
 import ghLogo from "/images/logo/gh_logo.svg"
 import {doc, getDoc, setDoc} from "firebase/firestore";
 import AuthLoginComponent from "@/components/AuthLoginComponent.tsx";
+import AuthRegisterComponent from "./AuthRegisterComponent";
 
 type FormData = {
   email: string;
@@ -122,20 +123,8 @@ function Auth() {
 
         <img src={ghLogo} width={40} height={60} className="mb-4"/>
 
-        {
-          mode === "LOGIN" && (
-            <AuthLoginComponent />
-          )
-        }
-
-        {/* Google Sign-in */}
-        {/*<button*/}
-        {/*  onClick={handleGoogleLogin}*/}
-        {/*  className="w-full mt-3 bg-white text-black py-2 rounded flex items-center justify-center gap-[10px]"*/}
-        {/*>*/}
-        {/*  <img src={googleIcon} width={20} height={20}/>*/}
-        {/*  Log in with Google*/}
-        {/*</button>*/}
+        {mode === "LOGIN" && (<AuthLoginComponent />)}
+        {mode === "SIGNUP" && (<AuthRegisterComponent />)}
 
         {/* Toggle Between Login and Signup */}
         <p className="text-center text-sm mt-4">
