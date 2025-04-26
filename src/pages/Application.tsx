@@ -11,6 +11,9 @@ import { db } from "@/utils/firebase";
 import { APPLICATION_STATUS } from "@/types/application";
 import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
+import Cookies from "js-cookie";
+import toast from "react-hot-toast";
+import { getStateKey } from "@/utils/applicationUtils";
 
 export enum APPLICATION_STATES {
   INTRO = "Intro",
@@ -29,6 +32,7 @@ export interface LocalApplicationState {
       id: string;
       type: string;
       response: any;
+      error: string;
     };
   };
   lastUpdated: Date;
@@ -72,6 +76,7 @@ function Application() {
           id: questionId,
           type,
           response,
+          error: "",
         },
       },
     });
@@ -100,11 +105,87 @@ function Application() {
     }
   };
 
-  const toNextState = () => {
-    const currentIndex = APPLICATION_STATES_ARRAY.indexOf(applicationState);
-    if (currentIndex < APPLICATION_STATES_ARRAY.length - 1) {
-      setApplicationState(APPLICATION_STATES_ARRAY[currentIndex + 1]);
+  const toNextState = async () => {
+
+    try {
+      if (applicationState !== APPLICATION_STATES.INTRO && applicationState !== APPLICATION_STATES.SUBMITTED) {
+        const state = getStateKey(applicationState)
+
+        let formResponse: { [key: string]: any } = {};
+
+        for (const questionId in localApplicationState.data) {
+          const question = localApplicationState.data[questionId];
+          const response = question.response;
+
+          if (question.type === "file") {
+            formResponse[questionId] = response.name;
+            continue;
+          }
+
+          formResponse[questionId] = response;
+        }
+
+        const response = await fetch("/api/application", {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "x-csrf-token": Cookies.get("XSRF-TOKEN") || ""
+          },
+          body: JSON.stringify({
+            state: state,
+            ...formResponse
+          })
+        })
+
+        if (!response.ok) {
+          toast.error('Failed to save application data');
+          const errorData = await response.json();
+
+          if (errorData.details && Array.isArray(errorData.details)) {
+            const updatedData = { ...localApplicationState.data };
+
+            errorData.details.forEach((error) => {
+              const { field_id, message } = error;
+
+              console.log(field_id, message);
+
+              if (updatedData[field_id]) {
+                updatedData[field_id] = {
+                  ...updatedData[field_id],
+                  error: message
+                };
+              } else {
+                updatedData[field_id] = {
+                  id: field_id,
+                  type: localApplicationState.data[field_id]?.type,
+                  response: localApplicationState.data[field_id]?.response,
+                  error: message
+                }
+              }
+            });
+
+            setLocalApplicationState({
+              ...localApplicationState,
+              data: updatedData
+            });
+
+            toast.error("There are errors in your application.")
+            return;
+          } else {
+            toast.error('Failed to save application');
+          }
+        }
+      }
+
+
+      const currentIndex = APPLICATION_STATES_ARRAY.indexOf(applicationState);
+      if (currentIndex < APPLICATION_STATES_ARRAY.length - 1) {
+        setApplicationState(APPLICATION_STATES_ARRAY[currentIndex + 1]);
+      }
+    } catch (error) {
+      console.error('Error saving application data:', error);
     }
+
   };
 
   const toPreviousState = () => {
@@ -117,19 +198,24 @@ function Application() {
   useEffect(() => {
     // check from db whether user.status is "submitted"
     // if yes, redirect to home page
-    const checkUserSubmitted = async () => {
-      if (user) {
-        const ref = doc(db, "users", user.uid);
-        const userSnap = await getDoc(ref);
-        if (userSnap.exists()) {
-          const userData = userSnap.data();
-          if (userData.status === APPLICATION_STATUS.SUBMITTED) {
-            navigate("/")
-          }
-        }
+    const fetchApplicationStatus = async () => {
+      const response = await fetch("/api/application/status", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include"
+      })
+
+      const data = await response.json();
+      console.log("application status", data);
+      if (data.data === APPLICATION_STATUS.SUBMITTED) {
+        navigate("/home");
+        return
       }
-    };
-    checkUserSubmitted();
+    }
+
+    fetchApplicationStatus();
 
     const localApplicationStateJson = localStorage.getItem(
       "localApplicationState"
@@ -159,7 +245,7 @@ function Application() {
 
   if (isLoading) {
     return <div className="h-screen w-screen flex items-center justify-center">
-      <Loader2 className="animate-spin"/>
+      <Loader2 className="animate-spin" />
     </div>;
   }
 
