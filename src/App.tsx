@@ -9,8 +9,16 @@ import Ticketing from "./pages/Ticketing";
 import Application from "./pages/Application";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-	const { user } = useAuth();
-	return user ? children : <Navigate to="/auth" />;
+    const { user, loading } = useAuth();
+
+    if (loading) {
+        return <div>Loading...</div>; // Or your loading component
+    }
+
+    if (!user) {
+        return <Navigate to="/auth" />;
+    }
+    return children;
 };
 
 function App() {

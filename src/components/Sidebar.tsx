@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { signOut } from "firebase/auth";
 import { auth } from "../utils/firebase";
 import { useAuth } from "../context/AuthContext";
 import SidebarTab from "./SidebarTab";
+import toast from "react-hot-toast";
 
 interface SidebarProps {
 	onSidebarToggle?: (isOpen: boolean) => void;
@@ -13,7 +13,7 @@ function Sidebar({ onSidebarToggle }: SidebarProps = {}) {
 	const [showMenu, setShowMenu] = useState(false);
 	const [isMobile, setIsMobile] = useState(false);
 	const [sidebarOpen, setSidebarOpen] = useState(true);
-	const user = useAuth();
+	const {user, signOut} = useAuth();
 
 	const navigate = useNavigate();
 
@@ -38,7 +38,14 @@ function Sidebar({ onSidebarToggle }: SidebarProps = {}) {
 
 	const handleLogout = async () => {
 		try {
-			await signOut(auth);
+			console.log("signing out");
+			const { data, error } = await signOut();
+			
+			if (error) {
+				toast.error(error.message);
+				return;
+			}
+
 			navigate("/auth");
 		} catch (error) {
 			console.error("Logout failed:", error);
@@ -130,7 +137,7 @@ function Sidebar({ onSidebarToggle }: SidebarProps = {}) {
 					<div className="flex items-center justify-between">
 						<div className="">
 							<div className="text-white font-medium">
-								{user?.user.displayName || "Guest"}
+								{user?.displayName || "Guest"}
 							</div>
 						</div>
 						<button

@@ -10,7 +10,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import { APPLICATION_STATUS } from "@/types/application";
 import { useNavigate } from "react-router-dom";
-import { Loader, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 export enum APPLICATION_STATES {
   INTRO = "Intro",

@@ -1,8 +1,6 @@
 import {useState, useEffect} from "react";
 import {useAuth} from "../context/AuthContext";
 import Page from "../components/Page";
-import {db} from "../utils/firebase";
-import {doc, getDoc} from "firebase/firestore";
 import {APPLICATION_STATUS} from "@/types/application";
 import HomeStatusNotRsvpd from "@/components/HomeStatusNotRsvpd";
 import {Button} from "@/components/ui/button";
@@ -50,21 +48,6 @@ function Home() {
 
     }
     fetchApplicationStatus();
-
-    //
-    // const getUser = async () => {
-    //   if (user?.user) {
-    //     const ref = doc(db, "users", user.user.uid);
-    //     const userSnap = await getDoc(ref);
-    //     if (userSnap.exists()) {
-    //       const userData = userSnap.data();
-    //       if (userData.status === APPLICATION_STATUS.SUBMITTED) {
-    //         setUserApplicationStatus(APPLICATION_STATUS.SUBMITTED);
-    //       }
-    //     }
-    //   }
-    // };
-    // getUser();
   }, [user]);
 
   /**

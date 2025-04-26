@@ -38,13 +38,13 @@ export const getAuthErrorMessage = (error: any) => {
 
 function Auth() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
   useEffect(() => {
-    if (user) {
+    if (!loading && user) {
       navigate("/home");
     }
-  }, [user, navigate]);
+  }, [user, navigate, loading]);
 
   const [mode, setMode] = useState<"LOGIN" | "SIGNUP">("LOGIN");
   const [error, setError] = useState("");

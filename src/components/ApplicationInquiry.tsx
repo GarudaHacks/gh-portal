@@ -2,34 +2,35 @@ import { ApplicationQuestion } from "@/types/application";
 import { Button } from "./ui/button";
 import { renderQuestion } from "@/lib/application-utils";
 import { APPLICATION_STATES, LocalApplicationState } from "@/pages/Application";
+import { useEffect, useState } from "react";
 
-const dummies: ApplicationQuestion[] = [
-  {
-    id: "inquiry0",
-    text: "How many hackathons have you been to before?",
-    type: "number",
-  },
-  {
-    id: "inquiry1",
-    text: "What roles would you like to take in a hackathon?",
-    type: "string",
-  },
-  {
-    id: "inquiry2",
-    text: "Please upload your resume.",
-    type: "file",
-  },
-  {
-    id: "inquiry3",
-    text: "What motivates you to build in Garuda Hacks? Please provide a response within 150 words.",
-    type: "textarea",
-  },
-  {
-    id: "inquiry4",
-    text: "Share an interesting project you've previously worked on. It doesn't have to be technical! Please provide a response within 150 words.",
-    type: "textarea",
-  },
-];
+// const dummies: ApplicationQuestion[] = [
+//   {
+//     id: "inquiry0",
+//     text: "How many hackathons have you been to before?",
+//     type: "number",
+//   },
+//   {
+//     id: "inquiry1",
+//     text: "What roles would you like to take in a hackathon?",
+//     type: "string",
+//   },
+//   {
+//     id: "inquiry2",
+//     text: "Please upload your resume.",
+//     type: "file",
+//   },
+//   {
+//     id: "inquiry3",
+//     text: "What motivates you to build in Garuda Hacks? Please provide a response within 150 words.",
+//     type: "textarea",
+//   },
+//   {
+//     id: "inquiry4",
+//     text: "Share an interesting project you've previously worked on. It doesn't have to be technical! Please provide a response within 150 words.",
+//     type: "textarea",
+//   },
+// ];
 
 export default function ApplicationInquiry({
   localApplicationState,
@@ -44,9 +45,46 @@ export default function ApplicationInquiry({
   onPrevClick: () => void;
   onFormChange: (questionId: string, type: string, response: any) => void;
 }) {
+
+  const [questions, setQuestions] = useState<ApplicationQuestion[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch("/api/application/questions?state=INQUIRY", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          credentials: "include"
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch questions');
+        }
+
+        const data = await response.json();
+        setQuestions(data.data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to fetch questions');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchQuestions();
+  }, []);
+
   const handleInputChange = (question: ApplicationQuestion, value: any) => {
     onFormChange(question.id, question.type, value);
   };
+
+  if (isLoading) {
+    return <div>Loading questions...</div>;
+  }
 
   return (
     <div className="p-4 flex flex-col items-center gap-4 lg:gap-6 w-full">
@@ -67,7 +105,7 @@ export default function ApplicationInquiry({
         {applicationState}
       </h1>
       <div className="w-full py-4 flex flex-col gap-4">
-        {dummies.map((q, index) => (
+        {questions.map((q, index) => (
           <div key={index}>{renderQuestion(q, localApplicationState, handleInputChange)}</div>
         ))}
       </div>
