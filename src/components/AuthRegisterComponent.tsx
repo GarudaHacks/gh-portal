@@ -40,6 +40,14 @@ export default function AuthRegisterComponent() {
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setError("");
         try {
+            const passwordPolicy = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{8,})/;
+            if (!passwordPolicy.test(values.password)) {
+                setError(
+                    "Password must be at least 8 characters, contain an uppercase letter and a special character."
+                );
+                return;
+            }
+
             const { error } = await signUpWithEmailPassword({
                 displayName: values.displayName,
                 email: values.email,
