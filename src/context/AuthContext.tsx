@@ -210,7 +210,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (!response.ok) {
         console.log("API ERROR:", data);
-        return { error: { message: data.message || "Logout failed" }, data: null };
+        return { error: { message: data.error || "Logout failed" }, data: null };
       }
       return { error: null, data: { message: "Logout successful", user: data.user || data } };
     } catch (e) {
