@@ -1,25 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {useForm} from "react-hook-form";
 import {useAuth} from "../context/AuthContext";
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup
-} from "firebase/auth";
-import {auth, db} from "../utils/firebase";
-
 
 import ghLogo from "/images/logo/gh_logo.svg"
-import {doc, getDoc, setDoc} from "firebase/firestore";
 import AuthLoginComponent from "@/components/AuthLoginComponent.tsx";
 import AuthRegisterComponent from "./AuthRegisterComponent";
-
-type FormData = {
-  email: string;
-  password: string;
-};
 
 export const getAuthErrorMessage = (error: any) => {
   const errorCode = error.code || "";
@@ -48,73 +33,6 @@ function Auth() {
   }, [user, navigate, loading]);
 
   const [mode, setMode] = useState<"LOGIN" | "SIGNUP">("LOGIN");
-  const [error, setError] = useState("");
-
-  const handleSignup = async (data: FormData) => {
-    const passwordPolicy = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{8,})/;
-
-    if (!passwordPolicy.test(data.password)) {
-      setError(
-        "Password must be at least 8 characters, contain an uppercase letter and a special character."
-      );
-      return;
-    }
-
-    try {
-      const userCred = await createUserWithEmailAndPassword(auth, data.email.toLowerCase(), data.password);
-      const user = userCred.user;
-
-      if (!user) {
-        setError("User creation failed. Please try again.");
-        return;
-      }
-
-      const ref = doc(db, "users", user.uid);
-      const userSnap = await getDoc(ref);
-
-      if (!userSnap.exists()) {
-        // New entry in db if it is first time authenticating
-        await setDoc(ref, {
-          uid: user.uid,
-          email: user.email,
-          createdAt: new Date(),
-        })
-      }
-
-      navigate("/home");
-    } catch (error: any) {
-      setError(getAuthErrorMessage(error));
-    }
-  };
-
-  const handleGoogleLogin = async () => {
-    try {
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-
-      if (!user.email) {
-        setError("No email associated.");
-        return;
-      }
-
-      const email = user.email?.toLowerCase();
-      const userRef = doc(db, "users", email);
-      const userSnap = await getDoc(userRef);
-
-      if (!userSnap.exists()) {
-        await setDoc(userRef, {
-          uid: user.uid,
-          email: user.email,
-          createdAt: new Date(),
-        });
-      }
-
-      navigate("/home");
-    } catch (error: any) {
-      setError(getAuthErrorMessage(error));
-    }
-  };
 
   return (
     <div className="flex items-center justify-center h-screen min-w-screen">
