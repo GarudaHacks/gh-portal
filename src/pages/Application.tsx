@@ -39,10 +39,9 @@ export interface LocalApplicationState {
 }
 
 function Application() {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
-  const [times,setTimes] = useState(0)
+  const [times, setTimes] = useState(0)
 
   const [applicationState, setApplicationState] = useState(
     APPLICATION_STATES.INTRO
@@ -56,11 +55,6 @@ function Application() {
   // save local application state to local storage
   const saveLocalApplicationState = () => {
     if (!localApplicationState) return;
-    console.log(`Saving state to localStorage: ${times}`, {
-      latestState: localApplicationState.latestState,
-      data: localApplicationState.data,
-      dataSize: Object.keys(localApplicationState.data).length,
-    });
     localStorage.setItem(
       "localApplicationState",
       JSON.stringify({
@@ -74,7 +68,6 @@ function Application() {
   // update form data
   const updateFormData = (questionId: string, type: string, response: any) => {
     if (!localApplicationState) return;
-    console.log("updateFormData", questionId, type, response);
     setLocalApplicationState({
       ...localApplicationState,
       data: {
@@ -101,19 +94,29 @@ function Application() {
 
     // temporarily update user state into "submitted" using firebase
     // assuming the user is saved to db already
-    if (user) {
-      const ref = doc(db, "users", user.uid);
-      const userSnap = await getDoc(ref);
+    try {
+      const response = await fetch("/api/application/status", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-csrf-token": Cookies.get("XSRF-TOKEN") || ""
+        }
+      })
+      const data = await response.json();
+      if (!response.ok) {
+        toast.error('Failed to save application. Please try again later.');
+        console.error('Error saving application data:', data);
+        return;
+      }
 
-      await setDoc(ref, {
-        ...userSnap.data(),
-        status: APPLICATION_STATUS.SUBMITTED,
-      });
+      toast.success('Application submitted!');
+    } catch (error) {
+      console.error('Error saving application data:', error);
+      toast.error('Failed to save application. Please try again later.');
     }
   };
 
   const toNextState = async () => {
-
     try {
       if (applicationState !== APPLICATION_STATES.INTRO && applicationState !== APPLICATION_STATES.SUBMITTED) {
         const state = getStateKey(applicationState)
@@ -150,7 +153,7 @@ function Application() {
           if (errorData.details && Array.isArray(errorData.details)) {
             const updatedData = { ...localApplicationState.data };
 
-            errorData.details.forEach((error: {field_id: string, message: string}) => {
+            errorData.details.forEach((error: { field_id: string, message: string }) => {
               const { field_id, message } = error;
 
               if (updatedData[field_id]) {
@@ -233,16 +236,15 @@ function Application() {
     fetchApplicationStatus();
 
     const localApplicationStateJson = localStorage.getItem("localApplicationState");
-    console.log("localApplicationStateJson", localApplicationStateJson);
     if (localApplicationStateJson) {
       try {
         const json = JSON.parse(localApplicationStateJson);
-        
+
         // Convert the lastUpdated string back to a Date object
         if (json.lastUpdated) {
           json.lastUpdated = new Date(json.lastUpdated);
         }
-        
+
         if (
           json.latestState &&
           APPLICATION_STATES_ARRAY.includes(json.latestState)
@@ -260,7 +262,6 @@ function Application() {
         });
       }
     } else {
-      console.log("localApplicationStateJson is null");
       setLocalApplicationState({
         latestState: APPLICATION_STATES.INTRO,
         data: {},

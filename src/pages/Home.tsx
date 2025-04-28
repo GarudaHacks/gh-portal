@@ -41,7 +41,6 @@ function Home() {
       })
 
       const data = await response.json();
-      console.log("application status", data);
       if (data.data === APPLICATION_STATUS.SUBMITTED) {
         setUserApplicationStatus(APPLICATION_STATUS.SUBMITTED);
       }
