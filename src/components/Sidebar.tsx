@@ -38,7 +38,6 @@ function Sidebar({ onSidebarToggle }: SidebarProps = {}) {
 
 	const handleLogout = async () => {
 		try {
-			console.log("signing out");
 			const { data, error } = await signOut();
 			
 			if (error) {

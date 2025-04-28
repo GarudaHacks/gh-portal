@@ -185,7 +185,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       setUser(data.user || data);
-      console.log("USER SET")
       return { error: null, data: { message: "Login successful", user: data.user || data } };
     } catch (e) {
       console.error("Login with Google", e);
@@ -197,7 +196,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signOut = async () => {
     try {
-      console.log("Sign Out, XSRF", Cookies.get("XSRF-TOKEN"));
       const response = await fetch("/api/auth/logout", {
         method: "POST",
         headers: {
