@@ -42,6 +42,7 @@ function Application() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+  const [times,setTimes] = useState(0)
 
   const [applicationState, setApplicationState] = useState(
     APPLICATION_STATES.INTRO
@@ -55,10 +56,15 @@ function Application() {
   // save local application state to local storage
   const saveLocalApplicationState = () => {
     if (!localApplicationState) return;
+    console.log(`Saving state to localStorage: ${times}`, {
+      latestState: localApplicationState.latestState,
+      data: localApplicationState.data,
+      dataSize: Object.keys(localApplicationState.data).length,
+    });
     localStorage.setItem(
       "localApplicationState",
       JSON.stringify({
-        latestState: applicationState,
+        latestState: localApplicationState.latestState,
         data: localApplicationState.data,
         lastUpdated: new Date().toISOString(),
       })
@@ -68,6 +74,7 @@ function Application() {
   // update form data
   const updateFormData = (questionId: string, type: string, response: any) => {
     if (!localApplicationState) return;
+    console.log("updateFormData", questionId, type, response);
     setLocalApplicationState({
       ...localApplicationState,
       data: {
@@ -85,12 +92,12 @@ function Application() {
   // handle submit
   const handleSubmit = async () => {
     // remove data for security
-    if (localApplicationState)
+    if (localApplicationState) {
       setLocalApplicationState({ ...localApplicationState, data: {} });
+    }
 
     // TODO: submit form data to backend
     setApplicationState(APPLICATION_STATES.SUBMITTED);
-    console.log(localApplicationState);
 
     // temporarily update user state into "submitted" using firebase
     // assuming the user is saved to db already
@@ -138,16 +145,13 @@ function Application() {
         })
 
         if (!response.ok) {
-          toast.error('Failed to save application data');
           const errorData = await response.json();
 
           if (errorData.details && Array.isArray(errorData.details)) {
             const updatedData = { ...localApplicationState.data };
 
-            errorData.details.forEach((error) => {
+            errorData.details.forEach((error: {field_id: string, message: string}) => {
               const { field_id, message } = error;
-
-              console.log(field_id, message);
 
               if (updatedData[field_id]) {
                 updatedData[field_id] = {
@@ -169,7 +173,7 @@ function Application() {
               data: updatedData
             });
 
-            toast.error("There are errors in your application.")
+            toast.error("There are errors in your application")
             return;
           } else {
             toast.error('Failed to save application');
@@ -177,10 +181,16 @@ function Application() {
         }
       }
 
-
       const currentIndex = APPLICATION_STATES_ARRAY.indexOf(applicationState);
       if (currentIndex < APPLICATION_STATES_ARRAY.length - 1) {
+        const nextState = APPLICATION_STATES_ARRAY[currentIndex + 1];
         setApplicationState(APPLICATION_STATES_ARRAY[currentIndex + 1]);
+
+        // Update localApplicationState.latestState to match
+        setLocalApplicationState(prev => ({
+          ...prev,
+          latestState: nextState
+        }));
       }
     } catch (error) {
       console.error('Error saving application data:', error);
@@ -191,7 +201,13 @@ function Application() {
   const toPreviousState = () => {
     const currentIndex = APPLICATION_STATES_ARRAY.indexOf(applicationState);
     if (currentIndex > 0) {
+      const prevState = APPLICATION_STATES_ARRAY[currentIndex - 1];
       setApplicationState(APPLICATION_STATES_ARRAY[currentIndex - 1]);
+
+      setLocalApplicationState(prev => ({
+        ...prev,
+        latestState: prevState
+      }));
     }
   };
 
@@ -208,7 +224,6 @@ function Application() {
       })
 
       const data = await response.json();
-      console.log("application status", data);
       if (data.data === APPLICATION_STATUS.SUBMITTED) {
         navigate("/home");
         return
@@ -217,19 +232,35 @@ function Application() {
 
     fetchApplicationStatus();
 
-    const localApplicationStateJson = localStorage.getItem(
-      "localApplicationState"
-    );
+    const localApplicationStateJson = localStorage.getItem("localApplicationState");
+    console.log("localApplicationStateJson", localApplicationStateJson);
     if (localApplicationStateJson) {
-      const json = JSON.parse(localApplicationStateJson);
-      setLocalApplicationState(json);
-      if (
-        json.latestState &&
-        APPLICATION_STATES_ARRAY.includes(json.latestState)
-      ) {
-        setApplicationState(json.latestState);
+      try {
+        const json = JSON.parse(localApplicationStateJson);
+        
+        // Convert the lastUpdated string back to a Date object
+        if (json.lastUpdated) {
+          json.lastUpdated = new Date(json.lastUpdated);
+        }
+        
+        if (
+          json.latestState &&
+          APPLICATION_STATES_ARRAY.includes(json.latestState)
+        ) {
+          setApplicationState(json.latestState);
+        }
+
+        setLocalApplicationState(json)
+      } catch (error) {
+        console.error('Error parsing localApplicationState:', error);
+        setLocalApplicationState({
+          latestState: APPLICATION_STATES.INTRO,
+          data: {},
+          lastUpdated: new Date(),
+        });
       }
     } else {
+      console.log("localApplicationStateJson is null");
       setLocalApplicationState({
         latestState: APPLICATION_STATES.INTRO,
         data: {},
@@ -240,7 +271,11 @@ function Application() {
   }, []);
 
   useEffect(() => {
-    saveLocalApplicationState();
+    if (times > 0) {
+      console.log(`useEffect triggered: ${times}:`, localApplicationState);
+      saveLocalApplicationState();
+    }
+    setTimes(times => times + 1);
   }, [localApplicationState, applicationState]);
 
   if (isLoading) {

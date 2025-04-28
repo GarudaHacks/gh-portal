@@ -174,17 +174,15 @@ export function renderQuestion(
         </Label>
         <Popover>
           <PopoverTrigger className="">
-            <Button
-              type="button"
-              variant={"outline"}
+            <div
               className={cn(
-                "w-[280px] justify-start text-left font-normal bg-white",
+                "h-9 px-4 py-2 has-[>svg]:px-3 border border-input shadow-xs hover:bg-accent hover:text-accent-foreground w-[280px] justify-start text-left font-normal bg-white flex items-center rounded-lg",
                 !value && "text-muted-foreground"
               )}
             >
               <CalendarDaysIcon className="mr-2 h-4 w-4" />
               {value ? format(new Date(value), "PPP") : <span>Pick a date</span>}
-            </Button>
+            </div>
           </PopoverTrigger>
           <PopoverContent align="start" className="w-auto p-0">
             <Calendar
