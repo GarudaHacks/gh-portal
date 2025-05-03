@@ -166,7 +166,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const loginWithGoogle = async (idToken: string) => {
     setLoading(true);
     try {
-      const response = await fetch("/api/auth/session-login", {
+      const response = await fetch("/api/auth/session-login", { // TODO: route doesn't exist in backend
         method: "POST",
         headers: {
           "Content-Type": "application/json",

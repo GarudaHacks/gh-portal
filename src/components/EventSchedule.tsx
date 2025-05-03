@@ -337,10 +337,6 @@ const EventSchedule = () => {
 
 	return (
 		<div className="max-w-full overflow-hidden">
-			<h1 className="text-3xl font-bold text-[#9F3737] mb-4">
-				Day-Of-Events Schedule
-			</h1>
-
 			{/* Header*/}
 			<div className="flex flex-col sm:flex-row justify-between mb-4 gap-4">
 				{/* Day indicator*/}
