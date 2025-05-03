@@ -96,7 +96,8 @@ export function renderQuestion(
                   // "Content-Type": "multipart/form-data" // implicitly from browser
                   "x-csrf-token": Cookies.get("XSRF-TOKEN") || ""
                 },
-                body: formData
+                body: formData,
+                credentials: "include"
               })
                 .then(data => {
                   toast.success("File uploaded successfully");

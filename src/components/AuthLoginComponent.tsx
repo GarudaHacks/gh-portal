@@ -85,7 +85,6 @@ export default function AuthLoginComponent() {
       } else {
         toast.success("Successfully logged in!");
         await auth.signOut()
-        navigate("/home");
       }
 
       navigate("/home");
