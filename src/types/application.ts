@@ -1,7 +1,9 @@
 export interface ApplicationQuestion {
   id: string;
+  order: number;
   text: string;
   type: string;
+  validation?: any;
   options?: string[];
 }
 

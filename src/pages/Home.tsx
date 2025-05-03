@@ -1,12 +1,10 @@
-import { useState, useEffect } from "react";
-import { useAuth } from "../context/AuthContext";
+import {useState, useEffect} from "react";
+import {useAuth} from "../context/AuthContext";
 import Page from "../components/Page";
-import { db } from "../utils/firebase";
-import { doc, getDoc } from "firebase/firestore";
-import { APPLICATION_STATUS } from "@/types/application";
+import {APPLICATION_STATUS} from "@/types/application";
 import HomeStatusNotRsvpd from "@/components/HomeStatusNotRsvpd";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import {Button} from "@/components/ui/button";
+import {useNavigate} from "react-router-dom";
 
 function Home() {
   const user = useAuth();
@@ -31,22 +29,24 @@ function Home() {
     seconds: 0,
   });
 
-  // temporary implementation to get user's application state using firebase
-  // TODO: modify to use backend (?)
   useEffect(() => {
-    const getUser = async () => {
-      if (user?.user) {
-        const ref = doc(db, "users", user.user.uid);
-        const userSnap = await getDoc(ref);
-        if (userSnap.exists()) {
-          const userData = userSnap.data();
-          if (userData.status === APPLICATION_STATUS.SUBMITTED) {
-            setUserApplicationStatus(APPLICATION_STATUS.SUBMITTED);
-          }
-        }
+
+    const fetchApplicationStatus = async () => {
+      const response = await fetch("/api/application/status", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include"
+      })
+
+      const data = await response.json();
+      if (data.data === APPLICATION_STATUS.SUBMITTED) {
+        setUserApplicationStatus(APPLICATION_STATUS.SUBMITTED);
       }
-    };
-    getUser();
+
+    }
+    fetchApplicationStatus();
   }, [user]);
 
   /**
@@ -65,10 +65,10 @@ function Home() {
       const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
       if (distance <= 0) {
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        setTimeLeft({days: 0, hours: 0, minutes: 0, seconds: 0});
         clearInterval(timerInterval);
       } else {
-        setTimeLeft({ days, hours, minutes, seconds });
+        setTimeLeft({days, hours, minutes, seconds});
       }
     };
 
@@ -85,7 +85,7 @@ function Home() {
       description="View all important announcements and events here."
     >
       {userApplicationStatus === APPLICATION_STATUS.SUBMITTED ? (
-        <HomeStatusNotRsvpd />
+        <HomeStatusNotRsvpd/>
       ) : null}
 
       {userApplicationStatus === APPLICATION_STATUS.ACCEPTED ? (
@@ -94,7 +94,8 @@ function Home() {
             <div className="flex justify-between items-center mb-6 text-[28px] font-semibold">
               <h2>Good morning, {getShortName()}! 👋</h2>
               <div className="flex gap-4 text-[14px] font-[600]">
-                <button className="group px-4 py-2 border bg-[#9F3737] text-[#FFF7F2] rounded flex items-center transition duration-300 hover:opacity-80 cursor-pointer">
+                <button
+                  className="group px-4 py-2 border bg-[#9F3737] text-[#FFF7F2] rounded flex items-center transition duration-300 hover:opacity-80 cursor-pointer">
                   View event booklet
                   <span className="ml-2">
                     <img
@@ -104,7 +105,8 @@ function Home() {
                     />
                   </span>
                 </button>
-                <button className="px-4 py-2 border border-[#A83E36] text-[#A83E36] rounded transition-colors duration-300 hover:bg-[#A83E36] hover:text-white">
+                <button
+                  className="px-4 py-2 border border-[#A83E36] text-[#A83E36] rounded transition-colors duration-300 hover:bg-[#A83E36] hover:text-white">
                   Judging Schedule
                 </button>
               </div>

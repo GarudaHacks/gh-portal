@@ -10,7 +10,10 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import { APPLICATION_STATUS } from "@/types/application";
 import { useNavigate } from "react-router-dom";
-import { Loader, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import Cookies from "js-cookie";
+import toast from "react-hot-toast";
+import { getStateKey } from "@/utils/applicationUtils";
 
 export enum APPLICATION_STATES {
   INTRO = "Intro",
@@ -29,15 +32,16 @@ export interface LocalApplicationState {
       id: string;
       type: string;
       response: any;
+      error: string;
     };
   };
   lastUpdated: Date;
 }
 
 function Application() {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+  const [times, setTimes] = useState(0)
 
   const [applicationState, setApplicationState] = useState(
     APPLICATION_STATES.INTRO
@@ -54,7 +58,7 @@ function Application() {
     localStorage.setItem(
       "localApplicationState",
       JSON.stringify({
-        latestState: applicationState,
+        latestState: localApplicationState.latestState,
         data: localApplicationState.data,
         lastUpdated: new Date().toISOString(),
       })
@@ -72,6 +76,7 @@ function Application() {
           id: questionId,
           type,
           response,
+          error: "",
         },
       },
     });
@@ -80,68 +85,181 @@ function Application() {
   // handle submit
   const handleSubmit = async () => {
     // remove data for security
-    if (localApplicationState)
+    if (localApplicationState) {
       setLocalApplicationState({ ...localApplicationState, data: {} });
+    }
 
     // TODO: submit form data to backend
     setApplicationState(APPLICATION_STATES.SUBMITTED);
-    console.log(localApplicationState);
 
     // temporarily update user state into "submitted" using firebase
     // assuming the user is saved to db already
-    if (user) {
-      const ref = doc(db, "users", user.uid);
-      const userSnap = await getDoc(ref);
+    try {
+      const response = await fetch("/api/application/status", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-csrf-token": Cookies.get("XSRF-TOKEN") || ""
+        }
+      })
+      const data = await response.json();
+      if (!response.ok) {
+        toast.error('Failed to save application. Please try again later.');
+        console.error('Error saving application data:', data);
+        return;
+      }
 
-      await setDoc(ref, {
-        ...userSnap.data(),
-        status: APPLICATION_STATUS.SUBMITTED,
-      });
+      toast.success('Application submitted!');
+    } catch (error) {
+      console.error('Error saving application data:', error);
+      toast.error('Failed to save application. Please try again later.');
     }
   };
 
-  const toNextState = () => {
-    const currentIndex = APPLICATION_STATES_ARRAY.indexOf(applicationState);
-    if (currentIndex < APPLICATION_STATES_ARRAY.length - 1) {
-      setApplicationState(APPLICATION_STATES_ARRAY[currentIndex + 1]);
+  const toNextState = async () => {
+    try {
+      if (applicationState !== APPLICATION_STATES.INTRO && applicationState !== APPLICATION_STATES.SUBMITTED) {
+        const state = getStateKey(applicationState)
+
+        let formResponse: { [key: string]: any } = {};
+
+        for (const questionId in localApplicationState.data) {
+          const question = localApplicationState.data[questionId];
+          const response = question.response;
+
+          if (question.type === "file") {
+            formResponse[questionId] = response.name;
+            continue;
+          }
+
+          formResponse[questionId] = response;
+        }
+
+        const response = await fetch("/api/application", {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "x-csrf-token": Cookies.get("XSRF-TOKEN") || ""
+          },
+          body: JSON.stringify({
+            state: state,
+            ...formResponse
+          })
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json();
+
+          if (errorData.details && Array.isArray(errorData.details)) {
+            const updatedData = { ...localApplicationState.data };
+
+            errorData.details.forEach((error: { field_id: string, message: string }) => {
+              const { field_id, message } = error;
+
+              if (updatedData[field_id]) {
+                updatedData[field_id] = {
+                  ...updatedData[field_id],
+                  error: message
+                };
+              } else {
+                updatedData[field_id] = {
+                  id: field_id,
+                  type: localApplicationState.data[field_id]?.type,
+                  response: localApplicationState.data[field_id]?.response,
+                  error: message
+                }
+              }
+            });
+
+            setLocalApplicationState({
+              ...localApplicationState,
+              data: updatedData
+            });
+
+            toast.error("There are errors in your application")
+            return;
+          } else {
+            toast.error('Failed to save application');
+          }
+        }
+      }
+
+      const currentIndex = APPLICATION_STATES_ARRAY.indexOf(applicationState);
+      if (currentIndex < APPLICATION_STATES_ARRAY.length - 1) {
+        const nextState = APPLICATION_STATES_ARRAY[currentIndex + 1];
+        setApplicationState(APPLICATION_STATES_ARRAY[currentIndex + 1]);
+
+        // Update localApplicationState.latestState to match
+        setLocalApplicationState(prev => ({
+          ...prev,
+          latestState: nextState
+        }));
+      }
+    } catch (error) {
+      console.error('Error saving application data:', error);
     }
+
   };
 
   const toPreviousState = () => {
     const currentIndex = APPLICATION_STATES_ARRAY.indexOf(applicationState);
     if (currentIndex > 0) {
+      const prevState = APPLICATION_STATES_ARRAY[currentIndex - 1];
       setApplicationState(APPLICATION_STATES_ARRAY[currentIndex - 1]);
+
+      setLocalApplicationState(prev => ({
+        ...prev,
+        latestState: prevState
+      }));
     }
   };
 
   useEffect(() => {
     // check from db whether user.status is "submitted"
     // if yes, redirect to home page
-    const checkUserSubmitted = async () => {
-      if (user) {
-        const ref = doc(db, "users", user.uid);
-        const userSnap = await getDoc(ref);
-        if (userSnap.exists()) {
-          const userData = userSnap.data();
-          if (userData.status === APPLICATION_STATUS.SUBMITTED) {
-            navigate("/")
-          }
-        }
-      }
-    };
-    checkUserSubmitted();
+    const fetchApplicationStatus = async () => {
+      const response = await fetch("/api/application/status", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include"
+      })
 
-    const localApplicationStateJson = localStorage.getItem(
-      "localApplicationState"
-    );
+      const data = await response.json();
+      if (data.data === APPLICATION_STATUS.SUBMITTED) {
+        navigate("/home");
+        return
+      }
+    }
+
+    fetchApplicationStatus();
+
+    const localApplicationStateJson = localStorage.getItem("localApplicationState");
     if (localApplicationStateJson) {
-      const json = JSON.parse(localApplicationStateJson);
-      setLocalApplicationState(json);
-      if (
-        json.latestState &&
-        APPLICATION_STATES_ARRAY.includes(json.latestState)
-      ) {
-        setApplicationState(json.latestState);
+      try {
+        const json = JSON.parse(localApplicationStateJson);
+
+        // Convert the lastUpdated string back to a Date object
+        if (json.lastUpdated) {
+          json.lastUpdated = new Date(json.lastUpdated);
+        }
+
+        if (
+          json.latestState &&
+          APPLICATION_STATES_ARRAY.includes(json.latestState)
+        ) {
+          setApplicationState(json.latestState);
+        }
+
+        setLocalApplicationState(json)
+      } catch (error) {
+        console.error('Error parsing localApplicationState:', error);
+        setLocalApplicationState({
+          latestState: APPLICATION_STATES.INTRO,
+          data: {},
+          lastUpdated: new Date(),
+        });
       }
     } else {
       setLocalApplicationState({
@@ -154,12 +272,16 @@ function Application() {
   }, []);
 
   useEffect(() => {
-    saveLocalApplicationState();
+    if (times > 0) {
+      console.log(`useEffect triggered: ${times}:`, localApplicationState);
+      saveLocalApplicationState();
+    }
+    setTimes(times => times + 1);
   }, [localApplicationState, applicationState]);
 
   if (isLoading) {
     return <div className="h-screen w-screen flex items-center justify-center">
-      <Loader2 className="animate-spin"/>
+      <Loader2 className="animate-spin" />
     </div>;
   }
 
