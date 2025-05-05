@@ -5,6 +5,7 @@ import {APPLICATION_STATUS} from "@/types/application";
 import HomeStatusNotRsvpd from "@/components/HomeStatusNotRsvpd";
 import {Button} from "@/components/ui/button";
 import {useNavigate} from "react-router-dom";
+import { applicationEndDate } from "@/data/dates";
 
 function Home() {
   const user = useAuth();
@@ -17,8 +18,8 @@ function Home() {
   const hackathonEndTime = new Date("2025-07-17T10:14:00").getTime();
 
   const getShortName = () => {
-    if (!user?.user?.displayName) return "User";
-    const alphabetsOnly = user.user.displayName.replace(/[^a-zA-Z]/g, "");
+    if (!user?.user?.first_name) return "User";
+    const alphabetsOnly = user.user.first_name.replace(/[^a-zA-Z]/g, "");
     return alphabetsOnly.substring(0, 3);
   };
 
@@ -201,7 +202,17 @@ function Home() {
 
       {userApplicationStatus === APPLICATION_STATUS.DRAFT ? (
         <div>
-          <Button onClick={() => navigate("/application")}>Apply Now</Button>
+          <div className="text-sm text-primary mb-2">
+            <b>Applying as a hacker?</b> Apply by{" "}
+            {new Date(applicationEndDate).toLocaleDateString()} to secure your
+            spot!
+          </div>
+          <Button
+            className="cursor-pointer"
+            onClick={() => navigate("/application")}
+          >
+            Apply Now
+          </Button>
         </div>
       ) : null}
     </Page>

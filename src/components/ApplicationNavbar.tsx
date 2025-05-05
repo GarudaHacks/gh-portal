@@ -41,7 +41,7 @@ function ApplicationNavbar({
 
         {applicationState === APPLICATION_STATES.INTRO ? (
           <span className="text-md font-semibold text-center line-clamp-2">
-            {user.user?.displayName}
+            {user.user?.first_name}
           </span>
         ) : null}
 
@@ -103,7 +103,7 @@ function ApplicationNavbar({
 
         <div className="flex-1 block"></div>
 
-        <span className="text-xl font-semibold">{user.user?.displayName}</span>
+        <span className="text-xl font-semibold">{user.user?.first_name}</span>
 
         <Button className="flex" size="lg" onClick={handleLogout}>
           Logout

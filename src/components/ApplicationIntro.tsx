@@ -11,7 +11,7 @@ export default function ApplicationIntro({
 }: ApplicationIntroProps) {
   return (
     <div className="p-4 flex flex-col items-center gap-4 lg:gap-6 w-full">
-      <RedGradientBackground className="w-full p-4 rounded-2xl flex flex-col gap-4 text-white shadow-md">
+      <RedGradientBackground className="w-full py-4 px-6 rounded-2xl flex flex-col gap-4 text-white shadow-md">
         <h1 className="text-2xl font-bold">We're glad you're here.</h1>
         <p>{applicationIntro}</p>
         <div>

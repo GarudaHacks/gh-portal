@@ -54,14 +54,15 @@ function App() {
 							</ProtectedRoute>
 						}
 					/>
-					<Route
+					{/* TODO: Ticket system delegated to mobile app
+						<Route
 						path="/ticket"
 						element={
 							<ProtectedRoute>
 								<Ticketing />
 							</ProtectedRoute>
 						}
-					/>
+					/> */}
 					<Route
 						path="/mentorship"
 						element={

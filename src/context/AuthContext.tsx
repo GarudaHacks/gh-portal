@@ -1,4 +1,10 @@
-import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { User } from "@/model/User.ts";
 import Cookies from "js-cookie";
 
@@ -54,6 +60,8 @@ export interface AuthContextType {
   }>;
 }
 
+const AUTH_STORAGE_KEY = "authUser"; // Define a key for localStorage
+
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
@@ -64,7 +72,18 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    const storedUser = localStorage.getItem(AUTH_STORAGE_KEY);
+    if (storedUser) {
+      try {
+        return JSON.parse(storedUser) as User;
+      } catch (e) {
+        console.error("Failed to parse user from localStorage", e);
+        localStorage.removeItem(AUTH_STORAGE_KEY); // Clear corrupted data
+      }
+    }
+    return null;
+  });
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -81,24 +100,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         const data = await response.json();
 
-        if (response.ok) {
-          setUser(data.data.user);
-        } else {
+        if (response.ok && mounted) {
+          const fetchedUser = data.data.user as User;
+          setUser(fetchedUser);
+          localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(fetchedUser));
+        } else if (mounted) {
+          // Invalid session or error response
           setUser(null);
+          localStorage.removeItem(AUTH_STORAGE_KEY);
         }
       } catch (e) {
         console.error("Error checking session:", e);
         if (mounted) {
+          // Network error or other exception
           setUser(null);
+          localStorage.removeItem(AUTH_STORAGE_KEY);
         }
       } finally {
         if (mounted) {
           setLoading(false);
         }
       }
-    }
+    };
     checkSession();
-  }, [])
+
+    return () => {
+      mounted = false;
+    };
+  }, []); // Run only on mount
 
   const loginWithEmailPassword = async (credentials: LoginCredentials) => {
     setLoading(true);
@@ -106,11 +135,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
-          'Content-Type': "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           email: credentials.email,
-          password: credentials.password
+          password: credentials.password,
         }),
         credentials: "include",
       });
@@ -118,13 +147,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const data = await response.json();
 
       if (!response.ok) {
-        return { error: { message: data.message || "Login failed" }, data: null };
+        localStorage.removeItem(AUTH_STORAGE_KEY);
+        return {
+          error: { message: data.message || "Login failed" },
+          data: null,
+        };
       }
 
-      setUser(data.user || data);
-      return { error: null, data: { message: "Login successful", user: data.user || data } };
+      const loggedInUser = (data.user || data) as User;
+      setUser(loggedInUser);
+      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(loggedInUser)); // Save on success
+      return {
+        error: null,
+        data: { message: "Login successful", user: loggedInUser },
+      };
     } catch (e) {
       console.error("Login error:", e);
+      localStorage.removeItem(AUTH_STORAGE_KEY);
       return { error: { message: "Login failed" }, data: null };
     } finally {
       setLoading(false);
@@ -137,12 +176,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
-          'Content-Type': "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name: credentials.displayName,
           email: credentials.email,
-          password: credentials.password
+          password: credentials.password,
         }),
         credentials: "include",
       });
@@ -150,13 +189,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const data = await response.json();
 
       if (!response.ok) {
-        return { error: { message: data.message || "Signup failed" }, data: null };
+        localStorage.removeItem(AUTH_STORAGE_KEY); // Clear on failure
+        return {
+          error: { message: data.message || "Signup failed" },
+          data: null,
+        };
       }
 
-      setUser(data.user || data);
-      return { error: null, data: { message: "Signup successful", user: data.user || data } };
+      const signedUpUser = (data.user || data) as User;
+      setUser(signedUpUser);
+      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(signedUpUser)); // Save on success
+      return {
+        error: null,
+        data: { message: "Signup successful", user: signedUpUser },
+      };
     } catch (e) {
       console.error("Signup error:", e);
+      localStorage.removeItem(AUTH_STORAGE_KEY);
       return { error: { message: "Signup failed" }, data: null };
     } finally {
       setLoading(false);
@@ -166,64 +215,94 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const loginWithGoogle = async (idToken: string) => {
     setLoading(true);
     try {
-      const response = await fetch("/api/auth/session-login", { // TODO: route doesn't exist in backend
+      const response = await fetch("/api/auth/session-login", {
+        // TODO: route doesn't exist in backend
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          id_token: idToken
+          id_token: idToken,
         }),
-        credentials: "include"
-      })
+        credentials: "include",
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
         console.log("API ERROR:", data);
-        return { error: { message: data.message || "Login failed" }, data: null };
+        localStorage.removeItem(AUTH_STORAGE_KEY);
+        return {
+          error: { message: data.message || "Login failed" },
+          data: null,
+        };
       }
 
-      setUser(data.user || data);
-      return { error: null, data: { message: "Login successful", user: data.user || data } };
+      const googleUser = (data.user || data) as User;
+      setUser(googleUser);
+      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(googleUser)); // Save on success
+      return {
+        error: null,
+        data: { message: "Login successful", user: googleUser },
+      };
     } catch (e) {
       console.error("Login with Google", e);
+      localStorage.removeItem(AUTH_STORAGE_KEY);
       return { error: { message: "Login failed" }, data: null };
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   const signOut = async () => {
+    localStorage.removeItem(AUTH_STORAGE_KEY);
+
     try {
       const response = await fetch("/api/auth/logout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-csrf-token": Cookies.get("XSRF-TOKEN") || ""
+          "x-csrf-token": Cookies.get("XSRF-TOKEN") || "",
         },
-        credentials: "include"
-      })
-      const data = await response.json()
+        credentials: "include",
+      });
+      const data = await response.json();
 
       if (!response.ok) {
         console.log("API ERROR:", data);
-        return { error: { message: data.error || "Logout failed" }, data: null };
+        return {
+          error: { message: data.error || "Logout failed" },
+          data: null,
+        };
       }
-      return { error: null, data: { message: "Logout successful", user: data.user || data } };
+      return {
+        error: null,
+        data: { message: "Logout successful", user: data.user || data },
+      };
     } catch (e) {
       console.error("Login error:", e);
       setUser(null);
       return { error: { message: "Login failed" }, data: null };
     } finally {
       setUser(null);
-      setLoading(false);
+      localStorage.removeItem(AUTH_STORAGE_KEY);
     }
-  }
+  };
 
   return (
-    <AuthContext.Provider value={{ user, loading, loginWithEmailPassword, loginWithGoogle, signUpWithEmailPassword, signOut }}>
-      {!loading && children}
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        loginWithEmailPassword,
+        loginWithGoogle,
+        signUpWithEmailPassword,
+        signOut,
+      }}
+    >
+      {/* Render children immediately if user is loaded from localStorage, 
+          or after loading finishes if not. The checkSession useEffect handles validation. */}
+      {children}
     </AuthContext.Provider>
   );
 };

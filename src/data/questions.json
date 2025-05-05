@@ -1,0 +1,241 @@
+[
+    {
+      "id": "first_name",
+      "text": "First Name",
+      "category": "PROFILE",
+      "type": "text",
+      "placeholder": "Enter your first name",
+      "required": true,
+      "validation": {
+        "maxLength": 50,
+        "pattern": "^[A-Za-z\\s'\\-]+$"
+      }
+    },
+    {
+      "id": "last_name",
+      "text": "Last Name",
+      "category": "PROFILE",
+      "type": "text",
+      "placeholder": "Enter your last name",
+      "required": true,
+      "validation": {
+        "maxLength": 50,
+        "pattern": "^[A-Za-z\\s'\\-]+$"
+      }
+    },
+    {
+      "id": "preferredName",
+      "text": "Preferred Name",
+      "category": "PROFILE",
+      "type": "text",
+      "placeholder": "Name you’d like us to call you",
+      "required": false,
+      "validation": {
+        "maxLength": 50
+      }
+    },
+    {
+      "id": "date_of_birth",
+      "text": "Date of Birth",
+      "category": "PROFILE",
+      "type": "date",
+      "required": true,
+      "validation": {
+        "earliest": "1900‑01‑01",
+        "latest": "2025‑12‑31"
+      }
+    },
+    {
+      "id": "linkedin",
+      "text": "LinkedIn URL",
+      "category": "PROFILE",
+      "type": "url",
+      "placeholder": "https://www.linkedin.com/in/your‑handle",
+      "required": false,
+      "validation": {
+        "pattern": "^https?:\\/\\/(www\\.)?linkedin\\.com\\/.*$",
+        "maxLength": 200
+      }
+    },
+    {
+      "id": "github",
+      "text": "GitHub Profile",
+      "category": "PROFILE",
+      "type": "url",
+      "placeholder": "https://github.com/your‑handle",
+      "required": false,
+      "validation": {
+        "pattern": "^https?:\\/\\/(www\\.)?github\\.com\\/.*$",
+        "maxLength": 200
+      }
+    },
+    {
+      "id": "portfolio",
+      "text": "Portfolio Website",
+      "category": "PROFILE",
+      "type": "url",
+      "placeholder": "https://your‑portfolio.com (optional)",
+      "required": false,
+      "validation": {
+        "pattern": "^https?:\\/\\/.*$",
+        "maxLength": 200
+      }
+    },
+    {
+      "id": "gender_identity",
+      "text": "Gender Identity",
+      "category": "PROFILE",
+      "type": "select",
+      "required": false,
+      "options": [
+        "Woman",
+        "Man",
+        "Non‑binary",
+        "Prefer not to say",
+        "Other"
+      ]
+    },
+    {
+      "id": "education",
+      "text": "Highest Level of Education",
+      "category": "PROFILE",
+      "type": "select",
+      "required": true,
+      "options": [
+        "High School / Equivalent",
+        "University (Undergraduate)",
+        "Post‑Graduate / Masters",
+        "PhD / Doctorate",
+        "Bootcamp / Other"
+      ]
+    },
+    {
+      "id": "school",
+      "text": "School / Institution",
+      "category": "PROFILE",
+      "type": "text",
+      "placeholder": "e.g., University of Toronto",
+      "required": true,
+      "validation": {
+        "maxLength": 100
+      }
+    },
+    {
+      "id": "year",
+      "text": "Current Year of Study",
+      "category": "PROFILE",
+      "type": "number",
+      "placeholder": "1",
+      "required": false,
+      "validation": {
+        "min": 1,
+        "max": 10,
+        "step": 1
+      }
+    },
+    {
+      "id": "hackathonCount",
+      "text": "How many hackathons have you been to before?",
+      "category": "APPLICATION",
+      "type": "number",
+      "placeholder": "0",
+      "required": true,
+      "validation": {
+        "min": 0,
+        "max": 99,
+        "step": 1
+      }
+    },
+    {
+      "id": "desiredRoles",
+      "text": "What roles would you like to take in a hackathon?",
+      "category": "APPLICATION",
+      "type": "select",
+      "multiple": true,
+      "required": true,
+      "options": [
+        "Developer",
+        "Designer",
+        "Product Manager",
+        "Data Scientist",
+        "Entrepreneur",
+        "Other"
+      ],
+      "validation": {
+        "minSelections": 1,
+        "maxSelections": 3
+      }
+    },
+    {
+      "id": "resume",
+      "text": "Please upload your résumé",
+      "category": "APPLICATION",
+      "type": "file",
+      "required": true,
+      "validation": {
+        "accept": [ "application/pdf" ],
+        "maxSizeMB": 5
+      }
+    },
+    {
+      "id": "motivation",
+      "text": "What motivates you to build in Garuda Hacks?",
+      "category": "APPLICATION",
+      "type": "textarea",
+      "placeholder": "Answer in ≤ 150 words",
+      "required": true,
+      "validation": {
+        "maxWords": 150
+      }
+    },
+    {
+      "id": "bigProblem",
+      "text": "If you had unlimited resources, what problem would you solve within Indonesia?",
+      "category": "APPLICATION",
+      "type": "textarea",
+      "placeholder": "Answer in ≤ 150 words",
+      "required": true,
+      "validation": {
+        "maxWords": 150
+      }
+    },
+    {
+      "id": "interestingProject",
+      "text": "Share an interesting project you’ve previously worked on (technical or non‑technical)",
+      "category": "APPLICATION",
+      "type": "textarea",
+      "placeholder": "Answer in ≤ 150 words",
+      "required": true,
+      "validation": {
+        "maxWords": 150
+      }
+    },
+    {
+      "id": "referralSource",
+      "text": "Where did you hear about Garuda Hacks?",
+      "category": "INQUIRY",
+      "type": "select",
+      "required": true,
+      "options": [
+        "Instagram",
+        "Facebook",
+        "Twitter/X",
+        "LinkedIn",
+        "University Club",
+        "Friend",
+        "Other"
+      ]
+    },
+    {
+      "id": "accommodations",
+      "text": "Please let us know of any event accommodations we can make for you",
+      "category": "INQUIRY",
+      "type": "textarea",
+      "placeholder": "Dietary restrictions, accessibility needs, etc. (optional)",
+      "required": false,
+      "validation": {
+        "maxLength": 600
+      }
+    }
+  ]
+  
