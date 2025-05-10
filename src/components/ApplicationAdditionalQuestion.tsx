@@ -2,36 +2,15 @@ import { ApplicationQuestion } from "@/types/application";
 import { Button } from "./ui/button";
 import { renderQuestion } from "@/lib/application-utils";
 import { APPLICATION_STATES, LocalApplicationState } from "@/pages/Application";
-
-const dummies: ApplicationQuestion[] = [
-  {
-    id: "additional0",
-    text: "Where did you hear about Garuda Hacks?",
-    type: "dropdown",
-    options: [
-      "Friend",
-      "Instagram",
-      "Facebook",
-      "LinkedIn",
-      "Twitter",
-      "YouTube",
-      "Reddit",
-      "Other",
-    ],
-  },
-  {
-    id: "additional1",
-    text: "Please let us know of any event accommodations we can make for you.",
-    type: "textarea",
-  },
-];
+import { useMemo } from "react";
+import allQuestionsData from "@/data/questions.json";
 
 export default function ApplicationAdditionalQuestion({
   localApplicationState,
   applicationState,
   onPrevClick,
   onFormChange,
-  onSubmit
+  onSubmit,
 }: {
   localApplicationState: LocalApplicationState;
   applicationState: APPLICATION_STATES;
@@ -39,9 +18,16 @@ export default function ApplicationAdditionalQuestion({
   onFormChange: (questionId: string, type: string, response: any) => void;
   onSubmit: () => void;
 }) {
+  const questions = useMemo(() => {
+    return (allQuestionsData as ApplicationQuestion[])
+      .filter((q) => q.category === "INQUIRY")
+      .sort((a, b) => a.order - b.order);
+  }, []);
+
   const handleInputChange = (question: ApplicationQuestion, value: any) => {
     onFormChange(question.id, question.type, value);
   };
+
   return (
     <div className="p-4 flex flex-col items-center gap-4 lg:gap-6 w-full">
       <Button
@@ -61,8 +47,10 @@ export default function ApplicationAdditionalQuestion({
         {applicationState}
       </h1>
       <div className="w-full py-4 flex flex-col gap-4">
-        {dummies.map((q, index) => (
-          <div key={index}>{renderQuestion(q, localApplicationState, handleInputChange)}</div>
+        {questions.map((q) => (
+          <div key={q.id}>
+            {renderQuestion(q, localApplicationState, handleInputChange)}
+          </div>
         ))}
       </div>
 

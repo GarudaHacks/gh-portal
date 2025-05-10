@@ -7,13 +7,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { LocalApplicationState } from "@/pages/Application";
 import { ApplicationQuestion } from "@/types/application";
@@ -21,7 +21,7 @@ import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { CalendarDaysIcon } from "lucide-react";
 import { cn } from "./utils";
-import { format } from "date-fns"
+import { format } from "date-fns";
 
 export function renderQuestion(
   applicationQuestion: ApplicationQuestion,
@@ -81,25 +81,31 @@ export function renderQuestion(
         <Input
           className="bg-white"
           type="file"
-          accept={applicationQuestion.validation.allowedTypes || "*"}
+          accept={
+            Array.isArray(applicationQuestion.validation?.accept)
+              ? applicationQuestion.validation.accept.join(",")
+              : applicationQuestion.validation?.accept || "*"
+          }
           onChange={(e) => {
             // store metadata
             const file = e.target.files?.[0];
             if (file) {
-
               const formData = new FormData();
               formData.append("file", file);
 
-              fetch(`/api/application/file-upload?questionId=${applicationQuestion.id}`, {
-                method: "POST",
-                headers: {
-                  // "Content-Type": "multipart/form-data" // implicitly from browser
-                  "x-csrf-token": Cookies.get("XSRF-TOKEN") || ""
-                },
-                body: formData,
-                credentials: "include"
-              })
-                .then(data => {
+              fetch(
+                `/api/application/file-upload?questionId=${applicationQuestion.id}`,
+                {
+                  method: "POST",
+                  headers: {
+                    // "Content-Type": "multipart/form-data" // implicitly from browser
+                    "x-csrf-token": Cookies.get("XSRF-TOKEN") || "",
+                  },
+                  body: formData,
+                  credentials: "include",
+                }
+              )
+                .then((data) => {
                   toast.success("File uploaded successfully");
                   onChange?.(applicationQuestion, {
                     name: file.name,
@@ -110,7 +116,7 @@ export function renderQuestion(
                     // responseData: data
                   });
                 })
-                .catch(error => {
+                .catch((error) => {
                   console.error("Error uploading file:", error);
                   toast.error("Failed to upload file");
                   onChange?.(applicationQuestion, {
@@ -119,9 +125,9 @@ export function renderQuestion(
                     type: file.type,
                     lastModified: file.lastModified,
                     // uploaded: false,
-                    error: error.message
+                    error: error.message,
                   });
-                })
+                });
             }
           }}
         />
@@ -182,7 +188,11 @@ export function renderQuestion(
               )}
             >
               <CalendarDaysIcon className="mr-2 h-4 w-4" />
-              {value ? format(new Date(value), "PPP") : <span>Pick a date</span>}
+              {value ? (
+                format(new Date(value), "PPP")
+              ) : (
+                <span>Pick a date</span>
+              )}
             </div>
           </PopoverTrigger>
           <PopoverContent align="start" className="w-auto p-0">

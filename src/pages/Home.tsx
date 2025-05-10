@@ -12,7 +12,7 @@ function Home() {
   const navigate = useNavigate();
 
   const [userApplicationStatus, setUserApplicationStatus] =
-    useState<APPLICATION_STATUS>(APPLICATION_STATUS.DRAFT);
+    useState<APPLICATION_STATUS>(APPLICATION_STATUS.NOT_STARTED);
 
   const registrationsClose = new Date("2025-06-31T10:14:00").getTime();
   const hackathonEndTime = new Date("2025-07-17T10:14:00").getTime();
@@ -200,7 +200,8 @@ function Home() {
         </div>
       ) : null}
 
-      {userApplicationStatus === APPLICATION_STATUS.DRAFT ? (
+      {userApplicationStatus === APPLICATION_STATUS.NOT_STARTED ||
+      userApplicationStatus === APPLICATION_STATUS.IN_PROGRESS ? (
         <div>
           <div className="text-sm text-primary mb-2">
             <b>Applying as a hacker?</b> Apply by{" "}
@@ -211,7 +212,9 @@ function Home() {
             className="cursor-pointer"
             onClick={() => navigate("/application")}
           >
-            Apply Now
+            {userApplicationStatus === APPLICATION_STATUS.NOT_STARTED
+              ? "Apply Now"
+              : "Continue Application"}
           </Button>
         </div>
       ) : null}

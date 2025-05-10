@@ -7,6 +7,8 @@ import {
 } from "react";
 import { User } from "@/model/User.ts";
 import Cookies from "js-cookie";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "@/utils/firebase";
 
 export interface LoginCredentials {
   email: string;
@@ -40,7 +42,7 @@ export interface AuthContextType {
       user?: User | null;
     } | null;
   }>;
-  loginWithGoogle: (idToken: string) => Promise<{
+  loginWithGoogle: () => Promise<{
     error: {
       message: string;
     } | null;
@@ -212,38 +214,38 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const loginWithGoogle = async (idToken: string) => {
+  const loginWithGoogle = async () => {
     setLoading(true);
     try {
-      const response = await fetch("/api/auth/session-login", {
-        // TODO: route doesn't exist in backend
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id_token: idToken,
-        }),
-        credentials: "include",
-      });
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
 
-      const data = await response.json();
+      // Map Firebase user to User interface
+      const mappedUser: User = {
+        id: user.uid,
+        email: user.email || "",
+        first_name: user.displayName?.split(" ")[0] || "",
+        last_name: user.displayName?.split(" ").slice(1).join(" ") || null,
+        admin: false,
+        created_at: user.metadata.creationTime || new Date().toISOString(),
+        date_of_birth: null,
+        education: null,
+        gender_identity: null,
+        github: null,
+        grade: null,
+        linkedin: null,
+        portfolio: null,
+        school: null,
+        status: "active",
+        year: null,
+      };
 
-      if (!response.ok) {
-        console.log("API ERROR:", data);
-        localStorage.removeItem(AUTH_STORAGE_KEY);
-        return {
-          error: { message: data.message || "Login failed" },
-          data: null,
-        };
-      }
-
-      const googleUser = (data.user || data) as User;
-      setUser(googleUser);
-      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(googleUser)); // Save on success
+      setUser(mappedUser);
+      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(mappedUser));
       return {
         error: null,
-        data: { message: "Login successful", user: googleUser },
+        data: { message: "Login successful", user: mappedUser },
       };
     } catch (e) {
       console.error("Login with Google", e);
