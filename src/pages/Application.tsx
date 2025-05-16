@@ -273,7 +273,6 @@ function Application() {
 
   useEffect(() => {
     if (times > 0) {
-      console.log(`useEffect triggered: ${times}:`, localApplicationState);
       saveLocalApplicationState();
     }
     setTimes(times => times + 1);
