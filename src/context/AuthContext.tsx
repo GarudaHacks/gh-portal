@@ -180,7 +180,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const data = await response.json()
 
       if (!response.ok) {
-        console.log("API ERROR:", data);
         return { error: { message: data.message || "Login failed" }, data: null };
       }
 
@@ -196,6 +195,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signOut = async () => {
     try {
+      console.log(Cookies.get("XSRF-TOKEN"))
       const response = await fetch("/api/auth/logout", {
         method: "POST",
         headers: {
@@ -207,7 +207,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const data = await response.json()
 
       if (!response.ok) {
-        console.log("API ERROR:", data);
         return { error: { message: data.error || "Logout failed" }, data: null };
       }
       return { error: null, data: { message: "Logout successful", user: data.user || data } };

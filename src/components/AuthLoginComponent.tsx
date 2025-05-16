@@ -77,7 +77,6 @@ export default function AuthLoginComponent() {
       }
 
       const token = await user.getIdToken()
-      console.log(token)
       const { error } = await loginWithGoogle(token);
 
       if (error) {
