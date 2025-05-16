@@ -1,4 +1,10 @@
-import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { User } from "@/model/User.ts";
 import Cookies from "js-cookie";
 
@@ -96,9 +102,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setLoading(false);
         }
       }
-    }
+    };
     checkSession();
-  }, [])
+  }, []);
 
   const loginWithEmailPassword = async (credentials: LoginCredentials) => {
     setLoading(true);
@@ -106,11 +112,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
-          'Content-Type': "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           email: credentials.email,
-          password: credentials.password
+          password: credentials.password,
         }),
         credentials: "include",
       });
@@ -118,11 +124,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const data = await response.json();
 
       if (!response.ok) {
-        return { error: { message: data.message || "Login failed" }, data: null };
+        return {
+          error: { message: data.message || "Login failed" },
+          data: null,
+        };
       }
 
       setUser(data.user || data);
-      return { error: null, data: { message: "Login successful", user: data.user || data } };
+      return {
+        error: null,
+        data: { message: "Login successful", user: data.user || data },
+      };
     } catch (e) {
       console.error("Login error:", e);
       return { error: { message: "Login failed" }, data: null };
@@ -137,12 +149,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
-          'Content-Type': "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name: credentials.displayName,
           email: credentials.email,
-          password: credentials.password
+          password: credentials.password,
         }),
         credentials: "include",
       });
@@ -150,11 +162,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const data = await response.json();
 
       if (!response.ok) {
-        return { error: { message: data.message || "Signup failed" }, data: null };
+        return {
+          error: { message: data.message || "Signup failed" },
+          data: null,
+        };
       }
 
       setUser(data.user || data);
-      return { error: null, data: { message: "Signup successful", user: data.user || data } };
+      return {
+        error: null,
+        data: { message: "Signup successful", user: data.user || data },
+      };
     } catch (e) {
       console.error("Signup error:", e);
       return { error: { message: "Signup failed" }, data: null };
@@ -172,44 +190,56 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          id_token: idToken
+          id_token: idToken,
         }),
-        credentials: "include"
-      })
+        credentials: "include",
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
-        return { error: { message: data.message || "Login failed" }, data: null };
+        return {
+          error: { message: data.message || "Login failed" },
+          data: null,
+        };
       }
 
       setUser(data.user || data);
-      return { error: null, data: { message: "Login successful", user: data.user || data } };
+      return {
+        error: null,
+        data: { message: "Login successful", user: data.user || data },
+      };
     } catch (e) {
       console.error("Login with Google", e);
       return { error: { message: "Login failed" }, data: null };
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   const signOut = async () => {
     try {
-      console.log(Cookies.get("XSRF-TOKEN"))
+      console.log(Cookies.get("XSRF-TOKEN"));
       const response = await fetch("/api/auth/logout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-csrf-token": Cookies.get("XSRF-TOKEN") || ""
+          "x-csrf-token": Cookies.get("XSRF-TOKEN") || "",
         },
-        credentials: "include"
-      })
-      const data = await response.json()
+        credentials: "include",
+      });
+      const data = await response.json();
 
       if (!response.ok) {
-        return { error: { message: data.error || "Logout failed" }, data: null };
+        return {
+          error: { message: data.error || "Logout failed" },
+          data: null,
+        };
       }
-      return { error: null, data: { message: "Logout successful", user: data.user || data } };
+      return {
+        error: null,
+        data: { message: "Logout successful", user: data.user || data },
+      };
     } catch (e) {
       console.error("Login error:", e);
       setUser(null);
@@ -218,10 +248,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(null);
       setLoading(false);
     }
-  }
+  };
 
   return (
-    <AuthContext.Provider value={{ user, loading, loginWithEmailPassword, loginWithGoogle, signUpWithEmailPassword, signOut }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        loginWithEmailPassword,
+        loginWithGoogle,
+        signUpWithEmailPassword,
+        signOut,
+      }}
+    >
       {!loading && children}
     </AuthContext.Provider>
   );

@@ -1,0 +1,72 @@
+[
+  {
+    "id": "profile_name",
+    "text": "Full Name",
+    "category": "PROFILE",
+    "type": "string",
+    "order": 1,
+    "required": true,
+    "placeholder": "Enter your full name",
+    "validation": { "maxLength": 100 }
+  },
+  {
+    "id": "profile_dob",
+    "text": "Date of Birth",
+    "category": "PROFILE",
+    "type": "datetime",
+    "order": 2,
+    "required": true,
+    "validation": {}
+  },
+  {
+    "id": "profile_major",
+    "text": "Major",
+    "category": "PROFILE",
+    "type": "string",
+    "order": 3,
+    "required": true,
+    "placeholder": "Your major of study",
+    "validation": { "maxLength": 100 }
+  },
+  {
+    "id": "inquiry_experience",
+    "text": "Describe your programming experience.",
+    "category": "INQUIRY",
+    "type": "textarea",
+    "order": 1,
+    "required": true,
+    "placeholder": "Share your experience...",
+    "validation": { "maxWords": 500 }
+  },
+  {
+    "id": "inquiry_team",
+    "text": "Do you have a team?",
+    "category": "INQUIRY",
+    "type": "dropdown",
+    "order": 2,
+    "required": true,
+    "options": ["Yes", "No"],
+    "validation": {}
+  },
+  {
+    "id": "additional_referral",
+    "text": "How did you hear about us?",
+    "category": "ADDITIONAL",
+    "type": "dropdown",
+    "order": 1,
+    "required": false,
+    "options": ["Social Media", "Friend", "University", "Advertisement", "Other"],
+    "placeholder": "Select an option",
+    "validation": {}
+  },
+  {
+    "id": "additional_comments",
+    "text": "Any additional comments or questions?",
+    "category": "ADDITIONAL",
+    "type": "textarea",
+    "order": 2,
+    "required": false,
+    "placeholder": "Your comments...",
+    "validation": { "maxWords": 300 }
+  }
+] 

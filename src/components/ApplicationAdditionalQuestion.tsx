@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import { renderQuestion } from "@/lib/application-utils";
 import { APPLICATION_STATES, LocalApplicationState } from "@/pages/Application";
 import { useMemo } from "react";
-import { allQuestionsData } from "@/data/questions";
+import allQuestionsData from "@/data/questions.json";
 import { validateResponse } from "@/lib/application-utils";
 import toast from "react-hot-toast";
 
@@ -53,7 +53,7 @@ export default function ApplicationAdditionalQuestion({
         q.id,
         q.type,
         value,
-        errorMessage === null ? undefined : errorMessage 
+        errorMessage === null ? undefined : errorMessage
       );
     }
 
