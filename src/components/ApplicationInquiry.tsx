@@ -2,8 +2,8 @@ import { ApplicationQuestion } from "@/types/application";
 import { Button } from "./ui/button";
 import { renderQuestion } from "@/lib/application-utils";
 import { APPLICATION_STATES, LocalApplicationState } from "@/pages/Application";
-import { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
+import { useMemo } from "react";
+import { allQuestionsData } from "@/data/questions";
 
 
 export default function ApplicationInquiry({
@@ -20,48 +20,15 @@ export default function ApplicationInquiry({
   onFormChange: (questionId: string, type: string, response: any) => void;
 }) {
 
-  const [questions, setQuestions] = useState<ApplicationQuestion[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchQuestions = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch("/api/application/questions?state=INQUIRY", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          credentials: "include"
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch questions');
-        }
-
-        const data = await response.json();
-        setQuestions(data.data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch questions');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchQuestions();
+  const questions = useMemo(() => {
+    return (allQuestionsData as ApplicationQuestion[])
+      .filter((q) => q.state === "INQUIRY")
+      .sort((a, b) => a.order - b.order);
   }, []);
 
   const handleInputChange = (question: ApplicationQuestion, value: any) => {
     onFormChange(question.id, question.type, value);
   };
-
-  if (isLoading) {
-    return <div className="">
-      <Loader2 className="w-10 h-10 animate-spin" />
-      <p className="text-lg">Loading...</p>
-    </div>;
-  }
 
   return (
     <div className="p-4 flex flex-col items-center gap-4 lg:gap-6 w-full">

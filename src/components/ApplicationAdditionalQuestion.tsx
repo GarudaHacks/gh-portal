@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import { renderQuestion } from "@/lib/application-utils";
 import { APPLICATION_STATES, LocalApplicationState } from "@/pages/Application";
 import { useMemo } from "react";
-import allQuestionsData from "@/data/questions.json";
+import { allQuestionsData } from "@/data/questions";
 import { validateResponse } from "@/lib/application-utils";
 import toast from "react-hot-toast";
 
@@ -27,7 +27,7 @@ export default function ApplicationAdditionalQuestion({
 }) {
   const questions = useMemo(() => {
     return (allQuestionsData as ApplicationQuestion[])
-      .filter((q) => q.category === "INQUIRY") // This should be the category for additional questions
+      .filter((q) => q.state === "ADDITIONAL_QUESTION")
       .sort((a, b) => a.order - b.order);
   }, []);
 

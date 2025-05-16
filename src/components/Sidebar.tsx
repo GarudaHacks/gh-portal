@@ -4,6 +4,7 @@ import { auth } from "../utils/firebase";
 import { useAuth } from "../context/AuthContext";
 import SidebarTab from "./SidebarTab";
 import toast from "react-hot-toast";
+import { UserApplicationStatus } from "../types/applicationStatus";
 
 interface SidebarProps {
   onSidebarToggle?: (isOpen: boolean) => void;
@@ -13,7 +14,7 @@ function Sidebar({ onSidebarToggle }: SidebarProps = {}) {
   const [showMenu, setShowMenu] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { user, signOut } = useAuth();
+  const { user, signOut, applicationStatus } = useAuth();
 
   const navigate = useNavigate();
 
@@ -50,6 +51,10 @@ function Sidebar({ onSidebarToggle }: SidebarProps = {}) {
       console.error("Logout failed:", error);
     }
   };
+
+  const canAccessRestrictedPages =
+    applicationStatus === UserApplicationStatus.ACCEPTED ||
+    applicationStatus === UserApplicationStatus.CONFIRMED_RSVP;
 
   return (
     <>
@@ -113,14 +118,17 @@ function Sidebar({ onSidebarToggle }: SidebarProps = {}) {
             <SidebarTab
               name="Schedule"
               iconUrl="/images/icons/calendar_month.svg"
+              disabled={!canAccessRestrictedPages}
             />
             <SidebarTab
               name="Ticket"
               iconUrl="/images/icons/confirmation_number.svg"
+              disabled={!canAccessRestrictedPages}
             />
             <SidebarTab
               name="Mentorship"
               iconUrl="/images/icons/group_search.svg"
+              disabled={!canAccessRestrictedPages}
             />
             <SidebarTab
               name="FAQ"

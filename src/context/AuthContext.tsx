@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { User } from "@/model/User.ts";
 import Cookies from "js-cookie";
+import { UserApplicationStatus } from "../types/applicationStatus";
 
 export interface LoginCredentials {
   email: string;
@@ -22,6 +23,7 @@ export interface RegisterCredentials {
 export interface AuthContextType {
   user: User | null;
   loading: boolean;
+  applicationStatus: UserApplicationStatus;
   loginWithEmailPassword: (credentials: LoginCredentials) => Promise<{
     error: {
       message: string;
@@ -63,6 +65,7 @@ export interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
+  applicationStatus: UserApplicationStatus.NOT_APPLICABLE,
   loginWithEmailPassword: async () => ({ error: null, data: null }),
   signUpWithEmailPassword: async () => ({ error: null, data: null }),
   loginWithGoogle: async () => ({ error: null, data: null }),
@@ -72,6 +75,9 @@ const AuthContext = createContext<AuthContextType>({
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+
+  const applicationStatus =
+    user?.applicationStatus || UserApplicationStatus.NOT_APPLICABLE;
 
   useEffect(() => {
     let mounted = true;
@@ -255,6 +261,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       value={{
         user,
         loading,
+        applicationStatus,
         loginWithEmailPassword,
         loginWithGoogle,
         signUpWithEmailPassword,

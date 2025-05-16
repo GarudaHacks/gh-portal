@@ -1,9 +1,9 @@
 export enum UserApplicationStatus {
-  NOT_STARTED = "NOT_STARTED",
-  DRAFT = "DRAFT",
-  SUBMITTED = "SUBMITTED",
-  ACCEPTED = "ACCEPTED",
-  REJECTED = "REJECTED",
-  WAITLISTED = "WAITLISTED",
-  CONFIRMED_RSVP = "CONFIRMED_RSVP",
+  NOT_APPLICABLE = "not applicable",
+  DRAFT = "draft",
+  SUBMITTED = "submitted",
+  WAITLISTED = "waitlisted",
+  REJECTED = "rejected",
+  ACCEPTED = "accepted",
+  CONFIRMED_RSVP = "confirmed rsvp",
 } 
