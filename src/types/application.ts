@@ -4,7 +4,9 @@ export interface ApplicationQuestion {
   text: string;
   type: string;
   validation?: any;
+  required: boolean;
   options?: string[];
+  category: string;
 }
 
 export enum APPLICATION_STATUS {

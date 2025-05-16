@@ -23,6 +23,13 @@ import { CalendarDaysIcon } from "lucide-react";
 import { cn } from "./utils";
 import { format } from "date-fns"
 
+export function validateResponse(question: ApplicationQuestion, response: any) {
+  if (question.required && !response) {
+    return "This field is required";
+  }
+  return null;
+}
+
 export function renderQuestion(
   applicationQuestion: ApplicationQuestion,
   localState: LocalApplicationState,
