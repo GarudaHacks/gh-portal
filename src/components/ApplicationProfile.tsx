@@ -1,25 +1,9 @@
-import { ApplicationQuestion } from "@/types/application";
-import { Button } from "./ui/button";
-import { renderQuestion } from "@/lib/application-utils";
-import { APPLICATION_STATES, LocalApplicationState } from "@/pages/Application";
-
-const dummies: ApplicationQuestion[] = [
-  {
-    id: "profile0",
-    text: "First Name",
-    type: "string",
-  },
-  {
-    id: "profile1",
-    text: "Last Name",
-    type: "string",
-  },
-  {
-    id: "profile2",
-    text: "Preferred Name",
-    type: "string",
-  },
-];
+import {ApplicationQuestion} from "@/types/application";
+import {Button} from "./ui/button";
+import {renderQuestion} from "@/lib/application-utils";
+import {APPLICATION_STATES, LocalApplicationState} from "@/pages/Application";
+import {useEffect, useState} from "react";
+import { Loader2 } from "lucide-react";
 
 export default function ApplicationProfile({
   localApplicationState,
@@ -32,9 +16,52 @@ export default function ApplicationProfile({
   onNextClick: () => void;
   onFormChange: (questionId: string, type: string, response: any) => void;
 }) {
+  const [questions, setQuestions] = useState<ApplicationQuestion[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch("/api/application/questions?state=PROFILE", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          credentials: "include"
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch questions');
+        }
+
+        const data = await response.json();
+        setQuestions(data.data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to fetch questions');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchQuestions();
+  }, []);
+
   const handleInputChange = (question: ApplicationQuestion, value: any) => {
     onFormChange(question.id, question.type, value);
   };
+
+  if (isLoading) {
+    return <div className="">
+      <Loader2 className="w-10 h-10 animate-spin" />
+      <p className="text-lg">Loading...</p>
+    </div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="p-4 flex flex-col items-center gap-4 lg:gap-6 w-full">
@@ -42,7 +69,7 @@ export default function ApplicationProfile({
         {applicationState}
       </h1>
       <div className="w-full py-4 flex flex-col gap-4">
-        {dummies.map((q, index) => (
+        {questions.map((q, index) => (
           <div key={index}>
             {renderQuestion(q, localApplicationState, handleInputChange)}
           </div>
