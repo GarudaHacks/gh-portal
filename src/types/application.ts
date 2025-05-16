@@ -10,6 +10,7 @@ export interface ApplicationQuestion {
 }
 
 export enum APPLICATION_STATUS {
+  NOT_APPLICABLE = "not applicable",
   DRAFT = "draft",
   SUBMITTED = "submitted",
   WAITLISTED = "waitlisted",
