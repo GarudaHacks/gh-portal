@@ -8,8 +8,8 @@ export interface User {
   first_name?: string | null;
   last_name?: string | null;
   admin?: boolean;
-  created_at?: string | null; 
-  date_of_birth?: string | null; 
+  created_at?: string | null;
+  date_of_birth?: string | null;
   education_level?: string | null;
   university?: string | null;
   major?: string | null;
@@ -19,4 +19,4 @@ export interface User {
   github_url?: string | null;
   phone_number?: string | null;
   applicationStatus?: UserApplicationStatus;
-} 
+}

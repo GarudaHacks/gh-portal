@@ -5,13 +5,12 @@ import { APPLICATION_STATES, LocalApplicationState } from "@/pages/Application";
 import { useMemo } from "react";
 import { allQuestionsData } from "@/data/questions";
 
-
 export default function ApplicationInquiry({
   localApplicationState,
   applicationState,
   onNextClick,
   onPrevClick,
-  onFormChange
+  onFormChange,
 }: {
   localApplicationState: LocalApplicationState;
   applicationState: APPLICATION_STATES;
@@ -19,7 +18,6 @@ export default function ApplicationInquiry({
   onPrevClick: () => void;
   onFormChange: (questionId: string, type: string, response: any) => void;
 }) {
-
   const questions = useMemo(() => {
     return (allQuestionsData as ApplicationQuestion[])
       .filter((q) => q.state === "INQUIRY")
@@ -50,7 +48,9 @@ export default function ApplicationInquiry({
       </h1>
       <div className="w-full py-4 flex flex-col gap-4">
         {questions.map((q, index) => (
-          <div key={index}>{renderQuestion(q, localApplicationState, handleInputChange)}</div>
+          <div key={index}>
+            {renderQuestion(q, localApplicationState, handleInputChange)}
+          </div>
         ))}
       </div>
 

@@ -3,7 +3,10 @@ import { EventItem, Position, StyleSet, TimeSlot } from "../types/eventTypes";
 /**
  * Determine if two events overlap in time
  */
-export const doEventsOverlap = (event1: EventItem, event2: EventItem): boolean => {
+export const doEventsOverlap = (
+  event1: EventItem,
+  event2: EventItem
+): boolean => {
   return (
     (event1.startTime < event2.endTime && event1.endTime > event2.startTime) ||
     (event2.startTime < event1.endTime && event2.endTime > event1.startTime)
@@ -14,7 +17,7 @@ export const doEventsOverlap = (event1: EventItem, event2: EventItem): boolean =
  * Calculate position for timeline display
  */
 export const calculateEventPosition = (
-  event: EventItem, 
+  event: EventItem,
   hackathonStartDate: Date,
   HOUR_WIDTH: number
 ): Position => {
@@ -25,7 +28,8 @@ export const calculateEventPosition = (
   const hackathonStartTime = hackathonStartDate.getTime();
 
   const minutesFromStart = (eventStartTime - hackathonStartTime) / (1000 * 60);
-  const eventDurationMinutes = (event.endTime.getTime() - event.startTime.getTime()) / (1000 * 60);
+  const eventDurationMinutes =
+    (event.endTime.getTime() - event.startTime.getTime()) / (1000 * 60);
 
   return {
     left: minutesFromStart * minuteWidth,
@@ -77,7 +81,9 @@ export const formatTime = (date: Date): string => {
 /**
  * Group events into time slots for better organization
  */
-export const organizeEventsIntoTimeSlots = (allEvents: EventItem[]): TimeSlot[] => {
+export const organizeEventsIntoTimeSlots = (
+  allEvents: EventItem[]
+): TimeSlot[] => {
   const timeSlots: Record<string, TimeSlot> = {};
 
   // Sort events by start time
@@ -121,7 +127,8 @@ export const organizeEventsIntoTimeSlots = (allEvents: EventItem[]): TimeSlot[] 
     slot.events.forEach((event) => {
       // Find a row where this event doesn't overlap
       let rowIndex = rows.findIndex(
-        (row) => !row.some((existingEvent) => doEventsOverlap(event, existingEvent))
+        (row) =>
+          !row.some((existingEvent) => doEventsOverlap(event, existingEvent))
       );
 
       // If no suitable row, create a new one

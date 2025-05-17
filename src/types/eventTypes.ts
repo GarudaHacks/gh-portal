@@ -69,17 +69,16 @@ export interface TimelineHeaderProps {
   hourWidth: number;
 }
 
-
 interface EventType {
-	type: string;
-	label: string;
-	color: string;
+  type: string;
+  label: string;
+  color: string;
 }
 /**
  * Props for the EventTypeLegend component
  */
 export interface EventTypeLegendProps {
-	eventTypes: EventType[];
+  eventTypes: EventType[];
 }
 
 /**

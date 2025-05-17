@@ -19,7 +19,11 @@ export default function ApplicationIntro({
           <p>Venue:</p>
         </div>
       </RedGradientBackground>
-      <Button className="w-full lg:w-fit place-self-end font-semibold" size="lg" onClick={onNextClick}>
+      <Button
+        className="w-full lg:w-fit place-self-end font-semibold"
+        size="lg"
+        onClick={onNextClick}
+      >
         Start my application
         <img
           src="/images/icons/arrow_forward.svg"

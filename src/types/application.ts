@@ -12,7 +12,7 @@ export interface StringValidation {
   required?: boolean;
   minLength?: number;
   maxLength?: number;
-  pattern?: string; 
+  pattern?: string;
 }
 
 export interface NumberValidation {
@@ -23,8 +23,8 @@ export interface NumberValidation {
 
 export interface DatetimeValidation {
   required?: boolean;
-  earliest?: string; 
-  latest?: string; 
+  earliest?: string;
+  latest?: string;
 }
 
 export interface DropdownValidation {
@@ -40,10 +40,9 @@ export interface FileValidation {
   maxSize: number; // Max size in MB
 }
 
-
 export type ValidationTypeMap = {
   [QUESTION_TYPE.STRING]: StringValidation;
-  [QUESTION_TYPE.TEXTAREA]: StringValidation; 
+  [QUESTION_TYPE.TEXTAREA]: StringValidation;
   [QUESTION_TYPE.NUMBER]: NumberValidation;
   [QUESTION_TYPE.DATE]: DatetimeValidation;
   [QUESTION_TYPE.DROPDOWN]: DropdownValidation;
@@ -52,23 +51,23 @@ export type ValidationTypeMap = {
 
 // Base interface for all question types
 interface BaseApplicationQuestion {
-  id: string; 
+  id: string;
   order: number;
   text: string;
   placeholder?: string;
-  state: APPLICATION_STATES; 
-  required?: boolean; 
+  state: APPLICATION_STATES;
+  required?: boolean;
 }
 
 // Specific question type interfaces for creating a discriminated union
 export interface StringApplicationQuestion extends BaseApplicationQuestion {
   type: QUESTION_TYPE.STRING;
-  validation?: StringValidation; 
+  validation?: StringValidation;
 }
 
 export interface TextareaApplicationQuestion extends BaseApplicationQuestion {
   type: QUESTION_TYPE.TEXTAREA;
-  validation?: StringValidation; 
+  validation?: StringValidation;
 }
 
 export interface NumberApplicationQuestion extends BaseApplicationQuestion {
@@ -83,14 +82,14 @@ export interface DateApplicationQuestion extends BaseApplicationQuestion {
 
 export interface DropdownApplicationQuestion extends BaseApplicationQuestion {
   type: QUESTION_TYPE.DROPDOWN;
-  options: string[]; 
+  options: string[];
   multiple?: boolean;
   validation?: DropdownValidation;
 }
 
 export interface FileApplicationQuestion extends BaseApplicationQuestion {
   type: QUESTION_TYPE.FILE;
-  validation: FileValidation; 
+  validation: FileValidation;
 }
 
 export type ApplicationQuestion =
@@ -108,7 +107,7 @@ export enum APPLICATION_STATUS {
   WAITLISTED = "waitlisted",
   REJECTED = "rejected",
   ACCEPTED = "accepted",
-  CONFIRMED_RSVP = "confirmed rsvp", 
+  CONFIRMED_RSVP = "confirmed rsvp",
 }
 
 export enum APPLICATION_STATES {
