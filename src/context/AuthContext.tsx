@@ -71,7 +71,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     let mounted = true;
     const checkSession = async () => {
       try {
-        const response = await fetch("/api/auth/session-check", {
+        const response = await fetch("https://us-central1-garuda-hacks-6-0.cloudfunctions.net/api/auth/session-check", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -134,7 +134,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signUpWithEmailPassword = async (credentials: RegisterCredentials) => {
     setLoading(true);
     try {
-      const response = await fetch("/api/auth/register", {
+      const response = await fetch("https://us-central1-garuda-hacks-6-0.cloudfunctions.net/api/auth/register", {
         method: "POST",
         headers: {
           'Content-Type': "application/json",
