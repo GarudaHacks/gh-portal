@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://us-central1-garuda-hacks-6-0.cloudfunctions.net/api/:path*"
+    }
+  ]
+}
