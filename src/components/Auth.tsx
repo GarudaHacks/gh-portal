@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {useAuth} from "../context/AuthContext";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-import ghLogo from "/images/logo/gh_logo.svg"
+import ghLogo from "/images/logo/gh_logo.svg";
 import AuthLoginComponent from "@/components/AuthLoginComponent.tsx";
 import AuthRegisterComponent from "./AuthRegisterComponent";
 
@@ -36,13 +36,11 @@ function Auth() {
 
   return (
     <div className="flex items-center justify-center h-screen min-w-screen">
-      <div
-        className="bg-primary p-12 rounded-lg sm:w-full md:max-w-lg md:justify-center shadow-lg  text-white flex flex-col">
+      <div className="bg-primary p-12 rounded-lg sm:w-full md:max-w-lg md:justify-center shadow-lg  text-white flex flex-col">
+        <img src={ghLogo} width={40} height={60} className="mb-4" />
 
-        <img src={ghLogo} width={40} height={60} className="mb-4"/>
-
-        {mode === "LOGIN" && (<AuthLoginComponent />)}
-        {mode === "SIGNUP" && (<AuthRegisterComponent />)}
+        {mode === "LOGIN" && <AuthLoginComponent />}
+        {mode === "SIGNUP" && <AuthRegisterComponent />}
 
         {/* Toggle Between Login and Signup */}
         <p className="text-center text-sm mt-4">

@@ -6,4 +6,4 @@ export enum UserApplicationStatus {
   REJECTED = "rejected",
   ACCEPTED = "accepted",
   CONFIRMED_RSVP = "confirmed rsvp",
-} 
+}

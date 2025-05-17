@@ -21,8 +21,10 @@ export const db = getFirestore(app);
 export const auth = getAuth(app);
 auth.useDeviceLanguage();
 
-if (import.meta.env.VITE_ENVIRONMENT === 'development') {
-  connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: false });
-  connectFirestoreEmulator(db, 'localhost', 8080);
-  console.log('Connected to Firebase emulators');
+if (import.meta.env.VITE_ENVIRONMENT === "development") {
+  connectAuthEmulator(auth, "http://localhost:9099", {
+    disableWarnings: false,
+  });
+  connectFirestoreEmulator(db, "localhost", 8080);
+  console.log("Connected to Firebase emulators");
 }
