@@ -7,7 +7,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -24,8 +23,8 @@ import {
   FileValidation,
   DatetimeValidation,
   DropdownValidation,
-  FileApplicationQuestion, // Specifically for file validation access
-  DropdownApplicationQuestion, // Specifically for dropdown options access
+  FileApplicationQuestion, 
+  DropdownApplicationQuestion,
 } from "@/types/application";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
@@ -46,11 +45,9 @@ export function validateResponse(
   question: ApplicationQuestion,
   response: any
 ): string | null {
-  // General required check (can be on base or specific validation)
   const isGenerallyRequired = question.required;
   let specificRulesRequired = false;
 
-  // Check for required status within specific validation rules
   if (question.validation && "required" in question.validation) {
     specificRulesRequired = !!question.validation.required;
   }
@@ -64,7 +61,6 @@ export function validateResponse(
     return "This field is required.";
   }
 
-  // If not required and no response, then it's valid
   if (
     !effectiveRequired &&
     (response === null || response === undefined || response === "")
@@ -86,7 +82,7 @@ export function validateResponse(
       if (rules?.pattern) {
         const regex = new RegExp(rules.pattern);
         if (!regex.test(value)) {
-          return "Invalid format."; // Or a more specific message if pattern has a known meaning
+          return "Invalid format.";
         }
       }
       break;
@@ -95,11 +91,9 @@ export function validateResponse(
       const rules = question.validation as NumberValidation | undefined;
       const numValue = parseFloat(response);
       if (isNaN(numValue) && effectiveRequired) {
-        // only error if required and not a number
         return "Must be a valid number.";
       }
       if (!isNaN(numValue)) {
-        // only apply min/max if it's a number
         if (rules?.minValue !== undefined && numValue < rules.minValue) {
           return `Minimum value is ${rules.minValue}.`;
         }
@@ -156,34 +150,27 @@ export function validateResponse(
         ) {
           return `Please select no more than ${rules.maxSelections} option(s).`;
         }
-      } else {
-        // For single-select dropdown, the 'required' check at the beginning is usually sufficient.
-        // If there's a response, it's one of the options.
-      }
+      } 
       break;
     }
     case QUESTION_TYPE.FILE: {
-      // For files, response object is { name: string, size: number, type: string, ... }
-      // The initial 'required' check handles if the object itself is missing.
       const fileDetails = response as {
         name: string;
         size: number;
         type: string;
         error?: string;
       };
-      const rules = (question as FileApplicationQuestion).validation; // FileApplicationQuestion ensures validation exists
+      const rules = (question as FileApplicationQuestion).validation;
 
       if (fileDetails && fileDetails.error) {
         return `Upload error: ${fileDetails.error}`;
       }
 
       if (effectiveRequired && !fileDetails) {
-        // Redundant due to top check, but for clarity
         return "This field is required.";
       }
 
       if (fileDetails) {
-        // Only validate if a file object exists
         if (rules.allowedTypes) {
           const allowed = rules.allowedTypes
             .split(",")
@@ -204,11 +191,10 @@ export function validateResponse(
       break;
     }
     default:
-      // No specific validation for this type, or type not handled
       break;
   }
 
-  return null; // No validation errors
+  return null;
 }
 
 export function renderQuestion(
@@ -221,7 +207,7 @@ export function renderQuestion(
 
   const renderError = () => {
     if (errorMessage) {
-      return <p className="text-red-500 text-sm mt-1">{errorMessage}</p>;
+      return <p className="text-red-600 text-sm mt-1">{errorMessage}</p>;
     }
     return null;
   };
@@ -282,7 +268,6 @@ export function renderQuestion(
                 {
                   method: "POST",
                   headers: {
-                    // "Content-Type": "multipart/form-data" // implicitly from browser
                     "x-csrf-token": Cookies.get("XSRF-TOKEN") || "",
                   },
                   body: formData,
@@ -296,8 +281,6 @@ export function renderQuestion(
                     size: file.size,
                     type: file.type,
                     lastModified: file.lastModified,
-                    // uploaded: true,
-                    // responseData: data
                   });
                 })
                 .catch((error) => {
@@ -308,7 +291,6 @@ export function renderQuestion(
                     size: file.size,
                     type: file.type,
                     lastModified: file.lastModified,
-                    // uploaded: false,
                     error: error.message,
                   });
                 });
