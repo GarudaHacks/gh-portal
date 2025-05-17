@@ -23,7 +23,7 @@ import {
   FileValidation,
   DatetimeValidation,
   DropdownValidation,
-  FileApplicationQuestion, 
+  FileApplicationQuestion,
   DropdownApplicationQuestion,
 } from "@/types/application";
 import Cookies from "js-cookie";
@@ -150,7 +150,7 @@ export function validateResponse(
         ) {
           return `Please select no more than ${rules.maxSelections} option(s).`;
         }
-      } 
+      }
       break;
     }
     case QUESTION_TYPE.FILE: {
