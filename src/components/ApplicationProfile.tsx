@@ -1,9 +1,8 @@
-import {ApplicationQuestion} from "@/types/application";
-import {Button} from "./ui/button";
-import {renderQuestion} from "@/lib/application-utils";
-import {APPLICATION_STATES, LocalApplicationState} from "@/pages/Application";
-import {useEffect, useMemo, useState} from "react";
-import { Loader2 } from "lucide-react";
+import { ApplicationQuestion } from "@/types/application";
+import { Button } from "./ui/button";
+import { renderQuestion } from "@/lib/application-utils";
+import { APPLICATION_STATES, LocalApplicationState } from "@/pages/Application";
+import { useMemo } from "react";
 import { allQuestionsData } from "@/data/questions";
 
 export default function ApplicationProfile({
@@ -17,7 +16,6 @@ export default function ApplicationProfile({
   onNextClick: () => void;
   onFormChange: (questionId: string, type: string, response: any) => void;
 }) {
-
   const questions = useMemo(() => {
     return (allQuestionsData as ApplicationQuestion[])
       .filter((q) => q.state === "PROFILE")

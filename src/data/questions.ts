@@ -249,6 +249,17 @@ export const allQuestionsData: ApplicationQuestion[] = [
         "maxLength": 600
       },
       "order": 2
+    },
+    {
+      "id": "dietary_restrictions",
+      "text": "Please enter any dietary restrictions (if any).",
+      "state": APPLICATION_STATES.ADDITIONAL_QUESTION,
+      "type": QUESTION_TYPE.STRING,
+      "required": false,
+      "validation": {
+        "maxLength": 200
+      },
+      "order": 3
     }
   ]
   
