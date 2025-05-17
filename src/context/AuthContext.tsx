@@ -103,7 +103,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const loginWithEmailPassword = async (credentials: LoginCredentials) => {
     setLoading(true);
     try {
-      const response = await fetch("/api/auth/login", {
+      const response = await fetch("https://us-central1-garuda-hacks-6-0.cloudfunctions.net/api/auth/login", {
         method: "POST",
         headers: {
           'Content-Type': "application/json",
