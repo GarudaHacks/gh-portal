@@ -131,3 +131,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [React](https://reactjs.org/)
 - [Firebase](https://firebase.google.com/)
 - [TailwindCSS](https://tailwindcss.com/)
+
+---
+
+Made with ❤️ by the Garuda Hacks Team
