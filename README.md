@@ -1,50 +1,133 @@
-# React + TypeScript + Vite
+# Garuda Hacks Portal 🚀
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The official portal for Garuda Hacks 6.0, a premier hackathon event. Built with modern web technologies to provide a seamless experience for participants.
 
-Currently, two official plugins are available:
+## 🛠️ Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Frontend**
 
-## Expanding the ESLint configuration
+  - React 18
+  - TypeScript
+  - Vite
+  - TailwindCSS
+  - React Router
+  - React Hot Toast
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Backend**
 
-- Configure the top-level `parserOptions` property like this:
+  - Firebase Cloud Functions
+  - Firebase Authentication
+  - Firebase Firestore
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- **Deployment**
+  - Vercel
+  - Vercel Analytics
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- npm or yarn
+- Firebase account
+
+### Installation
+
+1. Clone the repository
+
+```bash
+git clone https://github.com/your-username/gh-portal.git
+cd gh-portal
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+2. Install dependencies
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```bash
+npm install
 ```
+
+3. Set up environment variables
+
+```bash
+cp .env.example .env
+```
+
+Fill in your Firebase configuration in `.env`
+
+4. Start development server
+
+```bash
+npm run dev
+```
+
+### Building for Production
+
+```bash
+npm run build
+```
+
+## 📁 Project Structure
+
+```
+gh-portal/
+├── src/
+│   ├── components/    # Reusable UI components
+│   ├── context/       # React context providers
+│   ├── lib/           # Utility functions
+│   ├── pages/         # Page components
+│   ├── types/         # TypeScript type definitions
+│   └── utils/         # Helper functions
+├── public/            # Static assets
+└── vite.config.ts     # Vite configuration
+```
+
+## 🔧 Configuration
+
+### Environment Variables
+
+Required environment variables:
+
+- `VITE_FIREBASE_API_KEY`
+- `VITE_FIREBASE_AUTH_DOMAIN`
+- `VITE_FIREBASE_PROJECT_ID`
+- `VITE_FIREBASE_STORAGE_BUCKET`
+- `VITE_FIREBASE_MESSAGING_SENDER_ID`
+- `VITE_FIREBASE_APP_ID`
+- `VITE_FIREBASE_MEASUREMENT_ID`
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feat/amazing-feature`)
+3. Make your changes following our commit conventions:
+
+   ```bash
+   # Format
+   <type>(<scope>): <description>
+
+   # Examples
+   feat(auth): add Google OAuth login
+   fix(api): resolve proxy configuration
+   docs(readme): update installation steps
+   style(ui): improve button hover states
+   refactor(forms): simplify validation logic
+   test(api): add auth endpoint tests
+   chore(deps): update dependencies
+   ```
+
+   Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+   Scope: optional, indicates the module affected
+
+4. Push to the branch (`git push origin feat/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- [Vite](https://vitejs.dev/)
+- [React](https://reactjs.org/)
+- [Firebase](https://firebase.google.com/)
+- [TailwindCSS](https://tailwindcss.com/)
