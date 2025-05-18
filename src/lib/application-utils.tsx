@@ -31,6 +31,7 @@ import toast from "react-hot-toast";
 import { CalendarDaysIcon } from "lucide-react";
 import { cn } from "./utils";
 import { format, isValid, parseISO } from "date-fns";
+import { DatePicker } from "@/components/Datepicker";
 
 function formatBytes(bytes: number, decimals = 2) {
   if (bytes === 0) return "0 Bytes";
@@ -348,33 +349,10 @@ export function renderQuestion(
         <Label className="text-md font-semibold">
           {applicationQuestion.text}
         </Label>
-        <Popover>
-          <PopoverTrigger className="">
-            <div
-              className={cn(
-                "h-9 px-4 py-2 has-[>svg]:px-3 border border-input shadow-xs hover:bg-accent hover:text-accent-foreground w-[280px] justify-start text-left font-normal bg-white flex items-center rounded-lg",
-                !value && "text-muted-foreground"
-              )}
-            >
-              <CalendarDaysIcon className="mr-2 h-4 w-4" />
-              {value ? (
-                format(new Date(value), "PPP")
-              ) : (
-                <span>Pick a date</span>
-              )}
-            </div>
-          </PopoverTrigger>
-          <PopoverContent align="start" className="w-auto p-0">
-            <Calendar
-              mode="single"
-              selected={value ? new Date(value) : undefined}
-              onSelect={(date) => {
-                onChange?.(applicationQuestion, date?.toISOString());
-              }}
-              initialFocus
-            />
-          </PopoverContent>
-        </Popover>
+        <DatePicker
+          value={value}
+          onChange={(value) => onChange?.(applicationQuestion, value)}
+        />
         {renderError()}
       </div>
     );

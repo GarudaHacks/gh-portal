@@ -23,6 +23,7 @@ export function DatePicker({ value, onChange }: DatePickerProps) {
           type="string"
           value={stringDate}
           className="bg-white"
+          placeholder="MM/DD/YYYY"
           onChange={(e) => {
             setStringDate(e.target.value);
             const parsedDate = new Date(e.target.value);

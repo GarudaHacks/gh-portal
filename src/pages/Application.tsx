@@ -11,6 +11,8 @@ import { Loader2 } from "lucide-react";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { getStateKey } from "@/utils/applicationUtils";
+import { parse, parseISO } from "date-fns";
+import { isValid } from "date-fns";
 
 export enum APPLICATION_STATES {
   INTRO = "Intro",
@@ -90,61 +92,61 @@ function Application() {
     // patch additional question data to DB
     let formResponse: { [key: string]: any } = {};
 
-        for (const questionId in localApplicationState.data) {
-          const question = localApplicationState.data[questionId];
-          const response = question.response;
+    for (const questionId in localApplicationState.data) {
+      const question = localApplicationState.data[questionId];
+      const response = question.response;
 
-          formResponse[questionId] = response;
-        }
+      formResponse[questionId] = response;
+    }
 
-        const payload = {
-          ...formResponse,
-        }
-        payload["state"] = 'ADDITIONAL_QUESTION';
+    const payload = {
+      ...formResponse,
+    };
+    payload["state"] = "ADDITIONAL_QUESTION";
 
-        const response = await fetch("/api/application", {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            "x-xsrf-token": Cookies.get("XSRF-TOKEN") || "",
-          },
-          credentials: "include",
-          body: JSON.stringify(payload),
+    const response = await fetch("/api/application", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "x-xsrf-token": Cookies.get("XSRF-TOKEN") || "",
+      },
+      credentials: "include",
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+
+      if (errorData.details && Array.isArray(errorData.details)) {
+        const updatedData = { ...localApplicationState.data };
+
+        errorData.details.forEach(
+          (error: { field_id: string; message: string }) => {
+            const { field_id, message } = error;
+
+            if (updatedData[field_id]) {
+              updatedData[field_id] = {
+                ...updatedData[field_id],
+                error: message,
+              };
+            } else {
+              updatedData[field_id] = {
+                id: field_id,
+                type: localApplicationState.data[field_id]?.type,
+                response: localApplicationState.data[field_id]?.response,
+                error: message,
+              };
+            }
+          }
+        );
+
+        setLocalApplicationState({
+          ...localApplicationState,
+          data: updatedData,
         });
 
-        if (!response.ok) {
-          const errorData = await response.json();
-
-          if (errorData.details && Array.isArray(errorData.details)) {
-            const updatedData = { ...localApplicationState.data };
-
-            errorData.details.forEach(
-              (error: { field_id: string; message: string }) => {
-                const { field_id, message } = error;
-
-                if (updatedData[field_id]) {
-                  updatedData[field_id] = {
-                    ...updatedData[field_id],
-                    error: message,
-                  };
-                } else {
-                  updatedData[field_id] = {
-                    id: field_id,
-                    type: localApplicationState.data[field_id]?.type,
-                    response: localApplicationState.data[field_id]?.response,
-                    error: message,
-                  };
-                }
-              }
-            );
-
-            setLocalApplicationState({
-              ...localApplicationState,
-              data: updatedData,
-            });
-
-            toast.error("There are errors in your application.");
-            return;
+        toast.error("There are errors in your application.");
+        return;
       } else {
         toast.error("Failed to save application.");
       }
@@ -194,13 +196,27 @@ function Application() {
           if (question.type === "file") {
             formResponse[questionId] = response.name;
             continue;
+          } else if (question.type === "datetime") {
+            try {
+              const parsedDate = parse(response, "MM/dd/yyyy", new Date());
+              if (parsedDate.toString() !== "Invalid Date") {
+                formResponse[questionId] = parsedDate.toISOString();
+              }
+            } catch (e) {
+              console.error(
+                `Error parsing date for question ${questionId}: ${response}`,
+                e
+              );
+              // Decide how to handle: send original, null, or skip
+            }
+          } else {
+            formResponse[questionId] = response;
           }
-
-          formResponse[questionId] = response;
+          
         }
         const payload = {
           ...formResponse,
-        }
+        };
         payload["state"] = state;
 
         const response = await fetch("/api/application", {
