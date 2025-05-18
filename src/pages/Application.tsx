@@ -87,7 +87,69 @@ function Application() {
       setLocalApplicationState({ ...localApplicationState, data: {} });
     }
 
-    // TODO: submit form data to backend
+    // patch additional question data to DB
+    let formResponse: { [key: string]: any } = {};
+
+        for (const questionId in localApplicationState.data) {
+          const question = localApplicationState.data[questionId];
+          const response = question.response;
+
+          formResponse[questionId] = response;
+        }
+
+        const payload = {
+          ...formResponse,
+        }
+        payload["state"] = 'ADDITIONAL_QUESTION';
+
+        const response = await fetch("/api/application", {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "x-xsrf-token": Cookies.get("XSRF-TOKEN") || "",
+          },
+          credentials: "include",
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+
+          if (errorData.details && Array.isArray(errorData.details)) {
+            const updatedData = { ...localApplicationState.data };
+
+            errorData.details.forEach(
+              (error: { field_id: string; message: string }) => {
+                const { field_id, message } = error;
+
+                if (updatedData[field_id]) {
+                  updatedData[field_id] = {
+                    ...updatedData[field_id],
+                    error: message,
+                  };
+                } else {
+                  updatedData[field_id] = {
+                    id: field_id,
+                    type: localApplicationState.data[field_id]?.type,
+                    response: localApplicationState.data[field_id]?.response,
+                    error: message,
+                  };
+                }
+              }
+            );
+
+            setLocalApplicationState({
+              ...localApplicationState,
+              data: updatedData,
+            });
+
+            toast.error("There are errors in your application.");
+            return;
+      } else {
+        toast.error("Failed to save application.");
+      }
+    }
+
     setApplicationState(APPLICATION_STATES.SUBMITTED);
 
     // temporarily update user state into "submitted" using firebase
