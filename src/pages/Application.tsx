@@ -122,7 +122,6 @@ function Application() {
         applicationState !== APPLICATION_STATES.SUBMITTED
       ) {
         const state = getStateKey(applicationState);
-        console.log("WTF", state);
 
         let formResponse: { [key: string]: any } = {};
 
