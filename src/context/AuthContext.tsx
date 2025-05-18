@@ -225,7 +225,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signOut = async () => {
     try {
-      console.log(Cookies.get("XSRF-TOKEN"));
       const response = await fetch("/api/auth/logout", {
         method: "POST",
         headers: {
