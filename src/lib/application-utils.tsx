@@ -268,7 +268,7 @@ export function renderQuestion(
                 {
                   method: "POST",
                   headers: {
-                    "x-csrf-token": Cookies.get("XSRF-TOKEN") || "",
+                    "x-xsrf-token": Cookies.get("XSRF-TOKEN") || "",
                   },
                   body: formData,
                   credentials: "include",

@@ -230,7 +230,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-csrf-token": Cookies.get("XSRF-TOKEN") || "",
+          "x-xsrf-token": Cookies.get("XSRF-TOKEN") || "",
         },
         credentials: "include",
       });
