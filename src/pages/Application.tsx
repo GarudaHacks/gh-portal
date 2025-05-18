@@ -97,8 +97,9 @@ function Application() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-csrf-token": Cookies.get("XSRF-TOKEN") || "",
+          "x-xsrf-token": Cookies.get("XSRF-TOKEN") || "",
         },
+        credentials: "include",
       });
       const data = await response.json();
       if (!response.ok) {
@@ -140,8 +141,9 @@ function Application() {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            "x-csrf-token": Cookies.get("XSRF-TOKEN") || "",
+            "x-xsrf-token": Cookies.get("XSRF-TOKEN") || "",
           },
+          credentials: "include",
           body: JSON.stringify({
             state: state,
             ...formResponse,
