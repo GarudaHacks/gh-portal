@@ -20,7 +20,7 @@ export function DatePicker({ value, onChange }: DatePickerProps) {
     <Popover>
       <div className="relative w-[280px]">
         <Input
-          type="string"
+          type="text"
           value={stringDate}
           className="bg-white"
           placeholder="MM/DD/YYYY"
