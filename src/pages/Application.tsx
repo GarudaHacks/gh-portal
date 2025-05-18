@@ -11,8 +11,7 @@ import { Loader2 } from "lucide-react";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { getStateKey } from "@/utils/applicationUtils";
-import { parse, parseISO } from "date-fns";
-import { isValid } from "date-fns";
+import { parse } from "date-fns";
 
 export enum APPLICATION_STATES {
   INTRO = "Intro",
@@ -212,7 +211,7 @@ function Application() {
           } else {
             formResponse[questionId] = response;
           }
-          
+
         }
         const payload = {
           ...formResponse,

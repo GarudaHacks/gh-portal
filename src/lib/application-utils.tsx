@@ -7,12 +7,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { LocalApplicationState } from "@/pages/Application";
 import {
@@ -20,7 +14,6 @@ import {
   QUESTION_TYPE,
   StringValidation,
   NumberValidation,
-  FileValidation,
   DatetimeValidation,
   DropdownValidation,
   FileApplicationQuestion,
@@ -28,8 +21,6 @@ import {
 } from "@/types/application";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
-import { CalendarDaysIcon } from "lucide-react";
-import { cn } from "./utils";
 import { format, isValid, parseISO } from "date-fns";
 import { DatePicker } from "@/components/Datepicker";
 
