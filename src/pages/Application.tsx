@@ -122,6 +122,7 @@ function Application() {
         applicationState !== APPLICATION_STATES.SUBMITTED
       ) {
         const state = getStateKey(applicationState);
+        console.log("WTF", state);
 
         let formResponse: { [key: string]: any } = {};
 
@@ -136,6 +137,10 @@ function Application() {
 
           formResponse[questionId] = response;
         }
+        const payload = {
+          ...formResponse,
+        }
+        payload["state"] = state;
 
         const response = await fetch("/api/application", {
           method: "PATCH",
@@ -144,10 +149,7 @@ function Application() {
             "x-xsrf-token": Cookies.get("XSRF-TOKEN") || "",
           },
           credentials: "include",
-          body: JSON.stringify({
-            state: state,
-            ...formResponse,
-          }),
+          body: JSON.stringify(payload),
         });
 
         if (!response.ok) {
