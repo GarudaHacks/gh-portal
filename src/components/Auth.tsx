@@ -35,8 +35,8 @@ function Auth() {
   const [mode, setMode] = useState<"LOGIN" | "SIGNUP">("LOGIN");
 
   return (
-    <div className="flex items-center justify-center h-screen min-w-screen">
-      <div className="bg-primary p-12 rounded-lg sm:w-full md:max-w-lg md:justify-center shadow-lg  text-white flex flex-col">
+    <div className="flex items-center justify-center h-screen min-w-screen auth">
+      <div className="p-12 rounded-lg sm:w-full md:max-w-lg md:justify-center shadow-lg  text-white flex flex-col border-gray-600 bg-opacity-10 bg-white/5 backdrop-blur-md border-2 ">
         <img src={ghLogo} width={40} height={60} className="mb-4" />
 
         {mode === "LOGIN" && <AuthLoginComponent />}

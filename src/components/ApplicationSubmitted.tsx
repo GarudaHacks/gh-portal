@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import RedGradientBackground from "./RedGradientBackground";
+import GlassyRectangleBackground from "./RedGradientBackground";
 import { Button } from "./ui/button";
 
 export default function ApplicationSubmitted() {
@@ -7,7 +7,7 @@ export default function ApplicationSubmitted() {
 
   return (
     <div className="p-4 flex flex-col items-center gap-4 lg:gap-6 w-full">
-      <RedGradientBackground className="w-full p-4 rounded-2xl flex flex-col gap-4 text-white shadow-md">
+      <GlassyRectangleBackground className="w-full p-4 rounded-2xl flex flex-col gap-4 text-white shadow-md">
         <h1 className="text-2xl font-bold">Hooray! Thanks for applying.</h1>
 
         <p>Your application has been submitted.</p>
@@ -16,7 +16,7 @@ export default function ApplicationSubmitted() {
           We will release decisions by Jun 20th 2025. Stay tuned for any emails
           from us!
         </p>
-      </RedGradientBackground>
+      </GlassyRectangleBackground>
 
       <Button
         className="w-full lg:w-fit place-self-end font-semibold"

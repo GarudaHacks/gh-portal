@@ -119,7 +119,7 @@ export default function AuthLoginComponent() {
                     <Input
                       placeholder="Enter your email"
                       type={`email`}
-                      className={`bg-background text-primary`}
+                      className={`text-white`}
                       {...field}
                     />
                   </FormControl>
@@ -137,7 +137,7 @@ export default function AuthLoginComponent() {
                     <Input
                       placeholder="Enter your password"
                       type={`password`}
-                      className={`bg-background text-primary`}
+                      className={`text-white`}
                       {...field}
                     />
                   </FormControl>
@@ -152,7 +152,6 @@ export default function AuthLoginComponent() {
 
             <Button
               type="submit"
-              variant={"secondary"}
               className={`w-full font-semibold text-white`}
             >
               {loading && <LoaderCircle className={"animate-spin"} />}
@@ -164,7 +163,7 @@ export default function AuthLoginComponent() {
               type={`button`}
               variant={"ghost"}
               onClick={handleGoogleLogin}
-              className="w-full flex items-center justify-center text-black bg-white"
+              className="w-full flex items-center justify-center text-black bg-white hover:text-black"
             >
               <img src={googleIcon} width={20} height={20} />
               Log in with Google

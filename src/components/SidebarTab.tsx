@@ -16,8 +16,8 @@ function SidebarTab({ name, iconUrl, disabled }: SidebarTabProps) {
   const path = "/" + name.toLowerCase();
 
   const commonClasses = `px-3 md:px-4 py-4 flex items-center`;
-  const activeClasses = "bg-[#920B0B] text-white";
-  const inactiveClasses = "text-white hover:bg-[#B25F5F]";
+  const activeClasses = "bg-[#FF0068] text-white";
+  const inactiveClasses = "text-white hover:bg-[#9f0041]";
   const disabledClasses = "cursor-not-allowed opacity-70";
 
   if (disabled) {
