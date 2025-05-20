@@ -134,10 +134,18 @@ function Sidebar({ onSidebarToggle }: SidebarProps = {}) {
               name="FAQ"
               iconUrl="/images/icons/contact_support.svg"
             />
+            {isMobile && (
+              <button
+                onClick={handleLogout}
+                className="w-fit ml-4 mt-4 rounded-lg bg-background px-4 py-2 flex items-center text-white active:opacity-80"
+              >
+                <span className="text-primary font-semibold md:text-lg">Logout</span>
+              </button>
+            )}
           </nav>
         </div>
 
-        <div className="p-4 border-t border-[#B25F5F]">
+        <div className="p-4 border-t border-[#B25F5F] hidden md:block">
           <div className="flex items-center justify-between">
             <div className="">
               <div className="text-white font-medium">

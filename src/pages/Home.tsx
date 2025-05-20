@@ -5,6 +5,8 @@ import { APPLICATION_STATUS } from "@/types/application";
 import HomeStatusNotRsvpd from "@/components/HomeStatusNotRsvpd";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { dates } from "@/assets/data/copywriting";
+import { format } from "date-fns";
 
 function Home() {
   const user = useAuth();
@@ -13,8 +15,8 @@ function Home() {
   const [userApplicationStatus, setUserApplicationStatus] =
     useState<APPLICATION_STATUS>(APPLICATION_STATUS.DRAFT);
 
-  const registrationsClose = new Date("2025-06-31T10:14:00").getTime();
-  const hackathonEndTime = new Date("2025-07-17T10:14:00").getTime();
+  const devTesting = true;
+  const applicationsOpen = devTesting ? true : new Date(dates.applicationOpenDate) < new Date() && new Date(dates.applicationCloseDate) > new Date();
 
   const getShortName = () => {
     if (!user?.user?.displayName) return "User";
@@ -54,7 +56,7 @@ function Home() {
     const updateTimer = () => {
       const now = new Date().getTime();
       const usedTime =
-        now < registrationsClose ? registrationsClose : hackathonEndTime;
+        now < new Date(dates.applicationCloseDate).getTime() ? new Date(dates.applicationCloseDate).getTime() : new Date(dates.hackathonEndDate).getTime();
       const distance = usedTime - now;
 
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -112,8 +114,8 @@ function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-10">
             <div className="border border-[#A83E36] rounded-lg p-6 px-8">
               <h3 className="text-sm uppercase font-semibold text-[#A83E36] mb-4 text-[1.2rem]">
-                {registrationsClose
-                  ? "REGISTRATION CLOSES IN"
+                {applicationsOpen
+                  ? "APPLICATIONS CLOSE IN"
                   : "HACKING CLOSES IN"}
               </h3>
               <div className="flex flex-wrap justify-center gap-2 md:gap-4 text-center">
@@ -196,8 +198,34 @@ function Home() {
       ) : null}
 
       {userApplicationStatus === APPLICATION_STATUS.DRAFT ? (
-        <div>
-          <Button onClick={() => navigate("/application")}>Apply Now</Button>
+        <div className="flex flex-col gap-4">
+          <h2 className="text-2xl font-bold text-primary">
+            Applications are {applicationsOpen ? "open!" : "currently closed."}
+          </h2>
+          <div className="flex flex-col gap-4 bg-white border-primary border-2 p-4 rounded-2xl shadow-md">
+            <p className="font-medium">
+              <span className="mb-2">Apply by <b>{format(new Date(dates.applicationCloseDate), "MMMM d, yyyy")}</b> for a spot at Garuda Hacks 6.0.</span>
+              <br />
+              <span className="font-bold">Date:</span>{" "}
+              {format(new Date(dates.hackathonStartDate), "MMMM d, yyyy")} -{" "}
+              {format(new Date(dates.hackathonEndDate), "MMMM d, yyyy")}
+              <br />
+              <span className="font-bold">Venue:</span> Universitas Multimedia Nusantara
+            </p>
+            {(() => {
+              return (
+                <Button
+                  className={`w-fit ${
+                    !applicationsOpen ? "opacity-90 cursor-not-allowed" : ""
+                  }`}
+                  disabled={!applicationsOpen}
+                  onClick={() => navigate("/application")}
+                >
+                  Apply Now
+                </Button>
+              );
+            })()}
+          </div>
         </div>
       ) : null}
     </Page>
