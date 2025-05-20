@@ -39,6 +39,7 @@ export interface LocalApplicationState {
 function Application() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [times, setTimes] = useState(0);
 
   const [applicationState, setApplicationState] = useState(
@@ -103,6 +104,7 @@ function Application() {
     };
     payload["state"] = "ADDITIONAL_QUESTION";
 
+    setIsSubmitting(true);
     const response = await fetch("/api/application", {
       method: "PATCH",
       headers: {
@@ -145,8 +147,10 @@ function Application() {
         });
 
         toast.error("There are errors in your application.");
+        setIsSubmitting(false);
         return;
       } else {
+        setIsSubmitting(false);
         toast.error("Failed to save application.");
       }
     }
@@ -172,9 +176,16 @@ function Application() {
       }
 
       toast.success("Application submitted!");
+      setLocalApplicationState({
+        latestState: APPLICATION_STATES.INTRO,
+        data: {},
+        lastUpdated: new Date(),
+      });
     } catch (error) {
       console.error("Error saving application data:", error);
       toast.error("Failed to save application. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -184,6 +195,8 @@ function Application() {
         applicationState !== APPLICATION_STATES.INTRO &&
         applicationState !== APPLICATION_STATES.SUBMITTED
       ) {
+        setIsSubmitting(true);
+
         const state = getStateKey(applicationState);
 
         let formResponse: { [key: string]: any } = {};
@@ -260,8 +273,10 @@ function Application() {
             });
 
             toast.error("There are errors in your application");
+            setIsSubmitting(false);
             return;
           } else {
+            setIsSubmitting(false);
             toast.error("Failed to save application");
           }
         }
@@ -280,6 +295,8 @@ function Application() {
       }
     } catch (error) {
       console.error("Error saving application data:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -388,7 +405,9 @@ function Application() {
             localApplicationState={localApplicationState!}
             applicationState={applicationState}
             onNextClick={toNextState}
+            onPrevClick={toPreviousState}
             onFormChange={updateFormData}
+            isSubmitting={isSubmitting}
           />
         ) : null}
         {applicationState === APPLICATION_STATES.INQUIRY ? (
@@ -398,6 +417,7 @@ function Application() {
             onPrevClick={toPreviousState}
             onNextClick={toNextState}
             onFormChange={updateFormData}
+            isSubmitting={isSubmitting}
           />
         ) : null}
         {applicationState === APPLICATION_STATES.ADDITIONAL_QUESTION ? (
@@ -407,6 +427,7 @@ function Application() {
             onPrevClick={toPreviousState}
             onFormChange={updateFormData}
             onSubmit={handleSubmit}
+            isSubmitting={isSubmitting}
           />
         ) : null}
         {applicationState === APPLICATION_STATES.SUBMITTED ? (

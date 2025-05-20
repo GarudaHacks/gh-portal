@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import SidebarTab from "./SidebarTab";
 import toast from "react-hot-toast";
 import { UserApplicationStatus } from "../types/applicationStatus";
+import { LogOut } from "lucide-react";
 
 interface SidebarProps {
   onSidebarToggle?: (isOpen: boolean) => void;
@@ -61,7 +62,7 @@ function Sidebar({ onSidebarToggle }: SidebarProps = {}) {
       {/* Mobile Toggle Button - Only visible on mobile */}
       {isMobile && (
         <button
-          className="fixed top-4 right-4 z-50 bg-[#9F3737] p-2 rounded-md shadow-md"
+          className="fixed top-4 right-4 z-50 bg-background p-2 rounded-md shadow-md"
           onClick={() => {
             const newState = !sidebarOpen;
             setSidebarOpen(newState);
@@ -82,7 +83,7 @@ function Sidebar({ onSidebarToggle }: SidebarProps = {}) {
 
       {/* Sidebar */}
       <div
-        className={`min-h-screen bg-[#9F3737] flex flex-col justify-between fixed md:relative z-40 transition-all duration-300 ${
+        className={`min-h-screen bg-gradient-to-br from-[#001745] to-[#001745] flex flex-col justify-between fixed md:relative z-40 transition-all duration-300 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         } ${isMobile ? "w-[250px]" : "min-w-[15rem] w-[15rem]"}`}
       >
@@ -137,15 +138,18 @@ function Sidebar({ onSidebarToggle }: SidebarProps = {}) {
             {isMobile && (
               <button
                 onClick={handleLogout}
-                className="w-fit ml-4 mt-4 rounded-lg bg-background px-4 py-2 flex items-center text-white active:opacity-80"
+                className="w-fit mt-4 rounded-lg bg-background px-3 md:px-4 py-2 flex items-center text-white active:opacity-80"
               >
-                <span className="text-primary font-semibold md:text-lg">Logout</span>
+                <span className="text-primary font-semibold md:text-lg flex flex-row items-center gap-1">
+                  <LogOut className="m-0"/>
+                  Logout
+                </span>
               </button>
             )}
           </nav>
         </div>
 
-        <div className="p-4 border-t border-[#B25F5F] hidden md:block">
+        <div className="p-4 border-t border-white hidden md:block">
           <div className="flex items-center justify-between">
             <div className="">
               <div className="text-white font-medium">
@@ -154,7 +158,7 @@ function Sidebar({ onSidebarToggle }: SidebarProps = {}) {
             </div>
             <button
               onClick={() => setShowMenu(!showMenu)}
-              className="text-white hover:bg-[#B25F5F] rounded-full"
+              className="text-white hover:bg-[#FF0068] rounded-full"
             >
               <img src="/images/icons/more_vert.svg" width={20} height={20} />
             </button>
@@ -173,7 +177,10 @@ function Sidebar({ onSidebarToggle }: SidebarProps = {}) {
                 onClick={handleLogout}
                 className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               >
-                Logout
+                <span className="flex flex-row items-center gap-1">
+                  <LogOut />
+                  Logout
+                </span>
               </button>
             </div>
           </div>

@@ -124,7 +124,7 @@ export default function AuthRegisterComponent() {
                                     <FormLabel className={`text-white`}>Name</FormLabel>
                                     <FormControl>
                                         <Input placeholder="Enter your name" type={`text`}
-                                            className={`bg-background text-primary`} {...field} />
+                                            className={`text-white`} {...field} />
                                     </FormControl>
                                     <FormMessage className={`text-white`} />
                                 </FormItem>
@@ -138,7 +138,7 @@ export default function AuthRegisterComponent() {
                                     <FormLabel className={`text-white`}>Email Address</FormLabel>
                                     <FormControl>
                                         <Input placeholder="Enter your email" type={`email`}
-                                            className={`bg-background text-primary`} {...field} />
+                                            className={`text-white`} {...field} />
                                     </FormControl>
                                     <FormMessage className={`text-white`} />
                                 </FormItem>
@@ -152,7 +152,7 @@ export default function AuthRegisterComponent() {
                                     <FormLabel>Password</FormLabel>
                                     <FormControl>
                                         <Input placeholder="Enter your password" type={`password`}
-                                            className={`bg-background text-primary`} {...field} />
+                                            className={`text-white`} {...field} />
                                     </FormControl>
                                     <FormMessage className={`text-white`} />
                                 </FormItem>
@@ -163,7 +163,6 @@ export default function AuthRegisterComponent() {
 
                         <Button
                             type="submit"
-                            variant={"secondary"}
                             className={`w-full font-semibold text-white`}
                         >
                             {loading && <LoaderCircle className={"animate-spin"} />}
@@ -176,7 +175,7 @@ export default function AuthRegisterComponent() {
                             type={`button`}
                             variant={"ghost"}
                             onClick={handleGoogleRegister}
-                            className="w-full flex items-center justify-center text-black bg-white"
+                            className="w-full flex items-center justify-center text-black bg-white hover:text-black"
                         >
                             <img src={googleIcon} width={20} height={20} />
                             Sign up with Google

@@ -27,7 +27,7 @@ function Page({ title, description, children }: PageProps) {
   }, []);
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen">
+    <div className="flex flex-col md:flex-row min-h-screen text-white bg-gradient-to-tr from-[#020f2a] to-[#001745]">
       <Sidebar onSidebarToggle={(isOpen) => setSidebarOpen(isOpen)} />
       <div
         className={`flex-1 overflow-hidden transition-all duration-300 ${
