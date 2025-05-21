@@ -272,7 +272,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
   },
   {
     id: "fee_waiver",
-    text: "We offer a fee waiver for participants who are unable to pay the full registration fee. If you would like to opt for a fee waiver, please answer the following essay questions.",
+    text: "We offer a fee waiver for participants who are unable to pay the full registration fee. If you would like to opt for a fee waiver, please check the box below and answer the following essay questions.",
     state: APPLICATION_STATES.PAYMENT,
     type: QUESTION_TYPE.CHECKBOX,
     options: ["I would like to opt for a fee waiver"],
@@ -295,7 +295,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
   },
   {
     id: "waiver_q2",
-    text: "We are all a part of many different communities--at the dinner table, in our friend groups, in our schools, etc. Describe to us the community you are a part of. Why does this community matter to you? How have you contributed to this community? (200-300 words)",
+    text: "We are all a part of many different communities – at the dinner table, in our friend groups, in our schools, etc. Describe to us the community you are a part of. Why does this community matter to you? How have you contributed to this community? (200-300 words)",
     state: APPLICATION_STATES.PAYMENT,
     type: QUESTION_TYPE.TEXTAREA,
     required: false,
@@ -307,7 +307,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
   },
   {
     id: "waiver_q3",
-    text: "Select one of the following questions: \n 1. ⁠Which track do you feel most passionate about? What do you think are the most urgent problems related to this track in Indonesian society? Do you have any ideas on how these problems can be solved? \n 2. ⁠Please tell us more about yourself. What is one experience that greatly influenced you? \n 3. ⁠Explain one of your coding projects, or other projects, to someone from the 19th century. Explain how you built it, and its impact. (P.S., someone from the 19th century probably doesn't have an understanding of the fundamentals of computer science).",
+    text: "Select one of the following questions (200-400 words): \n 1. ⁠Which track do you feel most passionate about? What do you think are the most urgent problems related to this track in Indonesian society? Do you have any ideas on how these problems can be solved? \n 2. ⁠Please tell us more about yourself. What is one experience that greatly influenced you? \n 3. ⁠Explain one of your coding projects, or other projects, to someone from the 19th century. Explain how you built it, and its impact. (P.S., someone from the 19th century probably doesn't have an understanding of the fundamentals of computer science).",
     state: APPLICATION_STATES.PAYMENT,
     type: QUESTION_TYPE.TEXTAREA,
     required: false,

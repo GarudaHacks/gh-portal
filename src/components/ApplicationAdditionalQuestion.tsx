@@ -95,7 +95,13 @@ export default function ApplicationAdditionalQuestion({
         size="lg"
         onClick={handleSubmitClick}
       >
-        Submit
+        Continue
+        <img
+          src="/images/icons/arrow_forward.svg"
+          width={48}
+          height={48}
+          className="w-4 h-4 pointer-events-none select-none"
+        />
       </Button>
     </div>
   );

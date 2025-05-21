@@ -2,7 +2,7 @@ import { ApplicationQuestion } from "@/types/application";
 import { Button } from "./ui/button";
 import { renderQuestion } from "@/lib/application-utils";
 import { APPLICATION_STATES, LocalApplicationState } from "@/pages/Application";
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { allQuestionsData } from "@/data/questions";
 import { validateResponse } from "@/lib/application-utils";
 import toast from "react-hot-toast";
@@ -25,11 +25,25 @@ export default function ApplicationPayment({
   ) => void;
   onSubmit: () => void;
 }) {
+  const [waiverChecked, setWaiverChecked] = useState(false);
+
   const questions = useMemo(() => {
     return (allQuestionsData as ApplicationQuestion[])
       .filter((q) => q.state === "PAYMENT")
       .sort((a, b) => a.order - b.order);
   }, []);
+
+  const nonWaiverQuestions = questions.filter(
+    (q) => !q.id.startsWith("waiver")
+  );
+  const waiverQuestions = questions.filter((q) => q.id.startsWith("waiver"));
+
+  useEffect(() => {
+    const waiverCheckbox = localApplicationState.data["fee_waiver"]?.response;
+    setWaiverChecked(
+      Array.isArray(waiverCheckbox) && waiverCheckbox.length > 0
+    );
+  }, [localApplicationState.data]);
 
   const handleInputChange = (question: ApplicationQuestion, value: any) => {
     const error = validateResponse(question, value);
@@ -43,7 +57,11 @@ export default function ApplicationPayment({
 
   const handleSubmitClick = async () => {
     let allValid = true;
-    for (const q of questions) {
+    const questionsToValidate = waiverChecked
+      ? [...nonWaiverQuestions, ...waiverQuestions]
+      : nonWaiverQuestions;
+
+    for (const q of questionsToValidate) {
       const value = localApplicationState.data[q.id]?.response;
       const errorMessage = validateResponse(q, value);
       if (errorMessage) {
@@ -83,11 +101,21 @@ export default function ApplicationPayment({
         {applicationState}
       </h1>
       <div className="w-full py-4 flex flex-col gap-4">
-        {questions.map((q) => (
+        {nonWaiverQuestions.map((q) => (
           <div key={q.id}>
             {renderQuestion(q, localApplicationState, handleInputChange)}
           </div>
         ))}
+
+        {waiverChecked && (
+          <div className="mt-4 border-t border-gray-200 flex flex-col gap-6 pt-4">
+            {waiverQuestions.map((q) => (
+              <div key={q.id}>
+                {renderQuestion(q, localApplicationState, handleInputChange)}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <Button

@@ -24,6 +24,7 @@ import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { format, isValid, parseISO } from "date-fns";
 import { DatePicker } from "@/components/Datepicker";
+import { Checkbox } from "@/components/ui/checkbox";
 
 function formatBytes(bytes: number, decimals = 2) {
   if (bytes === 0) return "0 Bytes";
@@ -297,7 +298,7 @@ export function renderQuestion(
     return (
       <div className="flex flex-col gap-1">
         <Label className="text-md font-semibold">
-          {applicationQuestion.text}
+          <div className="whitespace-pre-line">{applicationQuestion.text}</div>
           <span className="text-xs text-red-600">
             {applicationQuestion.required ? "*" : ""}
           </span>
@@ -345,6 +346,39 @@ export function renderQuestion(
           value={value}
           onChange={(value) => onChange?.(applicationQuestion, value)}
         />
+        {renderError()}
+      </div>
+    );
+  } else if (applicationQuestion.type === "checkbox") {
+    return (
+      <div className="flex flex-col gap-1">
+        <Label className="text-md font-semibold">
+          {applicationQuestion.text}
+        </Label>
+        <div className="flex flex-col gap-1">
+          {applicationQuestion.options.map((option) => (
+            <div key={option} className="flex items-center space-x-2 mt-2">
+              <Checkbox
+                id={option}
+                checked={Array.isArray(value) && value.includes(option)}
+                onCheckedChange={(checked) => {
+                  if (checked) {
+                    onChange?.(applicationQuestion, [option]);
+                  } else {
+                    onChange?.(applicationQuestion, []);
+                  }
+                }}
+                className="border-primary"
+              />
+              <label
+                htmlFor={option}
+                className="text-md font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                {option}
+              </label>
+            </div>
+          ))}
+        </div>
         {renderError()}
       </div>
     );
