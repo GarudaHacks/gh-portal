@@ -7,27 +7,27 @@ import { allQuestionsData } from "@/data/questions";
 import { validateResponse } from "@/lib/application-utils";
 import toast from "react-hot-toast";
 
-export default function ApplicationAdditionalQuestion({
+export default function ApplicationPayment({
   localApplicationState,
   applicationState,
   onPrevClick,
-  onNextClick,
   onFormChange,
+  onSubmit,
 }: {
   localApplicationState: LocalApplicationState;
   applicationState: APPLICATION_STATES;
   onPrevClick: () => void;
-  onNextClick: () => void;
   onFormChange: (
     questionId: string,
     type: string,
     response: any,
     error?: string
   ) => void;
+  onSubmit: () => void;
 }) {
   const questions = useMemo(() => {
     return (allQuestionsData as ApplicationQuestion[])
-      .filter((q) => q.state === "ADDITIONAL_QUESTION")
+      .filter((q) => q.state === "PAYMENT")
       .sort((a, b) => a.order - b.order);
   }, []);
 
@@ -58,7 +58,7 @@ export default function ApplicationAdditionalQuestion({
     }
 
     if (allValid) {
-      onNextClick();
+      onSubmit();
     } else {
       toast.error("Please correct the errors highlighted below.");
     }

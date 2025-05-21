@@ -1,4 +1,4 @@
-import { applicationIntro } from "@/assets/data/copywriting";
+import { applicationIntro } from "@/data/copywriting";
 import RedGradientBackground from "./RedGradientBackground";
 import { Button } from "./ui/button";
 

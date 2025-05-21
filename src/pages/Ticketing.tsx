@@ -1,5 +1,5 @@
 import Page from "../components/Page";
-import { ticketDescription } from "../assets/data/copywriting";
+import { ticketDescription } from "../data/copywriting";
 import Ticket from "../components/Ticket";
 
 function Ticketing() {

@@ -5,6 +5,7 @@ export enum QUESTION_TYPE {
   DATE = "datetime", // Matches backend QUESTION_TYPE.DATE
   DROPDOWN = "dropdown",
   FILE = "file",
+  CHECKBOX = "checkbox",
 }
 
 // Validation rule interfaces
@@ -38,6 +39,10 @@ export interface FileValidation {
   required?: boolean;
   allowedTypes: string; // Comma separated MIME types e.g. "image/jpeg,application/pdf"
   maxSize: number; // Max size in MB
+}
+
+export interface CheckboxValidation {
+  required?: boolean;
 }
 
 export type ValidationTypeMap = {
@@ -92,13 +97,20 @@ export interface FileApplicationQuestion extends BaseApplicationQuestion {
   validation: FileValidation;
 }
 
+export interface CheckboxApplicationQuestion extends BaseApplicationQuestion {
+  type: QUESTION_TYPE.CHECKBOX;
+  options: string[];
+  validation?: CheckboxValidation;
+}
+
 export type ApplicationQuestion =
   | StringApplicationQuestion
   | TextareaApplicationQuestion
   | NumberApplicationQuestion
   | DateApplicationQuestion
   | DropdownApplicationQuestion
-  | FileApplicationQuestion;
+  | FileApplicationQuestion
+  | CheckboxApplicationQuestion;
 
 export enum APPLICATION_STATUS {
   NOT_APPLICABLE = "not applicable",
@@ -114,4 +126,5 @@ export enum APPLICATION_STATES {
   PROFILE = "PROFILE",
   INQUIRY = "INQUIRY",
   ADDITIONAL_QUESTION = "ADDITIONAL_QUESTION",
+  PAYMENT = "PAYMENT"
 }

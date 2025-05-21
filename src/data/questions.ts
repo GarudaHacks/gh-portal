@@ -258,4 +258,63 @@ export const allQuestionsData: ApplicationQuestion[] = [
     },
     order: 3,
   },
+  {
+    id: "proof_of_payment",
+    text: "Please upload your proof of payment below",
+    state: APPLICATION_STATES.PAYMENT,
+    type: QUESTION_TYPE.FILE,
+    required: true,
+    validation: {
+      allowedTypes: "image/jpeg,image/png",
+      maxSize: 5,
+    },
+    order: 1,
+  },
+  {
+    id: "fee_waiver",
+    text: "We offer a fee waiver for participants who are unable to pay the full registration fee. If you would like to opt for a fee waiver, please answer the following essay questions.",
+    state: APPLICATION_STATES.PAYMENT,
+    type: QUESTION_TYPE.CHECKBOX,
+    options: ["I would like to opt for a fee waiver"],
+    required: true,
+    validation: {
+    },
+    order: 2,
+  },
+  {
+    id: "waiver_q1",
+    text: "What are your long-term goals and what are some specific steps you will take to achieve them? Please be honest; we will not evaluate your response based on what your goals are, but rather the quality of your response (100-200 words)",
+    state: APPLICATION_STATES.PAYMENT,
+    type: QUESTION_TYPE.TEXTAREA,
+    required: false,
+    validation: {
+      minLength: 100,
+      maxLength: 200,
+    },
+    order: 3,
+  },
+  {
+    id: "waiver_q2",
+    text: "We are all a part of many different communities--at the dinner table, in our friend groups, in our schools, etc. Describe to us the community you are a part of. Why does this community matter to you? How have you contributed to this community? (200-300 words)",
+    state: APPLICATION_STATES.PAYMENT,
+    type: QUESTION_TYPE.TEXTAREA,
+    required: false,
+    validation: {
+      minLength: 200,
+      maxLength: 300,
+    },
+    order: 4,
+  },
+  {
+    id: "waiver_q3",
+    text: "Select one of the following questions: \n 1. ⁠Which track do you feel most passionate about? What do you think are the most urgent problems related to this track in Indonesian society? Do you have any ideas on how these problems can be solved? \n 2. ⁠Please tell us more about yourself. What is one experience that greatly influenced you? \n 3. ⁠Explain one of your coding projects, or other projects, to someone from the 19th century. Explain how you built it, and its impact. (P.S., someone from the 19th century probably doesn't have an understanding of the fundamentals of computer science).",
+    state: APPLICATION_STATES.PAYMENT,
+    type: QUESTION_TYPE.TEXTAREA,
+    required: false,
+    validation: {
+      minLength: 200,
+      maxLength: 400,
+    },
+    order: 5,
+  },
 ];

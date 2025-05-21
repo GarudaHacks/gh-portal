@@ -18,6 +18,7 @@ import {
   DropdownValidation,
   FileApplicationQuestion,
   DropdownApplicationQuestion,
+  CheckboxApplicationQuestion,
 } from "@/types/application";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";

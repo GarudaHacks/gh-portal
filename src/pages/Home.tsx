@@ -5,7 +5,7 @@ import { APPLICATION_STATUS } from "@/types/application";
 import HomeStatusNotRsvpd from "@/components/HomeStatusNotRsvpd";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { dates } from "@/assets/data/copywriting";
+import { dates } from "@/data/copywriting";
 import { format } from "date-fns";
 
 function Home() {
@@ -16,7 +16,10 @@ function Home() {
     useState<APPLICATION_STATUS>(APPLICATION_STATUS.DRAFT);
 
   const devTesting = true;
-  const applicationsOpen = devTesting ? true : new Date(dates.applicationOpenDate) < new Date() && new Date(dates.applicationCloseDate) > new Date();
+  const applicationsOpen = devTesting
+    ? true
+    : new Date(dates.applicationOpenDate) < new Date() &&
+      new Date(dates.applicationCloseDate) > new Date();
 
   const getShortName = () => {
     if (!user?.user?.displayName) return "User";
@@ -56,7 +59,9 @@ function Home() {
     const updateTimer = () => {
       const now = new Date().getTime();
       const usedTime =
-        now < new Date(dates.applicationCloseDate).getTime() ? new Date(dates.applicationCloseDate).getTime() : new Date(dates.hackathonEndDate).getTime();
+        now < new Date(dates.applicationCloseDate).getTime()
+          ? new Date(dates.applicationCloseDate).getTime()
+          : new Date(dates.hackathonEndDate).getTime();
       const distance = usedTime - now;
 
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -204,13 +209,20 @@ function Home() {
           </h2>
           <div className="flex flex-col gap-4 bg-white border-primary border-2 p-4 rounded-2xl shadow-md">
             <p className="font-medium">
-              <span className="mb-2">Apply by <b>{format(new Date(dates.applicationCloseDate), "MMMM d, yyyy")}</b> for a spot at Garuda Hacks 6.0.</span>
+              <span className="mb-2">
+                Apply by{" "}
+                <b>
+                  {format(new Date(dates.applicationCloseDate), "MMMM d, yyyy")}
+                </b>{" "}
+                for a spot at Garuda Hacks 6.0.
+              </span>
               <br />
               <span className="font-bold">Date:</span>{" "}
               {format(new Date(dates.hackathonStartDate), "MMMM d, yyyy")} -{" "}
               {format(new Date(dates.hackathonEndDate), "MMMM d, yyyy")}
               <br />
-              <span className="font-bold">Venue:</span> Universitas Multimedia Nusantara
+              <span className="font-bold">Venue:</span> Universitas Multimedia
+              Nusantara
             </p>
             {(() => {
               return (

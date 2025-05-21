@@ -12,12 +12,14 @@ import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { getStateKey } from "@/utils/applicationUtils";
 import { parse } from "date-fns";
+import ApplicationPayment from "@/components/ApplicationPayment";
 
 export enum APPLICATION_STATES {
   INTRO = "Intro",
   PROFILE = "Your Profile",
   INQUIRY = "Application Questions",
   ADDITIONAL_QUESTION = "Additional Questions",
+  PAYMENT = "Payment",
   SUBMITTED = "Submitted",
 }
 
@@ -101,7 +103,7 @@ function Application() {
     const payload = {
       ...formResponse,
     };
-    payload["state"] = "ADDITIONAL_QUESTION";
+    payload["state"] = "PAYMENT";
 
     const response = await fetch("/api/application", {
       method: "PATCH",
@@ -402,6 +404,15 @@ function Application() {
         ) : null}
         {applicationState === APPLICATION_STATES.ADDITIONAL_QUESTION ? (
           <ApplicationAdditionalQuestion
+            localApplicationState={localApplicationState!}
+            applicationState={applicationState}
+            onPrevClick={toPreviousState}
+            onNextClick={toNextState}
+            onFormChange={updateFormData}
+          />
+        ) : null}
+        {applicationState === APPLICATION_STATES.PAYMENT ? (
+          <ApplicationPayment
             localApplicationState={localApplicationState!}
             applicationState={applicationState}
             onPrevClick={toPreviousState}
