@@ -60,6 +60,14 @@ export interface AuthContextType {
       user?: User | null;
     } | null;
   }>;
+  resetPassword: (email: string) => Promise<{
+    error: {
+      message: string;
+    } | null;
+    data: {
+      message: string | null;
+    } | null;
+  }>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -70,6 +78,7 @@ const AuthContext = createContext<AuthContextType>({
   signUpWithEmailPassword: async () => ({ error: null, data: null }),
   loginWithGoogle: async () => ({ error: null, data: null }),
   signOut: async () => ({ error: null, data: null }),
+  resetPassword: async () => ({ error: null, data: null }),
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -255,6 +264,39 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const resetPassword = async (email: string) => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+        credentials: "include",
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return {
+          error: { message: data.message || "Password reset failed" },
+          data: null,
+        };
+      }
+
+      return {
+        error: null,
+        data: { message: "Password reset email sent successfully" },
+      };
+    } catch (e) {
+      console.error("Password reset error:", e);
+      return { error: { message: "Password reset failed" }, data: null };
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -265,6 +307,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         loginWithGoogle,
         signUpWithEmailPassword,
         signOut,
+        resetPassword,
       }}
     >
       {!loading && children}

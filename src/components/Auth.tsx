@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import ghLogo from "/images/logo/gh_logo.svg";
 import AuthLoginComponent from "@/components/AuthLoginComponent.tsx";
 import AuthRegisterComponent from "./AuthRegisterComponent";
+import AuthForgotPasswordComponent from "./AuthForgotPasswordComponent";
 
 export const getAuthErrorMessage = (error: any) => {
   const errorCode = error.code || "";
@@ -32,7 +33,9 @@ function Auth() {
     }
   }, [user, navigate, loading]);
 
-  const [mode, setMode] = useState<"LOGIN" | "SIGNUP">("LOGIN");
+  const [mode, setMode] = useState<"LOGIN" | "SIGNUP" | "FORGOT_PASSWORD">(
+    "LOGIN"
+  );
 
   return (
     <div className="flex items-center justify-center h-screen min-w-screen auth">
@@ -41,18 +44,48 @@ function Auth() {
 
         {mode === "LOGIN" && <AuthLoginComponent />}
         {mode === "SIGNUP" && <AuthRegisterComponent />}
+        {mode === "FORGOT_PASSWORD" && <AuthForgotPasswordComponent />}
 
         {/* Toggle Between Login and Signup */}
         <p className="text-center text-sm mt-4">
-          {mode === "LOGIN"
-            ? "Don't have an account?"
-            : "Already have an account?"}
-          <span
-            className="underline font-semibold cursor-pointer ml-1"
-            onClick={() => setMode(mode === "LOGIN" ? "SIGNUP" : "LOGIN")}
-          >
-            {mode === "LOGIN" ? "Sign up" : "Log in"}
-          </span>
+          {mode === "LOGIN" ? (
+            <>
+              Don't have an account?
+              <span
+                className="underline font-semibold cursor-pointer ml-1"
+                onClick={() => setMode("SIGNUP")}
+              >
+                Sign up
+              </span>
+              <br />
+              <span
+                className="underline font-semibold cursor-pointer pt-2 block"
+                onClick={() => setMode("FORGOT_PASSWORD")}
+              >
+                Forgot Password?
+              </span>
+            </>
+          ) : mode === "SIGNUP" ? (
+            <>
+              Already have an account?
+              <span
+                className="underline font-semibold cursor-pointer ml-1"
+                onClick={() => setMode("LOGIN")}
+              >
+                Log in
+              </span>
+            </>
+          ) : (
+            <>
+              Remember your password?
+              <span
+                className="underline font-semibold cursor-pointer ml-1"
+                onClick={() => setMode("LOGIN")}
+              >
+                Log in
+              </span>
+            </>
+          )}
         </p>
       </div>
     </div>
