@@ -176,11 +176,11 @@ function Application() {
       }
 
       toast.success("Application submitted!");
-      setLocalApplicationState({
-        latestState: APPLICATION_STATES.INTRO,
-        data: {},
-        lastUpdated: new Date(),
-      });
+      // setLocalApplicationState({
+      //   latestState: APPLICATION_STATES.INTRO,
+      //   data: {},
+      //   lastUpdated: new Date(),
+      // });
     } catch (error) {
       console.error("Error saving application data:", error);
       toast.error("Failed to save application. Please try again later.");
