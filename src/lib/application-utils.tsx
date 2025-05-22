@@ -101,8 +101,8 @@ export function validateResponse(
         typeof response === "string"
           ? parseISO(response)
           : response instanceof Date
-          ? response
-          : null;
+            ? response
+            : null;
       if (!dateValue || !isValid(dateValue)) {
         if (effectiveRequired) return "Please select a valid date.";
         break;
@@ -128,8 +128,8 @@ export function validateResponse(
         const selectedOptions = Array.isArray(response)
           ? response
           : response
-          ? [response]
-          : [];
+            ? [response]
+            : [];
         if (
           rules.minSelections &&
           selectedOptions.length < rules.minSelections
@@ -209,6 +209,9 @@ export function renderQuestion(
       <div className="flex flex-col gap-1">
         <Label className="text-md font-semibold text-white">
           {applicationQuestion.text}
+          <span className="text-xs text-red-600">
+            {applicationQuestion.required ? "*" : ""}
+          </span>
         </Label>
         <Input
           className="text-white"
@@ -224,6 +227,9 @@ export function renderQuestion(
       <div className="flex flex-col gap-1">
         <Label className="text-md font-semibold text-white">
           {applicationQuestion.text}
+          <span className="text-xs text-red-600">
+            {applicationQuestion.required ? "*" : ""}
+          </span>
         </Label>
         <Input
           className="text-white"
@@ -243,6 +249,9 @@ export function renderQuestion(
       <div className="flex flex-col gap-1">
         <Label className="text-md font-semibold text-white">
           {applicationQuestion.text}
+          <span className="text-xs text-red-600">
+            {applicationQuestion.required ? "*" : ""}
+          </span>
         </Label>
         <Input
           className="text-white"
@@ -315,6 +324,9 @@ export function renderQuestion(
       <div className="flex flex-col gap-1">
         <Label className="text-md font-semibold text-white">
           {applicationQuestion.text}
+          <span className="text-xs text-red-600">
+            {applicationQuestion.required ? "*" : ""}
+          </span>
         </Label>
         <Select
           defaultValue={value}
@@ -339,6 +351,9 @@ export function renderQuestion(
       <div className="flex flex-col gap-1 w-min">
         <Label className="text-md font-semibold text-white">
           {applicationQuestion.text}
+          <span className="text-xs text-red-600">
+            {applicationQuestion.required ? "*" : ""}
+          </span>
         </Label>
         <DatePicker
           value={value}
