@@ -221,9 +221,9 @@ function Home() {
                   <br />
                   <span className="font-bold">Date:</span>{" "}
                   {format(new Date(dates.hackathonStartDate), "MMMM d, yyyy")} -{" "}
-                  {format(new Date(dates.hackathonEndDate), "MMMM d, yyyy")}
+                  {format(new Date(dates.hackathonEndDate), "MMMM d, yyyy")}.
                   <br />
-                  <span className="font-bold">Venue:</span> Universitas Multimedia Nusantara
+                  <span className="font-bold">Venue:</span> Universitas Multimedia Nusantara.
                 </p>
                 {(() => {
                   return (

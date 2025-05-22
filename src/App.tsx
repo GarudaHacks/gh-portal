@@ -1,15 +1,23 @@
 import Auth from "./components/Auth";
 import { AuthProvider, useAuth } from "./context/AuthContext";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 import Home from "./pages/Home";
 import Schedule from "./pages/Schedule";
 import Mentorship from "./pages/Mentorship";
 import Faq from "./pages/Faq";
 import Ticketing from "./pages/Ticketing";
 import Application from "./pages/Application";
+import { UserApplicationStatus } from "./types/applicationStatus";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading } = useAuth();
+  const { user, loading, applicationStatus } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -22,6 +30,19 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   if (!user) {
     return <Navigate to="/auth" />;
   }
+
+  // Check if the current route is a restricted page
+  const isRestrictedPage = ["/schedule", "/ticket", "/mentorship"].includes(
+    location.pathname
+  );
+  const canAccessRestrictedPages =
+    applicationStatus === UserApplicationStatus.ACCEPTED ||
+    applicationStatus === UserApplicationStatus.CONFIRMED_RSVP;
+
+  if (isRestrictedPage && !canAccessRestrictedPages) {
+    return <Navigate to="/home" />;
+  }
+
   return children;
 };
 
