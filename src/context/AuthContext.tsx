@@ -23,6 +23,7 @@ export interface RegisterCredentials {
 export interface AuthContextType {
   user: User | null;
   loading: boolean;
+  isActionLoading: boolean;
   applicationStatus: UserApplicationStatus;
   loginWithEmailPassword: (credentials: LoginCredentials) => Promise<{
     error: {
@@ -73,6 +74,7 @@ export interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
+  isActionLoading: false,
   applicationStatus: UserApplicationStatus.NOT_APPLICABLE,
   loginWithEmailPassword: async () => ({ error: null, data: null }),
   signUpWithEmailPassword: async () => ({ error: null, data: null }),
@@ -84,6 +86,7 @@ const AuthContext = createContext<AuthContextType>({
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isActionLoading, setIsActionLoading] = useState<boolean>(false);
 
   const applicationStatus =
     user?.applicationStatus || UserApplicationStatus.NOT_APPLICABLE;
@@ -125,8 +128,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     checkSession();
   }, []);
 
+
   const loginWithEmailPassword = async (credentials: LoginCredentials) => {
-    setLoading(true);
+    setIsActionLoading(true)
     try {
       const response = await fetch("/api/auth/login", {
         method: "POST",
@@ -139,12 +143,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }),
         credentials: "include",
       });
-
+  
       const data = await response.json();
-
+  
       if (!response.ok) {
+        console.log("Login error:", data);
         return {
-          error: { message: data.message || "Login failed" },
+          error: { message: data.error || "Login failed" },
           data: null,
         };
       }
@@ -163,12 +168,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.error("Login error:", e);
       return { error: { message: "Login failed" }, data: null };
     } finally {
-      setLoading(false);
+      setIsActionLoading(false)
     }
   };
 
   const signUpWithEmailPassword = async (credentials: RegisterCredentials) => {
-    setLoading(true);
+    setIsActionLoading(true)
     try {
       const response = await fetch("/api/auth/register", {
         method: "POST",
@@ -187,7 +192,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (!response.ok) {
         return {
-          error: { message: data.message || "Signup failed" },
+          error: { message: data.error || "Signup failed" },
           data: null,
         };
       }
@@ -195,18 +200,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(null);
       return {
         error: null,
-        data: { message: "Signup successful", user: data.user || data },
+        data: { message: data.message, user: data.user || data },
       };
     } catch (e) {
       console.error("Signup error:", e);
       return { error: { message: "Signup failed" }, data: null };
     } finally {
-      setLoading(false);
+      setIsActionLoading(false)
     }
   };
 
   const loginWithGoogle = async (idToken: string) => {
-    setLoading(true);
     try {
       const response = await fetch("/api/auth/session-login", {
         method: "POST",
@@ -236,8 +240,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (e) {
       console.error("Login with Google", e);
       return { error: { message: "Login failed" }, data: null };
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -274,7 +276,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const resetPassword = async (email: string) => {
-    setLoading(true);
     try {
       const response = await fetch("/api/auth/reset-password", {
         method: "POST",
@@ -301,8 +302,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (e) {
       console.error("Password reset error:", e);
       return { error: { message: "Password reset failed" }, data: null };
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -311,6 +310,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       value={{
         user,
         loading,
+        isActionLoading,
         applicationStatus,
         loginWithEmailPassword,
         loginWithGoogle,
