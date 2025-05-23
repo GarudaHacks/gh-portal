@@ -103,7 +103,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const data = await response.json();
 
         if (response.ok) {
-          setUser(data.data.user);
+          if (data.data.user?.emailVerified) {
+            setUser(data.data.user);
+          } else {
+            setUser(null);
+          }
         } else {
           setUser(null);
         }
@@ -145,7 +149,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         };
       }
 
-      setUser(data.user || data);
+      if (data.user?.emailVerified || data.emailVerified) {
+        setUser(data.user || data);
+      } else {
+        setUser(null);
+      }
+
       return {
         error: null,
         data: { message: "Login successful", user: data.user || data },
@@ -183,7 +192,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         };
       }
 
-      setUser(data.user || data);
+      setUser(null);
       return {
         error: null,
         data: { message: "Signup successful", user: data.user || data },
