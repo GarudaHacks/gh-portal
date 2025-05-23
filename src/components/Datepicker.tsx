@@ -22,7 +22,7 @@ export function DatePicker({ value, onChange }: DatePickerProps) {
         <Input
           type="text"
           value={stringDate}
-          className="bg-white"
+          className="text-white"
           placeholder="MM/DD/YYYY"
           onChange={(e) => {
             setStringDate(e.target.value);
@@ -45,11 +45,11 @@ export function DatePicker({ value, onChange }: DatePickerProps) {
         <PopoverTrigger asChild>
           <button
             className={cn(
-              "font-normal absolute right-0 translate-y-[-50%] top-[50%] rounded-l-none p-2 border",
+              "font-normal absolute right-0 translate-y-[-50%] top-[50%] rounded-md p-2 border",
               !date && "text-muted-foreground"
             )}
           >
-            <CalendarIcon className="w-4 h-4" />
+            <CalendarIcon className="w-4 h-4 text-white" />
           </button>
         </PopoverTrigger>
       </div>

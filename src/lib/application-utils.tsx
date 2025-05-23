@@ -101,8 +101,8 @@ export function validateResponse(
         typeof response === "string"
           ? parseISO(response)
           : response instanceof Date
-          ? response
-          : null;
+            ? response
+            : null;
       if (!dateValue || !isValid(dateValue)) {
         if (effectiveRequired) return "Please select a valid date.";
         break;
@@ -128,8 +128,8 @@ export function validateResponse(
         const selectedOptions = Array.isArray(response)
           ? response
           : response
-          ? [response]
-          : [];
+            ? [response]
+            : [];
         if (
           rules.minSelections &&
           selectedOptions.length < rules.minSelections
@@ -199,7 +199,7 @@ export function renderQuestion(
 
   const renderError = () => {
     if (errorMessage) {
-      return <p className="text-red-600 text-sm mt-1">{errorMessage}</p>;
+      return <p className="text-rose-400 text-sm mt-1">{errorMessage}</p>;
     }
     return null;
   };
@@ -207,11 +207,14 @@ export function renderQuestion(
   if (applicationQuestion.type === "string") {
     return (
       <div className="flex flex-col gap-1">
-        <Label className="text-md font-semibold">
+        <Label className="text-md font-semibold text-white">
           {applicationQuestion.text}
+          <span className="text-xs text-red-600">
+            {applicationQuestion.required ? "*" : ""}
+          </span>
         </Label>
         <Input
-          className="bg-white"
+          className="text-white"
           value={value}
           placeholder={`Your answer...`}
           onChange={(e) => onChange?.(applicationQuestion, e.target.value)}
@@ -222,11 +225,14 @@ export function renderQuestion(
   } else if (applicationQuestion.type === "number") {
     return (
       <div className="flex flex-col gap-1">
-        <Label className="text-md font-semibold">
+        <Label className="text-md font-semibold text-white">
           {applicationQuestion.text}
+          <span className="text-xs text-red-600">
+            {applicationQuestion.required ? "*" : ""}
+          </span>
         </Label>
         <Input
-          className="bg-white"
+          className="text-white"
           placeholder="0"
           type="number"
           value={value}
@@ -241,11 +247,14 @@ export function renderQuestion(
   } else if (applicationQuestion.type === "file") {
     return (
       <div className="flex flex-col gap-1">
-        <Label className="text-md font-semibold">
+        <Label className="text-md font-semibold text-white">
           {applicationQuestion.text}
+          <span className="text-xs text-red-600">
+            {applicationQuestion.required ? "*" : ""}
+          </span>
         </Label>
         <Input
-          className="bg-white"
+          className="text-white"
           type="file"
           accept={applicationQuestion.validation.allowedTypes || "*"}
           onChange={(e) => {
@@ -295,14 +304,14 @@ export function renderQuestion(
   } else if (applicationQuestion.type === "textarea") {
     return (
       <div className="flex flex-col gap-1">
-        <Label className="text-md font-semibold">
+        <Label className="text-md font-semibold text-white">
           {applicationQuestion.text}
           <span className="text-xs text-red-600">
             {applicationQuestion.required ? "*" : ""}
           </span>
         </Label>
         <Textarea
-          className="border p-2 w-full h-40 resize-none lg:resize-y bg-white"
+          className="border p-2 w-full h-40 resize-none lg:resize-y text-white"
           placeholder="Your response here..."
           value={value}
           onChange={(e) => onChange?.(applicationQuestion, e.target.value)}
@@ -313,14 +322,17 @@ export function renderQuestion(
   } else if (applicationQuestion.type === "dropdown") {
     return (
       <div className="flex flex-col gap-1">
-        <Label className="text-md font-semibold">
+        <Label className="text-md font-semibold text-white">
           {applicationQuestion.text}
+          <span className="text-xs text-red-600">
+            {applicationQuestion.required ? "*" : ""}
+          </span>
         </Label>
         <Select
           defaultValue={value}
           onValueChange={(value) => onChange?.(applicationQuestion, value)}
         >
-          <SelectTrigger className="border p-2 w-full bg-white">
+          <SelectTrigger className="border p-2 w-full text-white">
             <SelectValue placeholder="Select one..." />
           </SelectTrigger>
           <SelectContent>
@@ -337,8 +349,11 @@ export function renderQuestion(
   } else if (applicationQuestion.type === "datetime") {
     return (
       <div className="flex flex-col gap-1 w-min">
-        <Label className="text-md font-semibold">
+        <Label className="text-md font-semibold text-white">
           {applicationQuestion.text}
+          <span className="text-xs text-red-600">
+            {applicationQuestion.required ? "*" : ""}
+          </span>
         </Label>
         <DatePicker
           value={value}

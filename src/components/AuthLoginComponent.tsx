@@ -52,10 +52,28 @@ export default function AuthLoginComponent() {
       if (error) {
         setError(error.message || "Login failed");
         return;
-      } else {
-        toast.success("Successfully logged in!");
-        navigate("/home");
       }
+
+      // Check if email is verified
+      const response = await fetch("/api/auth/session-check", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
+      const sessionData = await response.json();
+
+      if (response.ok && !sessionData.data.user?.emailVerified) {
+        toast.error("Please verify your email first");
+        // Force navigation to verification page
+        window.location.href = "/auth?mode=verify-email";
+        return;
+      }
+
+      toast.success("Successfully logged in!");
+      window.location.href = "/home";
     } catch (err) {
       setError("An unexpected error occurred");
       console.error(err);
@@ -103,7 +121,7 @@ export default function AuthLoginComponent() {
     <div>
       <h2 className="text-2xl font-semibold">Login into your account</h2>
       <p className="text-sm mt-2">
-        Join 400+ hackers at SEA’s largest hackathon.
+        Join 400+ hackers at SEA's largest hackathon.
       </p>
 
       <div className={`pt-4`}>
@@ -119,7 +137,7 @@ export default function AuthLoginComponent() {
                     <Input
                       placeholder="Enter your email"
                       type={`email`}
-                      className={`bg-background text-primary`}
+                      className={`text-white`}
                       {...field}
                     />
                   </FormControl>
@@ -137,7 +155,7 @@ export default function AuthLoginComponent() {
                     <Input
                       placeholder="Enter your password"
                       type={`password`}
-                      className={`bg-background text-primary`}
+                      className={`text-white`}
                       {...field}
                     />
                   </FormControl>
@@ -150,11 +168,7 @@ export default function AuthLoginComponent() {
               <p className="text-red-100 text-sm text-center mt-4">{error}</p>
             )}
 
-            <Button
-              type="submit"
-              variant={"secondary"}
-              className={`w-full font-semibold text-white`}
-            >
+            <Button type="submit" className={`w-full font-semibold text-white`}>
               {loading && <LoaderCircle className={"animate-spin"} />}
               Log in
             </Button>
@@ -164,7 +178,7 @@ export default function AuthLoginComponent() {
               type={`button`}
               variant={"ghost"}
               onClick={handleGoogleLogin}
-              className="w-full flex items-center justify-center text-black bg-white"
+              className="w-full flex items-center justify-center text-black bg-white hover:text-black"
             >
               <img src={googleIcon} width={20} height={20} />
               Log in with Google
