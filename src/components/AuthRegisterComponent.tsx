@@ -31,7 +31,7 @@ const formSchema = z.object({
 export default function AuthRegisterComponent() {
   const navigate = useNavigate();
 
-  const { user, loading, loginWithGoogle, signUpWithEmailPassword } = useAuth();
+  const { user, loginWithGoogle, signUpWithEmailPassword, isActionLoading } = useAuth();
   const [error, setError] = useState<string>("");
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -54,7 +54,7 @@ export default function AuthRegisterComponent() {
         return;
       }
 
-      const { error } = await signUpWithEmailPassword({
+      const { error, data } = await signUpWithEmailPassword({
         displayName: values.displayName,
         email: values.email,
         password: values.password,
@@ -64,7 +64,7 @@ export default function AuthRegisterComponent() {
         setError(error.message || "Signup failed");
         return;
       } else {
-        toast.success("Successfully signed up! Please verify your email.");
+        toast.success(data?.message || "Signup successful");
         navigate("/auth?mode=verify-email");
       }
     } catch (err) {
@@ -185,8 +185,8 @@ export default function AuthRegisterComponent() {
                 type="submit"
                 className={`w-full font-semibold text-white`}
               >
-                {loading && <LoaderCircle className={"animate-spin"} />}
                 Sign up
+                {isActionLoading && <LoaderCircle className={"animate-spin"} />}
               </Button>
 
               {/* Google Sign-up */}

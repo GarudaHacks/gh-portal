@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input.tsx";
 import { useAuth } from "@/context/AuthContext.tsx";
 import { useNavigate } from "react-router-dom";
-import { LoaderCircle } from "lucide-react";
+import { Eye, EyeOff, LoaderCircle } from "lucide-react";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, db } from "@/utils/firebase.ts";
 import { doc, getDoc, setDoc } from "firebase/firestore";
@@ -29,9 +29,10 @@ const formSchema = z.object({
 
 export default function AuthLoginComponent() {
   const navigate = useNavigate();
-  const { loginWithEmailPassword, loading, loginWithGoogle } = useAuth();
+  const { loginWithEmailPassword, loading, loginWithGoogle, isActionLoading } = useAuth();
 
   const [error, setError] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,6 +51,7 @@ export default function AuthLoginComponent() {
       });
 
       if (error) {
+        console.log("Error when trying to login:", error);
         setError(error.message || "Login failed");
         return;
       }
@@ -76,7 +78,8 @@ export default function AuthLoginComponent() {
       window.location.href = "/home";
     } catch (err) {
       setError("An unexpected error occurred");
-      console.error(err);
+      console.error("Error when trying to login:", err);
+      return;
     }
   }
 
@@ -108,11 +111,11 @@ export default function AuthLoginComponent() {
       } else {
         toast.success("Successfully logged in!");
         await auth.signOut();
+        navigate("/home");
       }
 
-      navigate("/home");
     } catch (error: any) {
-      console.error(error);
+      console.error("Error when trying to login with Google:", error);
       setError(getAuthErrorMessage(error));
     }
   };
@@ -126,7 +129,10 @@ export default function AuthLoginComponent() {
 
       <div className={`pt-4`}>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8"
+          >
             <FormField
               control={form.control}
               name="email"
@@ -152,12 +158,25 @@ export default function AuthLoginComponent() {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Enter your password"
-                      type={`password`}
-                      className={`text-white`}
-                      {...field}
-                    />
+                    <div className="relative">
+                      <Input
+                        placeholder="Enter your password"
+                        type={showPassword ? "text" : "password"}
+                        className={`text-white pr-10`}
+                        {...field}
+                      />
+                      <button
+                        type="button"
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-white hover:text-gray-300"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-5 w-5" />
+                        ) : (
+                          <Eye className="h-5 w-5" />
+                        )}
+                      </button>
+                    </div>
                   </FormControl>
                   <FormMessage className={`text-white`} />
                 </FormItem>
@@ -169,8 +188,8 @@ export default function AuthLoginComponent() {
             )}
 
             <Button type="submit" className={`w-full font-semibold text-white`}>
-              {loading && <LoaderCircle className={"animate-spin"} />}
               Log in
+              {isActionLoading && <LoaderCircle className={"animate-spin"} />}
             </Button>
 
             {/* Google Sign-in */}
