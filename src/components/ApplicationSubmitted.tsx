@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import GlassyRectangleBackground from "./RedGradientBackground";
 import { Button } from "./ui/button";
+import { dates } from "@/assets/data/copywriting";
+import { format } from "date-fns";
 
 export default function ApplicationSubmitted() {
   const navigate = useNavigate();
@@ -13,7 +15,7 @@ export default function ApplicationSubmitted() {
         <p>Your application has been submitted.</p>
 
         <p>
-          We will release decisions by Jun 20th 2025. Stay tuned for any emails
+          We will release decisions on a rolling basis starting from {format(new Date(dates.applicationCloseDate), "MMMM d, yyyy")}. Stay tuned for any emails
           from us!
         </p>
       </GlassyRectangleBackground>
