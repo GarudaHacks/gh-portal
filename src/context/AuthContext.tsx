@@ -129,9 +129,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     checkSession();
   }, []);
 
-
   const loginWithEmailPassword = async (credentials: LoginCredentials) => {
-    setIsActionLoading(true)
+    setIsActionLoading(true);
     try {
       const response = await fetch("/api/auth/login", {
         method: "POST",
@@ -144,9 +143,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }),
         credentials: "include",
       });
-  
+
       const data = await response.json();
-  
+
       if (!response.ok) {
         console.log("Login error:", data);
         return {
@@ -169,11 +168,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.error("Login error:", e);
       return { error: { message: "Login failed" }, data: null };
     } finally {
-      setIsActionLoading(false)
+      setIsActionLoading(false);
     }
   };
 
   const signUpWithEmailPassword = async (credentials: RegisterCredentials) => {
+    setIsActionLoading(true);
     try {
       const response = await fetch("/api/auth/register", {
         method: "POST",
@@ -206,7 +206,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.error("Signup error:", e);
       return { error: { message: "Signup failed" }, data: null };
     } finally {
-      setIsActionLoading(false)
+      setIsActionLoading(false);
     }
   };
 
