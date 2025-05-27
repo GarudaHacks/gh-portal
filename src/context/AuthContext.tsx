@@ -87,6 +87,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isActionLoading, setIsActionLoading] = useState<boolean>(false);
+  const [isVerifyingEmail, setIsVerifyingEmail] = useState<boolean>(false);
 
   const applicationStatus =
     user?.applicationStatus || UserApplicationStatus.NOT_APPLICABLE;
@@ -173,7 +174,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signUpWithEmailPassword = async (credentials: RegisterCredentials) => {
-    setIsActionLoading(true)
     try {
       const response = await fetch("/api/auth/register", {
         method: "POST",

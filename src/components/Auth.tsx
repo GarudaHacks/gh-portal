@@ -31,17 +31,24 @@ function Auth() {
 
   useEffect(() => {
     if (!loading && user) {
-      // Check if we're on the verification page
-      if (searchParams.get("mode") === "verify-email") {
-        return;
-      }
       navigate("/home");
     }
-  }, [user, navigate, loading, searchParams]);
+  }, [user, navigate, loading]);
+
+  useEffect(() => {
+    const urlMode = searchParams.get("mode");
+    if (urlMode === "verify-email") {
+      setMode("VERIFY_EMAIL");
+    }
+  }, [searchParams]);
 
   const [mode, setMode] = useState<
     "LOGIN" | "SIGNUP" | "FORGOT_PASSWORD" | "VERIFY_EMAIL"
-  >(searchParams.get("mode") === "verify-email" ? "VERIFY_EMAIL" : "LOGIN");
+  >(() => {
+    const urlMode = searchParams.get("mode");
+    if (urlMode === "verify-email") return "VERIFY_EMAIL";
+    return "LOGIN";
+  });
 
   return (
     <div className="flex items-center justify-center h-screen min-w-screen auth">
