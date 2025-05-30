@@ -9,7 +9,7 @@ const ticketDescription =
 
 // APPLICATION
 const applicationIntro =
-  "Garuda Hacks is Indonesia's largest hackathon. Whether you're just starting to discover tech or a seasoned developer, we're here to help you turn your ideas into reality. Founded in 2020, we have since hosted 5 successful hackathons with over 1000 participants and 40 million IDR in prizes. This year, we are excited to host our largest iteration yet, featuring a lineup of speakers and judges from top companies, beginner-friendly workshops and streams, and a prize pool of 20 million IDR. \n We read and appreciate every application, and we will get back to you as soon as possible – press continue to start your application.";
+  "Garuda Hacks is Indonesia's largest hackathon. Whether you're just starting to discover tech or a seasoned developer, we're here to help you turn your ideas into reality. Founded in 2020, we have since hosted 5 successful hackathons with over 1000 participants and more than 100 million in prizes. This year, we are excited to host our largest iteration yet, featuring a lineup of speakers and judges from top companies, beginner-friendly workshops and streams, and a prize pool worth over 100 million. \n We read and appreciate every application, and we will get back to you as soon as possible – press continue to start your application.";
 
 // DATES
 const dates = {

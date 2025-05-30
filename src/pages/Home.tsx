@@ -215,7 +215,7 @@ function Home() {
                   {format(new Date(dates.hackathonStartDate), "MMMM d, yyyy")} -{" "}
                   {format(new Date(dates.hackathonEndDate), "MMMM d, yyyy")}.
                   <br />
-                  <span className="font-bold">Venue:</span> Universitas Multimedia Nusantara.
+                  <span className="font-bold">Venue:</span> Universitas Multimedia Nusantara (UMN).
                 </p>
                 {(() => {
                   return (

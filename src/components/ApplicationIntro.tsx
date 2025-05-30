@@ -15,8 +15,8 @@ export default function ApplicationIntro({
         <h1 className="text-2xl font-bold">We're glad you're here.</h1>
         <p>{applicationIntro}</p>
         <div>
-          <p>Date:</p>
-          <p>Venue:</p>
+          <p>Date: July 24, 2025 - July 26, 2025.</p>
+          <p>Venue: Universitas Multimedia Nusantara (UMN).</p>
         </div>
       </GlassyRectangleBackground>
       <Button
