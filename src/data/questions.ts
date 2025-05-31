@@ -258,4 +258,13 @@ export const allQuestionsData: ApplicationQuestion[] = [
     },
     order: 3,
   },
+  {
+    id: "lookingForTeammates",
+    text: "Are you looking for teammates?",
+    state: APPLICATION_STATES.ADDITIONAL_QUESTION,
+    type: QUESTION_TYPE.DROPDOWN,
+    required: true,
+    options: ["Yes", "No"],
+    order: 4,
+  },
 ];
