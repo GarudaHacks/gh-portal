@@ -12,6 +12,7 @@ import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { getStateKey } from "@/utils/applicationUtils";
 import { parse } from "date-fns";
+import { useAuth } from "@/context/AuthContext";
 
 export enum APPLICATION_STATES {
   INTRO = "Intro",
@@ -38,6 +39,7 @@ export interface LocalApplicationState {
 
 function Application() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [times, setTimes] = useState(0);
@@ -101,6 +103,7 @@ function Application() {
 
     const payload = {
       ...formResponse,
+      userId: user?.uid,
     };
     payload["state"] = "ADDITIONAL_QUESTION";
 
@@ -224,10 +227,10 @@ function Application() {
           } else {
             formResponse[questionId] = response;
           }
-
         }
         const payload = {
           ...formResponse,
+          userId: user?.uid,
         };
         payload["state"] = state;
 
