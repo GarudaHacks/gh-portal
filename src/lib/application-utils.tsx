@@ -302,6 +302,9 @@ export function renderQuestion(
       </div>
     );
   } else if (applicationQuestion.type === "textarea") {
+    const maxLength = applicationQuestion.validation?.maxLength || 999999999; // default to very large
+    const currentLength = value?.length || 0;
+    
     return (
       <div className="flex flex-col gap-1">
         <Label className="text-md font-semibold text-white">
@@ -314,8 +317,12 @@ export function renderQuestion(
           className="border p-2 w-full h-40 resize-none lg:resize-y text-white"
           placeholder="Your response here..."
           value={value}
+          maxLength={maxLength}
           onChange={(e) => onChange?.(applicationQuestion, e.target.value)}
         />
+        <div className={`text-xs text-end ${currentLength < maxLength ? "text-primary-foreground" : "text-red-400"}`}>
+          {currentLength} / {maxLength} characters
+        </div>
         {renderError()}
       </div>
     );
