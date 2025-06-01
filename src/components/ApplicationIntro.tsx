@@ -13,7 +13,7 @@ export default function ApplicationIntro({
     <div className="p-4 flex flex-col items-center gap-4 lg:gap-6 w-full">
       <GlassyRectangleBackground className="w-full p-4 rounded-2xl flex flex-col gap-4 text-white shadow-md">
         <h1 className="text-2xl font-bold">We're glad you're here.</h1>
-        <p>{applicationIntro}</p>
+        <p className="whitespace-pre-wrap">{applicationIntro}</p>
         <div>
           <p>Date: July 24, 2025 - July 26, 2025.</p>
           <p>Venue: Universitas Multimedia Nusantara (UMN).</p>
