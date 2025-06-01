@@ -320,7 +320,7 @@ export function renderQuestion(
           maxLength={maxLength}
           onChange={(e) => onChange?.(applicationQuestion, e.target.value)}
         />
-        <div className={`text-xs text-end ${currentLength < maxLength ? "text-primary-foreground" : "text-red-400"}`}>
+        <div className={`text-xs text-end ${currentLength <= maxLength ? "text-primary-foreground" : "text-red-400"}`}>
           {currentLength} / {maxLength} characters
         </div>
         {renderError()}
