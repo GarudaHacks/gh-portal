@@ -96,13 +96,18 @@ function Application() {
       formResponse[questionId] = response;
     }
 
+    if (!user?.uid) {
+      toast.error("You must be logged in to submit.");
+      return;
+    }
+
     const payload: {
-      userId: string | undefined;
+      userId: string;
       state: string;
       [key: string]: any;
     } = {
       ...formResponse,
-      userId: user?.uid,
+      userId: user.uid,
       state: "ADDITIONAL_QUESTION",
     };
 
