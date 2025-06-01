@@ -245,8 +245,7 @@ function Home() {
                     ? format(portalConfig.hackathonEndDate, "MMMM d, yyyy")
                     : ""}
                   <br />
-                  <span className="font-bold">Venue:</span> Universitas
-                  Multimedia Nusantara.
+                  <span className="font-bold">Venue:</span> Universitas Multimedia Nusantara (UMN).
                 </p>
                 {(() => {
                   return (

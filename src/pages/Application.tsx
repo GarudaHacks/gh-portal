@@ -86,11 +86,6 @@ function Application() {
 
   // handle submit
   const handleSubmit = async () => {
-    // remove data for security
-    if (localApplicationState) {
-      setLocalApplicationState({ ...localApplicationState, data: {} });
-    }
-
     // patch additional question data to DB
     let formResponse: { [key: string]: any } = {};
 
@@ -101,11 +96,20 @@ function Application() {
       formResponse[questionId] = response;
     }
 
-    const payload = {
+    if (!user?.uid) {
+      toast.error("You must be logged in to submit.");
+      return;
+    }
+
+    const payload: {
+      userId: string;
+      state: string;
+      [key: string]: any;
+    } = {
       ...formResponse,
-      userId: user?.uid,
+      userId: user.uid,
+      state: "ADDITIONAL_QUESTION",
     };
-    payload["state"] = "ADDITIONAL_QUESTION";
 
     setIsSubmitting(true);
     const response = await fetch("/api/application", {
@@ -155,7 +159,13 @@ function Application() {
       } else {
         setIsSubmitting(false);
         toast.error("Failed to save application.");
+        return;
       }
+    }
+
+    // Only clear the local state after successful submission
+    if (localApplicationState) {
+      setLocalApplicationState({ ...localApplicationState, data: {} });
     }
 
     setApplicationState(APPLICATION_STATES.SUBMITTED);
@@ -179,11 +189,6 @@ function Application() {
       }
 
       toast.success("Application submitted!");
-      // setLocalApplicationState({
-      //   latestState: APPLICATION_STATES.INTRO,
-      //   data: {},
-      //   lastUpdated: new Date(),
-      // });
     } catch (error) {
       console.error("Error saving application data:", error);
       toast.error("Failed to save application. Please try again later.");
@@ -228,11 +233,15 @@ function Application() {
             formResponse[questionId] = response;
           }
         }
-        const payload = {
+        const payload: {
+          userId: string | undefined;
+          state: string;
+          [key: string]: any;
+        } = {
           ...formResponse,
           userId: user?.uid,
+          state: state,
         };
-        payload["state"] = state;
 
         const response = await fetch("/api/application", {
           method: "PATCH",

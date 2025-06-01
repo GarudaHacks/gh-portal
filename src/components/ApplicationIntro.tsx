@@ -32,7 +32,8 @@ export default function ApplicationIntro({
         <h1 className="text-2xl font-bold">We're glad you're here.</h1>
         <p style={{ whiteSpace: "pre-line" }}>{applicationIntro}</p>
         <div>
-          <p>
+          {/* TODO: Need to fix this */}
+          {/* <p>
             <span className="font-bold">Date:</span>{" "}
             {portalConfig
               ? format(portalConfig.hackathonStartDate, "MMMM d, yyyy")
@@ -45,7 +46,9 @@ export default function ApplicationIntro({
           <p>
             <span className="font-bold">Venue:</span> Universitas Multimedia
             Nusantara
-          </p>
+          </p> */}
+          <p>Date: July 24, 2025 - July 26, 2025.</p>
+          <p>Venue: Universitas Multimedia Nusantara (UMN).</p>
         </div>
       </GlassyRectangleBackground>
       <Button
