@@ -1,11 +1,25 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import GlassyRectangleBackground from "./RedGradientBackground";
 import { Button } from "./ui/button";
-import { dates } from "@/assets/data/copywriting";
+import { fetchPortalConfig, PortalConfig } from "@/utils/portalConfig";
 import { format } from "date-fns";
 
 export default function ApplicationSubmitted() {
   const navigate = useNavigate();
+  const [portalConfig, setPortalConfig] = useState<PortalConfig | null>(null);
+
+  useEffect(() => {
+    const loadPortalConfig = async () => {
+      try {
+        const config = await fetchPortalConfig();
+        setPortalConfig(config);
+      } catch (error) {
+        console.error("Error loading portal config:", error);
+      }
+    };
+    loadPortalConfig();
+  }, []);
 
   return (
     <div className="p-4 flex flex-col items-center gap-4 lg:gap-6 w-full">
@@ -15,8 +29,11 @@ export default function ApplicationSubmitted() {
         <p>Your application has been submitted.</p>
 
         <p>
-          We will release decisions on a rolling basis starting from {format(new Date(dates.applicationCloseDate), "MMMM d, yyyy")}. Stay tuned for any emails
-          from us!
+          We will release decisions on a rolling basis starting from{" "}
+          {portalConfig
+            ? format(portalConfig.applicationReleaseDate, "MMM d yyyy")
+            : "Jun 20th 2025"}
+          . Stay tuned for any emails from us!
         </p>
       </GlassyRectangleBackground>
 
