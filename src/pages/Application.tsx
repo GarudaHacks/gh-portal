@@ -68,7 +68,7 @@ function Application() {
   };
 
   // update form data
-  const updateFormData = (questionId: string, type: string, response: any) => {
+  const updateFormData = (questionId: string, type: string, response: any, error?: string) => {
     if (!localApplicationState) return;
     setLocalApplicationState({
       ...localApplicationState,
@@ -78,7 +78,7 @@ function Application() {
           id: questionId,
           type,
           response,
-          error: "",
+          error: error || "",
         },
       },
     });
