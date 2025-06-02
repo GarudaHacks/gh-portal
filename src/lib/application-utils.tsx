@@ -22,7 +22,7 @@ import {
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { format, isValid, parseISO } from "date-fns";
-import { DatePicker } from "@/components/Datepicker";
+import BetterDatePicker from "@/components/own-ui/BetterDatePicker";
 
 function formatBytes(bytes: number, decimals = 2) {
   if (bytes === 0) return "0 Bytes";
@@ -99,10 +99,11 @@ export function validateResponse(
       const rules = question.validation as DatetimeValidation | undefined;
       const dateValue =
         typeof response === "string"
-          ? parseISO(response)
+          ? new Date(response)
           : response instanceof Date
-            ? response
-            : null;
+        ? response
+        : null;
+        
       if (!dateValue || !isValid(dateValue)) {
         if (effectiveRequired) return "Please select a valid date.";
         break;
@@ -355,15 +356,15 @@ export function renderQuestion(
     );
   } else if (applicationQuestion.type === "datetime") {
     return (
-      <div className="flex flex-col gap-1 w-min">
+      <div className="flex flex-col gap-1 w-full">
         <Label className="text-md font-semibold text-white">
           {applicationQuestion.text}
           <span className="text-xs text-red-600">
             {applicationQuestion.required ? "*" : ""}
           </span>
         </Label>
-        <DatePicker
-          value={value}
+        <BetterDatePicker
+          value={new Date(value)}
           onChange={(value) => onChange?.(applicationQuestion, value)}
         />
         {renderError()}
