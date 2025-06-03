@@ -22,7 +22,7 @@ import {
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { format, isValid, parseISO } from "date-fns";
-import BetterDatePicker from "@/components/own-ui/BetterDatePicker";
+import { DatePicker } from "@/components/Datepicker";
 
 function countWords(text: string): number {
   if (!text || text.trim() === "") return 0;
@@ -327,7 +327,7 @@ export function renderQuestion(
     const stringValidation = applicationQuestion.validation as
       | StringValidation
       | undefined;
-    const maxWords = stringValidation?.maxLength || 999999999;
+    const minWords = stringValidation?.minLength || 150;
     const currentWordCount = countWords(value);
 
     return (
@@ -344,15 +344,9 @@ export function renderQuestion(
           value={value}
           onChange={(e) => onChange?.(applicationQuestion, e.target.value)}
         />
-        <div className="flex justify-between text-xs">
-          <span
-            className={`${
-              currentWordCount <= maxWords
-                ? "text-primary-foreground"
-                : "text-red-400"
-            }`}
-          >
-            {currentWordCount} / {maxWords} words
+        <div className="flex justify-end text-xs">
+          <span className="text-primary-foreground">
+            {currentWordCount} / {minWords} words
           </span>
         </div>
         {renderError()}
@@ -394,8 +388,8 @@ export function renderQuestion(
             {applicationQuestion.required ? "*" : ""}
           </span>
         </Label>
-        <BetterDatePicker
-          value={new Date(value)}
+        <DatePicker
+          value={value}
           onChange={(value) => onChange?.(applicationQuestion, value)}
         />
         {renderError()}
