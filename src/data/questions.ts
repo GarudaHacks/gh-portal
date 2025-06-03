@@ -95,7 +95,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     state: APPLICATION_STATES.PROFILE,
     type: QUESTION_TYPE.DROPDOWN,
     required: false,
-    options: ["Woman", "Man", "Non-binary", "Prefer not to say", "Other"],
+    options: ["Man", "Woman", "Prefer not to say"],
     order: 8,
   },
   {
@@ -142,7 +142,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     text: "What motivates you to build in Garuda Hacks?",
     state: APPLICATION_STATES.INQUIRY,
     type: QUESTION_TYPE.TEXTAREA,
-    placeholder: "Answer in ≤ 150 words",
+    placeholder: "Answer in 150 words or less",
     required: true,
     validation: {
       minLength: 150,
@@ -155,7 +155,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     text: "If you had unlimited resources, what problem would you solve within Indonesia?",
     state: APPLICATION_STATES.INQUIRY,
     type: QUESTION_TYPE.TEXTAREA,
-    placeholder: "Answer in ≤ 150 words",
+    placeholder: "Answer in 150 words or less",
     required: true,
     validation: {
       minLength: 150,
@@ -168,7 +168,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     text: "Share an interesting project you've previously worked on (technical or non-technical)",
     state: APPLICATION_STATES.INQUIRY,
     type: QUESTION_TYPE.TEXTAREA,
-    placeholder: "Answer in ≤ 150 words",
+    placeholder: "Answer in 150 words or less",
     required: true,
     validation: {
       minLength: 150,
