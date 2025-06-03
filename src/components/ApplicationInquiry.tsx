@@ -27,6 +27,30 @@ export default function ApplicationInquiry({
   ) => void;
   isSubmitting: boolean;
 }) {
+
+  const handleNextClick = async () => {
+    let allValid = true;
+    for (const q of questions) {
+      const value = localApplicationState.data[q.id]?.response;
+      const errorMessage = validateResponse(q, value);
+      if (errorMessage) {
+        allValid = false;
+      }
+      onFormChange(
+        q.id,
+        q.type,
+        value,
+        errorMessage === null ? undefined : errorMessage
+      );
+    }
+
+    if (allValid) {
+      onNextClick();
+    } else {
+      toast.error("Please correct the errors highlighted below.");
+    }
+  };
+
   const questions = useMemo(() => {
     return (allQuestionsData as ApplicationQuestion[])
       .filter((q) => q.state === "INQUIRY")

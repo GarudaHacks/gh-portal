@@ -22,7 +22,7 @@ import {
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { format, isValid, parseISO } from "date-fns";
-import { DatePicker } from "@/components/Datepicker";
+import BetterDatePicker from "@/components/own-ui/BetterDatePicker";
 
 function countWords(text: string): number {
   if (!text || text.trim() === "") return 0;
@@ -120,7 +120,6 @@ export function validateResponse(
           : response instanceof Date
           ? response
           : null;
-
       if (!dateValue || !isValid(dateValue)) {
         if (effectiveRequired) return "Please select a valid date.";
         break;
@@ -395,8 +394,8 @@ export function renderQuestion(
             {applicationQuestion.required ? "*" : ""}
           </span>
         </Label>
-        <DatePicker
-          value={value}
+        <BetterDatePicker
+          value={new Date(value)}
           onChange={(value) => onChange?.(applicationQuestion, value)}
         />
         {renderError()}
