@@ -145,7 +145,8 @@ export const allQuestionsData: ApplicationQuestion[] = [
     placeholder: "Answer in ≤ 150 words",
     required: true,
     validation: {
-      maxLength: 150,
+      minLength: 150,
+      maxLength: 500,
     },
     order: 4,
   },
@@ -157,7 +158,8 @@ export const allQuestionsData: ApplicationQuestion[] = [
     placeholder: "Answer in ≤ 150 words",
     required: true,
     validation: {
-      maxLength: 150,
+      minLength: 150,
+      maxLength: 500,
     },
     order: 5,
   },
@@ -169,7 +171,8 @@ export const allQuestionsData: ApplicationQuestion[] = [
     placeholder: "Answer in ≤ 150 words",
     required: true,
     validation: {
-      maxLength: 150,
+      minLength: 150,
+      maxLength: 500,
     },
     order: 6,
   },
