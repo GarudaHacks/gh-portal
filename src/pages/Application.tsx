@@ -93,12 +93,25 @@ function Application() {
       const question = localApplicationState.data[questionId];
       const response = question.response;
 
-      formResponse[questionId] = response;
-    }
-
-    if (!user?.uid) {
-      toast.error("You must be logged in to submit.");
-      return;
+      if (question.type === "file") {
+        formResponse[questionId] = response.name;
+        continue;
+      } else if (question.type === "datetime") {
+        try {
+          const parsedDate = parse(response, "MM/dd/yyyy", new Date());
+          if (parsedDate.toString() !== "Invalid Date") {
+            formResponse[questionId] = parsedDate.toISOString();
+          }
+        } catch (e) {
+          console.error(
+            `Error parsing date for question ${questionId}: ${response}`,
+            e
+          );
+          // Decide how to handle: send original, null, or skip
+        }
+      } else {
+        formResponse[questionId] = response;
+      }
     }
 
     const payload: {
@@ -107,7 +120,7 @@ function Application() {
       [key: string]: any;
     } = {
       ...formResponse,
-      userId: user.uid,
+      userId: user?.uid || "",
       state: "ADDITIONAL_QUESTION",
     };
 
