@@ -22,7 +22,12 @@ import {
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { format, isValid, parseISO } from "date-fns";
-import { DatePicker } from "@/components/Datepicker";
+import BetterDatePicker from "@/components/own-ui/BetterDatePicker";
+
+function countWords(text: string): number {
+  if (!text || text.trim() === "") return 0;
+  return text.trim().split(/\s+/).length;
+}
 
 function formatBytes(bytes: number, decimals = 2) {
   if (bytes === 0) return "0 Bytes";
@@ -65,12 +70,24 @@ export function validateResponse(
     case QUESTION_TYPE.TEXTAREA: {
       const rules = question.validation as StringValidation | undefined;
       const value = String(response || "");
-      if (rules?.minLength && value.length < rules.minLength) {
-        return `Minimum length is ${rules.minLength} characters.`;
+
+      if (question.type === QUESTION_TYPE.TEXTAREA) {
+        const wordCount = countWords(value);
+        if (rules?.minLength && wordCount < rules.minLength) {
+          return `Minimum word count is ${rules.minLength} words.`;
+        }
+        if (rules?.maxLength && wordCount > rules.maxLength) {
+          return `Maximum word count is ${rules.maxLength} words.`;
+        }
+      } else {
+        if (rules?.minLength && value.length < rules.minLength) {
+          return `Minimum length is ${rules.minLength} characters.`;
+        }
+        if (rules?.maxLength && value.length > rules.maxLength) {
+          return `Maximum length is ${rules.maxLength} characters.`;
+        }
       }
-      if (rules?.maxLength && value.length > rules.maxLength) {
-        return `Maximum length is ${rules.maxLength} characters.`;
-      }
+
       if (rules?.pattern) {
         const regex = new RegExp(rules.pattern);
         if (!regex.test(value)) {
@@ -99,10 +116,11 @@ export function validateResponse(
       const rules = question.validation as DatetimeValidation | undefined;
       const dateValue =
         typeof response === "string"
-          ? parseISO(response)
+          ? new Date(response)
           : response instanceof Date
-            ? response
-            : null;
+          ? response
+          : null;
+
       if (!dateValue || !isValid(dateValue)) {
         if (effectiveRequired) return "Please select a valid date.";
         break;
@@ -128,8 +146,8 @@ export function validateResponse(
         const selectedOptions = Array.isArray(response)
           ? response
           : response
-            ? [response]
-            : [];
+          ? [response]
+          : [];
         if (
           rules.minSelections &&
           selectedOptions.length < rules.minSelections
@@ -205,6 +223,11 @@ export function renderQuestion(
   };
 
   if (applicationQuestion.type === "string") {
+    const stringValidation = applicationQuestion.validation as
+      | StringValidation
+      | undefined;
+    const currentLength = value?.length || 0;
+
     return (
       <div className="flex flex-col gap-1">
         <Label className="text-md font-semibold text-white">
@@ -218,7 +241,19 @@ export function renderQuestion(
           value={value}
           placeholder={`Your answer...`}
           onChange={(e) => onChange?.(applicationQuestion, e.target.value)}
+          maxLength={stringValidation?.maxLength}
         />
+        {stringValidation?.maxLength && (
+          <div
+            className={`text-xs text-end ${
+              currentLength <= stringValidation.maxLength
+                ? "text-primary-foreground"
+                : "text-red-400"
+            }`}
+          >
+            {currentLength} / {stringValidation.maxLength} characters
+          </div>
+        )}
         {renderError()}
       </div>
     );
@@ -302,9 +337,12 @@ export function renderQuestion(
       </div>
     );
   } else if (applicationQuestion.type === "textarea") {
-    const maxLength = applicationQuestion.validation?.maxLength || 999999999; // default to very large
-    const currentLength = value?.length || 0;
-    
+    const stringValidation = applicationQuestion.validation as
+      | StringValidation
+      | undefined;
+    const maxWords = stringValidation?.maxLength || 999999999;
+    const currentWordCount = countWords(value);
+
     return (
       <div className="flex flex-col gap-1">
         <Label className="text-md font-semibold text-white">
@@ -317,11 +355,18 @@ export function renderQuestion(
           className="border p-2 w-full h-40 resize-none lg:resize-y text-white"
           placeholder="Your response here..."
           value={value}
-          maxLength={maxLength}
           onChange={(e) => onChange?.(applicationQuestion, e.target.value)}
         />
-        <div className={`text-xs text-end ${currentLength <= maxLength ? "text-primary-foreground" : "text-red-400"}`}>
-          {currentLength} / {maxLength} characters
+        <div className="flex justify-between text-xs">
+          <span
+            className={`${
+              currentWordCount <= maxWords
+                ? "text-primary-foreground"
+                : "text-red-400"
+            }`}
+          >
+            {currentWordCount} / {maxWords} words
+          </span>
         </div>
         {renderError()}
       </div>
@@ -355,15 +400,15 @@ export function renderQuestion(
     );
   } else if (applicationQuestion.type === "datetime") {
     return (
-      <div className="flex flex-col gap-1 w-min">
+      <div className="flex flex-col gap-1 w-full">
         <Label className="text-md font-semibold text-white">
           {applicationQuestion.text}
           <span className="text-xs text-red-600">
             {applicationQuestion.required ? "*" : ""}
           </span>
         </Label>
-        <DatePicker
-          value={value}
+        <BetterDatePicker
+          value={new Date(value)}
           onChange={(value) => onChange?.(applicationQuestion, value)}
         />
         {renderError()}
