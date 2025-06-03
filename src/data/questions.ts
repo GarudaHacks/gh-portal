@@ -95,7 +95,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     state: APPLICATION_STATES.PROFILE,
     type: QUESTION_TYPE.DROPDOWN,
     required: false,
-    options: ["Woman", "Man", "Non-binary", "Prefer not to say", "Other"],
+    options: ["Man", "Woman", "Prefer not to say"],
     order: 8,
   },
   {
@@ -138,59 +138,15 @@ export const allQuestionsData: ApplicationQuestion[] = [
     order: 11,
   },
   {
-    id: "hackathonCount",
-    text: "How many hackathons have you been to before?",
-    state: APPLICATION_STATES.INQUIRY,
-    type: QUESTION_TYPE.NUMBER,
-    placeholder: "0",
-    required: true,
-    validation: {
-      minValue: 0,
-      maxValue: 99,
-    },
-    order: 1,
-  },
-  {
-    id: "desiredRoles",
-    text: "What roles would you like to take in a hackathon?",
-    state: APPLICATION_STATES.INQUIRY,
-    type: QUESTION_TYPE.DROPDOWN,
-    required: true,
-    options: [
-      "Developer",
-      "Designer",
-      "Product Manager",
-      "Data Scientist",
-      "Entrepreneur",
-      "Other",
-    ],
-    validation: {
-      minSelections: 1,
-      maxSelections: 3,
-    },
-    order: 2,
-  },
-  {
-    id: "resume",
-    text: "Please upload your résumé",
-    state: APPLICATION_STATES.INQUIRY,
-    type: QUESTION_TYPE.FILE,
-    required: true,
-    validation: {
-      allowedTypes: "application/pdf",
-      maxSize: 5,
-    },
-    order: 3,
-  },
-  {
     id: "motivation",
     text: "What motivates you to build in Garuda Hacks?",
     state: APPLICATION_STATES.INQUIRY,
     type: QUESTION_TYPE.TEXTAREA,
-    placeholder: "Answer in ≤ 150 words",
+    placeholder: "Answer in 150 words or less",
     required: true,
     validation: {
-      maxLength: 150,
+      minLength: 150,
+      maxLength: 500,
     },
     order: 4,
   },
@@ -199,10 +155,11 @@ export const allQuestionsData: ApplicationQuestion[] = [
     text: "If you had unlimited resources, what problem would you solve within Indonesia?",
     state: APPLICATION_STATES.INQUIRY,
     type: QUESTION_TYPE.TEXTAREA,
-    placeholder: "Answer in ≤ 150 words",
+    placeholder: "Answer in 150 words or less",
     required: true,
     validation: {
-      maxLength: 150,
+      minLength: 150,
+      maxLength: 500,
     },
     order: 5,
   },
@@ -211,10 +168,11 @@ export const allQuestionsData: ApplicationQuestion[] = [
     text: "Share an interesting project you've previously worked on (technical or non-technical)",
     state: APPLICATION_STATES.INQUIRY,
     type: QUESTION_TYPE.TEXTAREA,
-    placeholder: "Answer in ≤ 150 words",
+    placeholder: "Answer in 150 words or less",
     required: true,
     validation: {
-      maxLength: 150,
+      minLength: 150,
+      maxLength: 500,
     },
     order: 6,
   },
@@ -236,6 +194,59 @@ export const allQuestionsData: ApplicationQuestion[] = [
     order: 1,
   },
   {
+    id: "hackathonCount",
+    text: "How many hackathons have you been to before?",
+    state: APPLICATION_STATES.ADDITIONAL_QUESTION,
+    type: QUESTION_TYPE.NUMBER,
+    placeholder: "0",
+    required: true,
+    validation: {
+      minValue: 0,
+      maxValue: 99,
+    },
+    order: 2,
+  },
+  {
+    id: "garudaHacksAttendance",
+    text: "How many times have you attended Garuda Hacks? If so, please list out the year",
+    state: APPLICATION_STATES.ADDITIONAL_QUESTION,
+    type: QUESTION_TYPE.STRING,
+    placeholder: "",
+    order: 3,
+  },
+  {
+    id: "desiredRoles",
+    text: "What roles would you like to take in a hackathon?",
+    state: APPLICATION_STATES.ADDITIONAL_QUESTION,
+    type: QUESTION_TYPE.DROPDOWN,
+    required: true,
+    options: [
+      "Developer",
+      "Designer",
+      "Product Manager",
+      "Data Scientist",
+      "Entrepreneur",
+      "Other",
+    ],
+    validation: {
+      minSelections: 1,
+      maxSelections: 3,
+    },
+    order: 4,
+  },
+  {
+    id: "resume",
+    text: "Please upload your résumé / school transcript",
+    state: APPLICATION_STATES.ADDITIONAL_QUESTION,
+    type: QUESTION_TYPE.FILE,
+    required: true,
+    validation: {
+      allowedTypes: "application/pdf",
+      maxSize: 5,
+    },
+    order: 5,
+  },
+  {
     id: "accommodations",
     text: "Please let us know of any event accommodations we can make for you",
     state: APPLICATION_STATES.ADDITIONAL_QUESTION,
@@ -243,20 +254,20 @@ export const allQuestionsData: ApplicationQuestion[] = [
     placeholder: "Dietary restrictions, accessibility needs, etc. (optional)",
     required: false,
     validation: {
-      maxLength: 600,
+      maxLength: 500,
     },
-    order: 2,
+    order: 6,
   },
   {
     id: "dietary_restrictions",
     text: "Please enter any dietary restrictions (if any).",
     state: APPLICATION_STATES.ADDITIONAL_QUESTION,
-    type: QUESTION_TYPE.STRING,
+    type: QUESTION_TYPE.TEXTAREA,
     required: false,
     validation: {
-      maxLength: 200,
+      maxLength: 500,
     },
-    order: 3,
+    order: 7,
   },
   {
     id: "lookingForTeammates",
@@ -265,7 +276,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     type: QUESTION_TYPE.DROPDOWN,
     required: true,
     options: ["Yes", "No"],
-    order: 4,
+    order: 8,
   },
   {
     id: "blood_type",
@@ -274,7 +285,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     type: QUESTION_TYPE.DROPDOWN,
     required: true,
     options: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-", "Unknown"],
-    order: 5,
+    order: 9,
   },
   {
     id: "medical_info",
@@ -287,7 +298,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     validation: {
       maxLength: 500,
     },
-    order: 6,
+    order: 10,
   },
   {
     id: "emergency_contact_name",
@@ -298,7 +309,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     validation: {
       maxLength: 100,
     },
-    order: 7,
+    order: 11,
   },
   {
     id: "emergency_contact_phone",
@@ -309,7 +320,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     validation: {
       maxLength: 20,
     },
-    order: 8,
+    order: 12,
   },
   {
     id: "emergency_contact_relationship",
@@ -318,7 +329,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     type: QUESTION_TYPE.DROPDOWN,
     required: true,
     options: ["Father", "Mother", "Sibling", "Guardian", "Friend", "Other"],
-    order: 9,
+    order: 13,
   },
   {
     id: "liability_waiver",
@@ -327,7 +338,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     type: QUESTION_TYPE.DROPDOWN,
     required: true,
     options: ["I acknowledge and agree"],
-    order: 10,
+    order: 14,
   },
   {
     id: "medical_consent",
@@ -336,7 +347,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     type: QUESTION_TYPE.DROPDOWN,
     required: true,
     options: ["I acknowledge and agree"],
-    order: 11,
+    order: 15,
   },
   {
     id: "code_of_conduct",
@@ -347,6 +358,6 @@ export const allQuestionsData: ApplicationQuestion[] = [
     validation: {
       maxLength: 100,
     },
-    order: 12,
+    order: 16,
   },
 ];

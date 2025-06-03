@@ -11,7 +11,7 @@ import { Loader2 } from "lucide-react";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { getStateKey } from "@/utils/applicationUtils";
-import { parse } from "date-fns";
+import { format, parse } from "date-fns";
 import { useAuth } from "@/context/AuthContext";
 
 export enum APPLICATION_STATES {
@@ -68,7 +68,7 @@ function Application() {
   };
 
   // update form data
-  const updateFormData = (questionId: string, type: string, response: any) => {
+  const updateFormData = (questionId: string, type: string, response: any, error?: string) => {
     if (!localApplicationState) return;
     setLocalApplicationState({
       ...localApplicationState,
@@ -78,7 +78,7 @@ function Application() {
           id: questionId,
           type,
           response,
-          error: "",
+          error: error || "",
         },
       },
     });
@@ -93,12 +93,25 @@ function Application() {
       const question = localApplicationState.data[questionId];
       const response = question.response;
 
-      formResponse[questionId] = response;
-    }
-
-    if (!user?.uid) {
-      toast.error("You must be logged in to submit.");
-      return;
+      if (question.type === "file") {
+        formResponse[questionId] = response.name;
+        continue;
+      } else if (question.type === "datetime") {
+        try {
+          const parsedDate = parse(response, "MM/dd/yyyy", new Date());
+          if (parsedDate.toString() !== "Invalid Date") {
+            formResponse[questionId] = parsedDate.toISOString();
+          }
+        } catch (e) {
+          console.error(
+            `Error parsing date for question ${questionId}: ${response}`,
+            e
+          );
+          // Decide how to handle: send original, null, or skip
+        }
+      } else {
+        formResponse[questionId] = response;
+      }
     }
 
     const payload: {
@@ -107,7 +120,7 @@ function Application() {
       [key: string]: any;
     } = {
       ...formResponse,
-      userId: user.uid,
+      userId: user?.uid || "",
       state: "ADDITIONAL_QUESTION",
     };
 
@@ -218,7 +231,11 @@ function Application() {
             continue;
           } else if (question.type === "datetime") {
             try {
-              const parsedDate = parse(response, "MM/dd/yyyy", new Date());
+              // if response is a date, and is coming from betterdatepicker,
+              const stringifyedResponse = response instanceof Date
+                ? format(response, "MM/dd/yyyy")
+                : response;
+              const parsedDate = parse(stringifyedResponse, "MM/dd/yyyy", new Date());
               if (parsedDate.toString() !== "Invalid Date") {
                 formResponse[questionId] = parsedDate.toISOString();
               }
