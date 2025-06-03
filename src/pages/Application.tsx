@@ -11,7 +11,7 @@ import { Loader2 } from "lucide-react";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { getStateKey } from "@/utils/applicationUtils";
-import { parse } from "date-fns";
+import { format, parse } from "date-fns";
 import { useAuth } from "@/context/AuthContext";
 
 export enum APPLICATION_STATES {
@@ -218,7 +218,11 @@ function Application() {
             continue;
           } else if (question.type === "datetime") {
             try {
-              const parsedDate = parse(response, "MM/dd/yyyy", new Date());
+              // if response is a date, and is coming from betterdatepicker,
+              const stringifyedResponse = response instanceof Date
+                ? format(response, "MM/dd/yyyy")
+                : response;
+              const parsedDate = parse(stringifyedResponse, "MM/dd/yyyy", new Date());
               if (parsedDate.toString() !== "Invalid Date") {
                 formResponse[questionId] = parsedDate.toISOString();
               }

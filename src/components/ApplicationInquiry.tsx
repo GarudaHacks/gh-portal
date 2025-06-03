@@ -1,11 +1,11 @@
 import { ApplicationQuestion } from "@/types/application";
 import { Button } from "./ui/button";
-import { renderQuestion, validateResponse } from "@/lib/application-utils";
 import { APPLICATION_STATES, LocalApplicationState } from "@/pages/Application";
 import { useMemo } from "react";
 import { allQuestionsData } from "@/data/questions";
 import { ChevronLeft, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { renderQuestion, validateResponse } from "@/lib/application-utils";
 
 export default function ApplicationInquiry({
   localApplicationState,
