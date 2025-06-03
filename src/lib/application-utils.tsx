@@ -99,11 +99,11 @@ export function validateResponse(
     }
     case QUESTION_TYPE.NUMBER: {
       const rules = question.validation as NumberValidation | undefined;
-      const numValue = parseFloat(response);
-      if (isNaN(numValue) && effectiveRequired) {
+      const numValue = response === "" ? "" : parseFloat(response);
+      if (numValue === "" && effectiveRequired) {
         return "Must be a valid number.";
       }
-      if (!isNaN(numValue)) {
+      if (numValue !== "") {
         if (rules?.minValue !== undefined && numValue < rules.minValue) {
           return `Minimum value is ${rules.minValue}.`;
         }
@@ -257,11 +257,15 @@ export function renderQuestion(
         <Input
           className="text-white"
           placeholder="0"
-          type="number"
+          type="text"
+          pattern="[0-9]*"
+          inputMode="numeric"
           value={value}
           onChange={(e) => {
-            const numValue = e.target.value ? parseFloat(e.target.value) : "";
-            onChange?.(applicationQuestion, numValue);
+            const inputValue = e.target.value;
+            if (inputValue === "" || /^\d+$/.test(inputValue)) {
+              onChange?.(applicationQuestion, inputValue);
+            }
           }}
         />
         {renderError()}
@@ -390,7 +394,7 @@ export function renderQuestion(
           </span>
         </Label>
         <DateOfBirthPicker
-          value={value ? new Date(value) : null}
+          value={value}
           onChange={(date) => onChange?.(applicationQuestion, date)}
         />
         {renderError()}
