@@ -67,29 +67,6 @@ export default function ApplicationInquiry({
     );
   };
 
-  const handleNextClick = () => {
-    let allValid = true;
-    for (const q of questions) {
-      const value = localApplicationState.data[q.id]?.response;
-      const errorMessage = validateResponse(q, value);
-      if (errorMessage) {
-        allValid = false;
-      }
-      onFormChange(
-        q.id,
-        q.type,
-        value,
-        errorMessage === null ? undefined : errorMessage
-      );
-    }
-
-    if (allValid) {
-      onNextClick();
-    } else {
-      toast.error("Please correct the errors highlighted below.");
-    }
-  };
-
   return (
     <div className="p-4 flex flex-col items-center gap-4 lg:gap-6 w-full">
       <Button
