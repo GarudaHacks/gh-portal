@@ -93,7 +93,25 @@ function Application() {
       const question = localApplicationState.data[questionId];
       const response = question.response;
 
-      formResponse[questionId] = response;
+      if (question.type === "file") {
+        formResponse[questionId] = response.name;
+        continue;
+      } else if (question.type === "datetime") {
+        try {
+          const parsedDate = parse(response, "MM/dd/yyyy", new Date());
+          if (parsedDate.toString() !== "Invalid Date") {
+            formResponse[questionId] = parsedDate.toISOString();
+          }
+        } catch (e) {
+          console.error(
+            `Error parsing date for question ${questionId}: ${response}`,
+            e
+          );
+          // Decide how to handle: send original, null, or skip
+        }
+      } else {
+        formResponse[questionId] = response;
+      }
     }
 
     const payload: {
