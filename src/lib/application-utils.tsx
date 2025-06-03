@@ -22,7 +22,7 @@ import {
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { format, isValid, parseISO } from "date-fns";
-import BetterDatePicker from "@/components/own-ui/BetterDatePicker";
+import { DatePicker } from "@/components/Datepicker";
 
 function countWords(text: string): number {
   if (!text || text.trim() === "") return 0;
@@ -226,7 +226,6 @@ export function renderQuestion(
     const stringValidation = applicationQuestion.validation as
       | StringValidation
       | undefined;
-    const currentLength = value?.length || 0;
 
     return (
       <div className="flex flex-col gap-1">
@@ -243,17 +242,6 @@ export function renderQuestion(
           onChange={(e) => onChange?.(applicationQuestion, e.target.value)}
           maxLength={stringValidation?.maxLength}
         />
-        {stringValidation?.maxLength && (
-          <div
-            className={`text-xs text-end ${
-              currentLength <= stringValidation.maxLength
-                ? "text-primary-foreground"
-                : "text-red-400"
-            }`}
-          >
-            {currentLength} / {stringValidation.maxLength} characters
-          </div>
-        )}
         {renderError()}
       </div>
     );
@@ -407,8 +395,8 @@ export function renderQuestion(
             {applicationQuestion.required ? "*" : ""}
           </span>
         </Label>
-        <BetterDatePicker
-          value={new Date(value)}
+        <DatePicker
+          value={value}
           onChange={(value) => onChange?.(applicationQuestion, value)}
         />
         {renderError()}
