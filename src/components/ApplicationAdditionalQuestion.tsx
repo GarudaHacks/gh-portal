@@ -81,11 +81,17 @@ export default function ApplicationAdditionalQuestion({
         {applicationState}
       </h1>
       <div className="w-full py-4 flex flex-col gap-4">
-        {questions.map((q) => (
-          <div key={q.id}>
-            {renderQuestion(q, localApplicationState, handleInputChange)}
-          </div>
-        ))}
+        {questions.map(
+          (q) =>
+            (q.id === "referralOther"
+              ? localApplicationState.data["referralSource"]?.response ===
+                "Other"
+              : true) && (
+              <div key={q.id}>
+                {renderQuestion(q, localApplicationState, handleInputChange)}
+              </div>
+            )
+        )}
       </div>
 
       <Button

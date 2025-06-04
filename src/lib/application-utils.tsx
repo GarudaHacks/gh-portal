@@ -370,7 +370,7 @@ export function renderQuestion(
           defaultValue={value}
           onValueChange={(value) => onChange?.(applicationQuestion, value)}
         >
-          <SelectTrigger className="border p-2 w-full text-white">
+          <SelectTrigger className="border border-gray-500 p-2 w-full text-white">
             <SelectValue placeholder="Select one..." />
           </SelectTrigger>
           <SelectContent>

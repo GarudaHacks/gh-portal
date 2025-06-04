@@ -37,7 +37,6 @@ function Home() {
 
   useEffect(() => {
     const fetchApplicationStatus = async () => {
-      setIsLoading(true);
       try {
         const response = await fetch("/api/application/status", {
           method: "GET",
@@ -55,27 +54,26 @@ function Home() {
         }
       } catch (error) {
         console.error("Error fetching application status:", error);
-      } finally {
-        setIsLoading(false);
       }
     };
-    fetchApplicationStatus();
-  }, [user]);
 
-  // Fetch portal config on component mount
-  useEffect(() => {
     const loadPortalConfig = async () => {
-      console.log("Home: Starting to load portal config...");
       try {
         const config = await fetchPortalConfig();
-        console.log("Home: Portal config loaded:", config);
         setPortalConfig(config);
       } catch (error) {
-        console.error("Home: Error loading portal config:", error);
+        console.error("Error loading portal config:", error);
       }
     };
-    loadPortalConfig();
-  }, []);
+
+    const initializeData = async () => {
+      setIsLoading(true);
+      await Promise.all([fetchApplicationStatus(), loadPortalConfig()]);
+      setIsLoading(false);
+    };
+
+    initializeData();
+  }, [user]);
 
   /**
    * Counts down time to registration closing or hacking end time
