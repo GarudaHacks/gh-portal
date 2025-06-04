@@ -145,8 +145,8 @@ export const allQuestionsData: ApplicationQuestion[] = [
     placeholder: "Answer in 150 words or less",
     required: true,
     validation: {
-      minLength: 150,
-      maxLength: 500,
+      minLength: 100,
+      maxLength: 400,
     },
     order: 4,
   },
@@ -158,8 +158,8 @@ export const allQuestionsData: ApplicationQuestion[] = [
     placeholder: "Answer in 150 words or less",
     required: true,
     validation: {
-      minLength: 150,
-      maxLength: 500,
+      minLength: 100,
+      maxLength: 400,
     },
     order: 5,
   },
@@ -171,8 +171,8 @@ export const allQuestionsData: ApplicationQuestion[] = [
     placeholder: "Answer in 150 words or less",
     required: true,
     validation: {
-      minLength: 150,
-      maxLength: 500,
+      minLength: 100,
+      maxLength: 400,
     },
     order: 6,
   },
@@ -194,6 +194,17 @@ export const allQuestionsData: ApplicationQuestion[] = [
     order: 1,
   },
   {
+    id: "referralOther",
+    text: "Please specify where you heard about Garuda Hacks",
+    state: APPLICATION_STATES.ADDITIONAL_QUESTION,
+    type: QUESTION_TYPE.STRING,
+    required: false,
+    validation: {
+      maxLength: 100,
+    },
+    order: 2,
+  },
+  {
     id: "hackathonCount",
     text: "How many hackathons have you been to before?",
     state: APPLICATION_STATES.ADDITIONAL_QUESTION,
@@ -204,7 +215,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
       minValue: 0,
       maxValue: 99,
     },
-    order: 2,
+    order: 3,
   },
   {
     id: "garudaHacksAttendance",
@@ -212,7 +223,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     state: APPLICATION_STATES.ADDITIONAL_QUESTION,
     type: QUESTION_TYPE.STRING,
     placeholder: "",
-    order: 3,
+    order: 4,
   },
   {
     id: "desiredRoles",
@@ -232,7 +243,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
       minSelections: 1,
       maxSelections: 3,
     },
-    order: 4,
+    order: 5,
   },
   {
     id: "resume",
@@ -244,7 +255,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
       allowedTypes: "application/pdf",
       maxSize: 5,
     },
-    order: 5,
+    order: 6,
   },
   {
     id: "accommodations",
@@ -256,7 +267,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     validation: {
       maxLength: 500,
     },
-    order: 6,
+    order: 7,
   },
   {
     id: "dietary_restrictions",
@@ -267,7 +278,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     validation: {
       maxLength: 500,
     },
-    order: 7,
+    order: 8,
   },
   {
     id: "lookingForTeammates",
@@ -276,7 +287,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     type: QUESTION_TYPE.DROPDOWN,
     required: true,
     options: ["Yes", "No"],
-    order: 8,
+    order: 9,
   },
   {
     id: "blood_type",
@@ -285,7 +296,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     type: QUESTION_TYPE.DROPDOWN,
     required: true,
     options: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-", "Unknown"],
-    order: 9,
+    order: 10,
   },
   {
     id: "medical_info",
@@ -298,7 +309,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     validation: {
       maxLength: 500,
     },
-    order: 10,
+    order: 11,
   },
   {
     id: "emergency_contact_name",
@@ -309,7 +320,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     validation: {
       maxLength: 100,
     },
-    order: 11,
+    order: 12,
   },
   {
     id: "emergency_contact_phone",
@@ -320,7 +331,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     validation: {
       maxLength: 20,
     },
-    order: 12,
+    order: 13,
   },
   {
     id: "emergency_contact_relationship",
@@ -329,7 +340,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     type: QUESTION_TYPE.DROPDOWN,
     required: true,
     options: ["Father", "Mother", "Sibling", "Guardian", "Friend", "Other"],
-    order: 13,
+    order: 14,
   },
   {
     id: "liability_waiver",
@@ -338,7 +349,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     type: QUESTION_TYPE.DROPDOWN,
     required: true,
     options: ["I acknowledge and agree"],
-    order: 14,
+    order: 15,
   },
   {
     id: "medical_consent",
@@ -347,7 +358,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     type: QUESTION_TYPE.DROPDOWN,
     required: true,
     options: ["I acknowledge and agree"],
-    order: 15,
+    order: 16,
   },
   {
     id: "code_of_conduct",
@@ -358,6 +369,6 @@ export const allQuestionsData: ApplicationQuestion[] = [
     validation: {
       maxLength: 100,
     },
-    order: 16,
+    order: 17,
   },
 ];

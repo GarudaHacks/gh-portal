@@ -36,9 +36,9 @@ export const faqData = [
     category: "logistics",
   },
   {
-    question: "Do you offer travel reimbursements?",
+    question: "Do you offer travel reimbursements or scholarships?",
     answer:
-      "No. Unfortunately, due to participant constraints we will not be offering travel reimbursements this year.",
+      "In line with our mission to bring the hackathon experience to as many people as possible, the Director Board and Committee team at Garuda Hacks are delighted to announce that the Garuda Hacks 6.0 Committee team has pledged to offer the Garuda Inovasi Bangsa Scholarship. These will be offered to outstanding hackathon participants for whom financial need would be a barrier to attendance. You may find more information at https://tinyurl.com/gh6gibscholarinfo and apply for the scholarship at https://tinyurl.com/gh6gibscholarapp. If attending Garuda Hacks is a financial barrier, we strongly encourage you to apply and look forward to reviewing your application.",
     category: "logistics",
   },
   {
