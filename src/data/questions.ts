@@ -305,7 +305,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     type: QUESTION_TYPE.TEXTAREA,
     placeholder:
       "This will be relayed to medical professionals only in the event of a medical emergency",
-    required: true,
+    required: false,
     validation: {
       maxLength: 500,
     },
