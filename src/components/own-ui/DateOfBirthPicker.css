@@ -116,3 +116,9 @@
   color: #fff;
   font-weight: 600;
 }
+
+.react-datepicker__year-select,
+.react-datepicker__month-select {
+  color: #fff;
+  background: #001745;
+}
