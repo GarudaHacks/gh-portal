@@ -98,6 +98,7 @@ export default function AuthLoginComponent() {
         await setDoc(userRef, {
           email: user.email,
           displayName: user.displayName,
+          status: "not applicable",
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         });
