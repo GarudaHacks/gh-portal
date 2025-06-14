@@ -1,14 +1,9 @@
 import { useState, useEffect } from "react";
 import Page from "../components/Page";
 import QuestionForm, { QuestionFormData } from "../components/QuestionForm";
-import {
-	submitTicket,
-	getUserTickets,
-	Ticket,
-} from "../services/ticketService";
+import { submitTicket, getUserTickets, Ticket } from "../services/ticketService";
 import { useAuth } from "../context/AuthContext";
 import { Loader2 } from "lucide-react";
-import { Button } from "../components/ui/button";
 
 function Mentorship() {
 	const { user } = useAuth();
@@ -28,13 +23,13 @@ function Mentorship() {
 	// Fetch tickets from Firestore
 	const fetchUserTickets = async () => {
 		if (!user) return;
-
+		
 		setIsLoading(true);
 		try {
 			const userTickets = await getUserTickets(user.uid);
 			setTickets(userTickets);
 		} catch (error) {
-			console.error("Error fetching tickets:", error);
+			console.error('Error fetching tickets:', error);
 		} finally {
 			setIsLoading(false);
 		}
@@ -45,16 +40,16 @@ function Mentorship() {
 		setIsSubmitting(true);
 		try {
 			const newTicket = await submitTicket(formData, user);
-
+			
 			// Add the new ticket to the state
-			setTickets((prevTickets) => [newTicket, ...prevTickets]);
-
+			setTickets(prevTickets => [newTicket, ...prevTickets]);
+			
 			// Show success notification
 			setShowNotification(true);
 			setTimeout(() => setShowNotification(false), 5000);
 		} catch (error) {
-			console.error("Error submitting question:", error);
-			alert("Failed to submit your question. Please try again.");
+			console.error('Error submitting question:', error);
+			alert('Failed to submit your question. Please try again.');
 		} finally {
 			setIsSubmitting(false);
 			setIsFormOpen(false);
@@ -71,23 +66,20 @@ function Mentorship() {
 					<h1 className="text-2xl font-bold">
 						Have a question? Ask our mentors!
 					</h1>
-					<Button
-						className="bg-[#9F3737] hover:bg-[#9F3737]/90"
+					<button
+						className="bg-[#9F3737] text-white px-4 py-2 rounded-md flex items-center gap-2"
 						onClick={() => setIsFormOpen(true)}
 						disabled={isSubmitting}
 					>
 						{isSubmitting ? (
 							<>
-								<Loader2
-									className="animate-spin"
-									size={16}
-								/>
-								<span>Submitting...</span>
+								<Loader2 className="animate-spin mr-2" size={16} />
+								<span className="font-medium">Submitting...</span>
 							</>
 						) : (
-							<span>New Question</span>
+							<span className="font-medium">New Question</span>
 						)}
-					</Button>
+					</button>
 				</div>
 
 				{/* Step-by-step guide */}
@@ -131,10 +123,7 @@ function Mentorship() {
 
 					{isLoading ? (
 						<div className="flex justify-center py-12">
-							<Loader2
-								className="animate-spin text-[#9F3737]"
-								size={32}
-							/>
+							<Loader2 className="animate-spin text-[#9F3737]" size={32} />
 						</div>
 					) : tickets.length > 0 ? (
 						<div className="space-y-4">
@@ -154,9 +143,7 @@ function Mentorship() {
 											</div>
 											<h3 className="text-lg font-medium">{ticket.subject}</h3>
 											<p className="text-gray-700 mt-1">{ticket.description}</p>
-											<p className="text-gray-600 text-sm mt-1">
-												Location: {ticket.location}
-											</p>
+											<p className="text-gray-600 text-sm mt-1">Location: {ticket.location}</p>
 
 											<div className="mt-3">
 												<span className="text-sm text-gray-500">Category</span>
@@ -173,8 +160,7 @@ function Mentorship() {
 											</div>
 										</div>
 										<div className="text-sm text-gray-500">
-											Submitted{" "}
-											{new Date(ticket.submittedAt).toLocaleString("en-US", {
+											Submitted {new Date(ticket.submittedAt).toLocaleString("en-US", {
 												month: "short",
 												day: "numeric",
 												hour: "numeric",
