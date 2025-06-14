@@ -1,4 +1,3 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
@@ -6,7 +5,6 @@ import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -23,8 +21,10 @@ export const db = getFirestore(app);
 export const auth = getAuth(app);
 auth.useDeviceLanguage();
 
-if (import.meta.env.VITE_ENVIRONMENT === 'development') {
-  connectAuthEmulator(auth, 'http://localhost:9099', { disableWarnings: false });
-  connectFirestoreEmulator(db, 'localhost', 8080);
-  console.log('Connected to Firebase emulators');
+if (import.meta.env.VITE_ENVIRONMENT === "development") {
+  connectAuthEmulator(auth, "http://localhost:9099", {
+    disableWarnings: false,
+  });
+  connectFirestoreEmulator(db, "localhost", 8080);
+  console.log("Connected to Firebase emulators");
 }

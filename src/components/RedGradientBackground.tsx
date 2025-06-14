@@ -1,4 +1,4 @@
-export default function RedGradientBackground({
+export default function GlassyRectangleBackground({
   children,
   className,
 }: {
@@ -7,7 +7,7 @@ export default function RedGradientBackground({
 }) {
   return (
     <div
-      className={`bg-gradient-to-r from-[#A03737] to-[#602121] ${className}`}
+      className={`border-gray-600 bg-opacity-10 bg-white/5 backdrop-blur-md border-2 p-4 rounded-2xl shadow-md ${className}`}
     >
       {children}
     </div>

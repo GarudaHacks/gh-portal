@@ -1,7 +1,5 @@
 function Ticket() {
-  return (
-    <div>Ticket</div>
-  )
+  return <div>Ticket</div>;
 }
 
-export default Ticket
+export default Ticket;

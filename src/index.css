@@ -4,27 +4,28 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-	line-height: 1.5;
-	font-weight: 400;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
 
   color-scheme: light;
-  background-color: #FFF7F2;
+  background-color: #001745;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --background: #FFF7F3;
-  --foreground: #B25F5F;
+  --background: #001745;
+  --background-secondary: #020617;
+  --foreground: #FF0068;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: #B25F5F;
+  --primary: #FF0068;
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: #9e3737;
+  --secondary: #D900FF;
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
@@ -44,30 +45,31 @@
 }
 
 @layer base {
-	html {
-		@apply text-[#A83E36];
-	}
+  html {
+    @apply text-[#A83E36];
+  }
 }
 
 @keyframes fadeInUp {
-	from {
-		opacity: 0;
-		transform: translateY(20px);
-	}
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fade-in-up {
-	animation: fadeInUp 0.5s ease-out forwards;
+  animation: fadeInUp 0.5s ease-out forwards;
 }
 
 @tailwind utilities;
 
 @theme inline {
   --color-background: var(--background);
+  --color-background-secondary: var(--background-secondary);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
@@ -104,4 +106,22 @@
   body {
     @apply bg-background text-primary;
   }
+}
+
+.auth {
+  background: linear-gradient(-45deg, #001745, #1e011c, #001745, #26011d);
+  background-size: 400% 400%;
+	animation: gradient 30s ease infinite;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
 }

@@ -2,8 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { Button } from "./ui/button";
 import { APPLICATION_STATES } from "@/pages/Application";
-import { signOut } from "firebase/auth";
-import { auth } from "../utils/firebase";
+import { ArrowLeft, LogOut } from "lucide-react";
 
 function ApplicationNavbar({
   applicationState,
@@ -12,12 +11,12 @@ function ApplicationNavbar({
   applicationState: APPLICATION_STATES;
   onPrevClick: () => void;
 }) {
-  const user = useAuth();
+  const {user, signOut} = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
-      await signOut(auth);
+      await signOut();
       navigate("/auth");
     } catch (error) {
       console.error("Logout failed:", error);
@@ -31,7 +30,7 @@ function ApplicationNavbar({
         {applicationState === APPLICATION_STATES.INTRO ? (
           <Link to="/" className="place-self-start h-full flex items-center">
             <img
-              src="/images/logo/gh_logo-color.png"
+              src="/images/logo/gh_logo.svg"
               width={500}
               height={500}
               className="w-10 h-10 pointer-events-none select-none"
@@ -41,7 +40,7 @@ function ApplicationNavbar({
 
         {applicationState === APPLICATION_STATES.INTRO ? (
           <span className="text-md font-semibold text-center line-clamp-2">
-            {user.user?.displayName}
+            {user?.displayName}
           </span>
         ) : null}
 
@@ -51,12 +50,7 @@ function ApplicationNavbar({
             className="place-self-start h-full"
             onClick={onPrevClick}
           >
-            <img
-              src="/images/icons/arrow_backward.svg"
-              width={64}
-              height={64}
-              className="w-5 h-5 pointer-events-none select-none"
-            />
+            <ArrowLeft className="w-30 h-30 pointer-events-none select-none text-white" />
           </Button>
         ) : null}
 
@@ -71,12 +65,7 @@ function ApplicationNavbar({
           variant="ghost"
           onClick={handleLogout}
         >
-          <img
-            src={`/images/icons/sign_out.svg`}
-            width={120}
-            height={120}
-            className="w-6 h-6 pointer-events-none select-none"
-          />
+          <LogOut className="w-30 h-30 pointer-events-none select-none text-white" />
         </Button>
       </div>
 
@@ -85,17 +74,17 @@ function ApplicationNavbar({
         <div className="flex flex-row">
           <Link to="/">
             <img
-              src="/images/logo/gh_logo-color.png"
+              src="/images/logo/gh_logo.svg"
               width={500}
               height={500}
               className="w-20 h-20 pointer-events-none select-none"
             />
           </Link>
-          <div className="hidden lg:flex flex-col justify-center">
-            <h1 className="text-2xl text-primary font-bold">
+          <div className="hidden lg:flex flex-col justify-center text-white">
+            <h1 className="text- font-bold">
               Apply to Garuda Hacks 6.0
             </h1>
-            <p className="text-xl text-primary">
+            <p className="text-xl">
               Join hundreds of hackers at SEA's largest hackathon.
             </p>
           </div>
@@ -103,16 +92,16 @@ function ApplicationNavbar({
 
         <div className="flex-1 block"></div>
 
-        <span className="text-xl font-semibold">{user.user?.displayName}</span>
+        <span className="text-xl font-semibold text-white">{user?.displayName}</span>
 
         <Button className="flex" size="lg" onClick={handleLogout}>
-          Logout
           <img
             src="/images/icons/sign_out_white.svg"
             width={64}
             height={64}
             className="w-4 h-4 pointer-events-none select-none"
-          />
+            />
+            Logout
         </Button>
       </div>
     </>

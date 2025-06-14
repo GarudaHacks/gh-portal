@@ -1,60 +1,43 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Page from "../components/Page";
 import QuestionForm, { QuestionFormData } from "../components/QuestionForm";
-import { submitTicket, getUserTickets, Ticket } from "../services/ticketService";
-import { useAuth } from "../context/AuthContext";
-import { Loader2 } from "lucide-react";
+
+interface Ticket {
+	id: string;
+	subject: string;
+	description: string;
+	status: "waiting" | "claimed" | "resolved";
+	submittedAt: string;
+	categories: string[];
+}
 
 function Mentorship() {
-	const { user } = useAuth();
 	const [isFormOpen, setIsFormOpen] = useState(false);
 	const [tickets, setTickets] = useState<Ticket[]>([]);
-	const [isLoading, setIsLoading] = useState(false);
-	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	const handleSubmitQuestion = (formData: QuestionFormData) => {
+		const newTicket: Ticket = {
+			id: Date.now().toString(),
+			subject: formData.subject,
+			description: formData.description,
+			status: "waiting",
+			submittedAt: new Date().toLocaleString("en-US", {
+				month: "short",
+				day: "numeric",
+				hour: "numeric",
+				minute: "numeric",
+				hour12: true,
+			}),
+			categories: formData.categories,
+		};
+
+		setTickets([newTicket, ...tickets]);
+		// Show success notification
+		setShowNotification(true);
+		setTimeout(() => setShowNotification(false), 5000);
+	};
+
 	const [showNotification, setShowNotification] = useState(false);
-
-	// Fetch user tickets when component mounts or user changes
-	useEffect(() => {
-		if (user) {
-			fetchUserTickets();
-		}
-	}, [user]);
-
-	// Fetch tickets from Firestore
-	const fetchUserTickets = async () => {
-		if (!user) return;
-		
-		setIsLoading(true);
-		try {
-			const userTickets = await getUserTickets(user.uid);
-			setTickets(userTickets);
-		} catch (error) {
-			console.error('Error fetching tickets:', error);
-		} finally {
-			setIsLoading(false);
-		}
-	};
-
-	// Handle form submission
-	const handleSubmitQuestion = async (formData: QuestionFormData) => {
-		setIsSubmitting(true);
-		try {
-			const newTicket = await submitTicket(formData, user);
-			
-			// Add the new ticket to the state
-			setTickets(prevTickets => [newTicket, ...prevTickets]);
-			
-			// Show success notification
-			setShowNotification(true);
-			setTimeout(() => setShowNotification(false), 5000);
-		} catch (error) {
-			console.error('Error submitting question:', error);
-			alert('Failed to submit your question. Please try again.');
-		} finally {
-			setIsSubmitting(false);
-			setIsFormOpen(false);
-		}
-	};
 
 	return (
 		<Page
@@ -69,16 +52,8 @@ function Mentorship() {
 					<button
 						className="bg-[#9F3737] text-white px-4 py-2 rounded-md flex items-center gap-2"
 						onClick={() => setIsFormOpen(true)}
-						disabled={isSubmitting}
 					>
-						{isSubmitting ? (
-							<>
-								<Loader2 className="animate-spin mr-2" size={16} />
-								<span className="font-medium">Submitting...</span>
-							</>
-						) : (
-							<span className="font-medium">New Question</span>
-						)}
+						<span className="font-medium">New Question</span>
 					</button>
 				</div>
 
@@ -121,11 +96,7 @@ function Mentorship() {
 				<div className="mt-4">
 					<h2 className="text-xl font-bold mb-4">Your Tickets</h2>
 
-					{isLoading ? (
-						<div className="flex justify-center py-12">
-							<Loader2 className="animate-spin text-[#9F3737]" size={32} />
-						</div>
-					) : tickets.length > 0 ? (
+					{tickets.length > 0 ? (
 						<div className="space-y-4">
 							{tickets.map((ticket) => (
 								<div
@@ -143,7 +114,6 @@ function Mentorship() {
 											</div>
 											<h3 className="text-lg font-medium">{ticket.subject}</h3>
 											<p className="text-gray-700 mt-1">{ticket.description}</p>
-											<p className="text-gray-600 text-sm mt-1">Location: {ticket.location}</p>
 
 											<div className="mt-3">
 												<span className="text-sm text-gray-500">Category</span>
@@ -160,13 +130,7 @@ function Mentorship() {
 											</div>
 										</div>
 										<div className="text-sm text-gray-500">
-											Submitted {new Date(ticket.submittedAt).toLocaleString("en-US", {
-												month: "short",
-												day: "numeric",
-												hour: "numeric",
-												minute: "numeric",
-												hour12: true,
-											})}
+											Submitted {ticket.submittedAt}
 										</div>
 									</div>
 								</div>

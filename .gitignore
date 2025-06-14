@@ -12,6 +12,7 @@ node_modules
 dist
 dist-ssr
 *.local
+service-key.json
 
 # Editor directories and files
 .vscode/*
@@ -24,3 +25,4 @@ dist-ssr
 *.sln
 *.sw?
 .qodo
+.vercel
