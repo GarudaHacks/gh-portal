@@ -9,8 +9,8 @@ import { inject } from "@vercel/analytics";
 inject();
 
 createRoot(document.getElementById("root")!).render(
-	<StrictMode>
-		<Toaster />
-		<App />
-	</StrictMode>
+  <StrictMode>
+    <Toaster />
+    <App />
+  </StrictMode>
 );
