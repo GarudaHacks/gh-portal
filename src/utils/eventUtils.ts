@@ -43,24 +43,24 @@ export const calculateEventPosition = (
 export const getEventTypeStyles = (type: string): StyleSet => {
   const styles: Record<string, StyleSet> = {
     main: {
-      bg: "bg-blue-50",
-      border: "border-l-4 border-blue-500",
-      indicator: "bg-blue-500",
+      bg: "bg-[#ff0068]/10",
+      border: "border-l-4 border-[#ff0068]",
+      indicator: "bg-[#ff0068]",
     },
     workshop: {
-      bg: "bg-pink-50",
-      border: "border-l-4 border-pink-500",
-      indicator: "bg-pink-500",
+      bg: "bg-[#7c000f]/10",
+      border: "border-l-4 border-[#7c000f]",
+      indicator: "bg-[#7c000f]",
     },
     activity: {
-      bg: "bg-purple-50",
-      border: "border-l-4 border-purple-500",
-      indicator: "bg-purple-500",
+      bg: "bg-[#2fbeb0]/10",
+      border: "border-l-4 border-[#2fbeb0]",
+      indicator: "bg-[#2fbeb0]",
     },
     break: {
-      bg: "bg-green-50",
-      border: "border-l-4 border-green-500",
-      indicator: "bg-green-500",
+      bg: "bg-[#f7f5dd]/10",
+      border: "border-l-4 border-[#bdbb9a]",
+      indicator: "bg-[#f7f5dd]",
     },
   };
 
