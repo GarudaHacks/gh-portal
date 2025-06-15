@@ -39,7 +39,7 @@ function EventCard({
       ref={(el) => setRef(event.id, el)}
       className={`p-3 rounded-md shadow-sm ${!isDesktop ? "mx-2" : ""} ${
         typeStyles.bg
-      } ${typeStyles.border} cursor-pointer hover:shadow-md`}
+      } ${typeStyles.border} cursor-pointer hover:shadow-md text-white`}
       style={{
         ...desktopStyles,
         ...mobileStyles,
@@ -48,20 +48,20 @@ function EventCard({
         transition:
           "height 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease",
         transform: isExpanded ? "scale(1.02)" : "scale(1)",
-        boxShadow: isExpanded ? "0 4px 12px rgba(0, 0, 0, 0.1)" : "",
+        boxShadow: isExpanded ? "0 4px 12px rgba(0, 0, 0, 0.2)" : "",
       }}
       onClick={(e) => onEventClick(event, e)}
     >
       <div className="font-medium">{event.title}</div>
-      <div className="text-sm text-gray-600">
+      <div className="text-sm text-white/80">
         {formatTime(event.startTime)} - {formatTime(event.endTime)}
       </div>
       {event.location && (
-        <div className="text-sm text-gray-600">{event.location}</div>
+        <div className="text-sm text-white/80">{event.location}</div>
       )}
 
       {!isDesktop && !isExpanded && (
-        <div className="text-xs mt-1 text-gray-500 transition-opacity duration-200">
+        <div className="text-xs mt-1 text-white/60 transition-opacity duration-200">
           Click for details
         </div>
       )}

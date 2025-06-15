@@ -32,7 +32,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   // Check if the current route is a restricted page
-  const isRestrictedPage = ["/schedule", "/ticket", "/mentorship"].includes(
+  const isRestrictedPage = ["/ticket", "/mentorship"].includes(
     location.pathname
   );
   const canAccessRestrictedPages =

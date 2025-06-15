@@ -2,7 +2,7 @@ import { DayIndicatorProps } from "../types/eventTypes";
 
 function DayIndicator({ currentDay, eventDays }: DayIndicatorProps) {
   return (
-    <div className="font-medium text-lg relative h-10 flex items-center">
+    <div className="font-medium text-lg relative h-10 flex items-center text-white">
       <div className="relative w-24 h-10">
         {eventDays.map((day, index) => (
           <div

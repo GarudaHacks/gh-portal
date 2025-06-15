@@ -68,7 +68,12 @@ function Application() {
   };
 
   // update form data
-  const updateFormData = (questionId: string, type: string, response: any, error?: string) => {
+  const updateFormData = (
+    questionId: string,
+    type: string,
+    response: any,
+    error?: string
+  ) => {
     if (!localApplicationState) return;
     setLocalApplicationState({
       ...localApplicationState,
@@ -171,8 +176,7 @@ function Application() {
         return;
       } else {
         setIsSubmitting(false);
-        toast.error("Failed to save application.");
-        return;
+        toast.error(errorData.message || "Failed to save application.");
       }
     }
 
@@ -196,7 +200,9 @@ function Application() {
       });
       const data = await response.json();
       if (!response.ok) {
-        toast.error("Failed to save application. Please try again later.");
+        toast.error(
+          data.message || "Failed to save application. Please try again later."
+        );
         console.error("Error saving application data:", data);
         return;
       }
@@ -204,7 +210,11 @@ function Application() {
       toast.success("Application submitted!");
     } catch (error) {
       console.error("Error saving application data:", error);
-      toast.error("Failed to save application. Please try again later.");
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to save application. Please try again later."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -232,10 +242,15 @@ function Application() {
           } else if (question.type === "datetime") {
             try {
               // if response is a date, and is coming from betterdatepicker,
-              const stringifyedResponse = response instanceof Date
-                ? format(response, "MM/dd/yyyy")
-                : response;
-              const parsedDate = parse(stringifyedResponse, "MM/dd/yyyy", new Date());
+              const stringifyedResponse =
+                response instanceof Date
+                  ? format(response, "MM/dd/yyyy")
+                  : response;
+              const parsedDate = parse(
+                stringifyedResponse,
+                "MM/dd/yyyy",
+                new Date()
+              );
               if (parsedDate.toString() !== "Invalid Date") {
                 formResponse[questionId] = parsedDate.toISOString();
               }
@@ -306,7 +321,7 @@ function Application() {
             return;
           } else {
             setIsSubmitting(false);
-            toast.error("Failed to save application");
+            toast.error(errorData.message || "Failed to save application");
           }
         }
       }

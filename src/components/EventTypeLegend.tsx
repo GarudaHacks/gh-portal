@@ -2,10 +2,10 @@ import { EventTypeLegendProps } from "../types/eventTypes";
 
 function EventTypeLegend({
   eventTypes = [
-    { type: "main", label: "Main Events", color: "#3b82f6" },
-    { type: "workshop", label: "Workshops", color: "#ec4899" },
-    { type: "activity", label: "Activities", color: "#8b5cf6" },
-    { type: "break", label: "Breaks", color: "#22c55e" },
+    { type: "main", label: "Main Events", color: "#FF0068" },
+    { type: "workshop", label: "Workshops", color: "#9f0041" },
+    { type: "activity", label: "Activities", color: "#FF0068" },
+    { type: "break", label: "Breaks", color: "#9f0041" },
   ],
 }: EventTypeLegendProps): JSX.Element {
   return (
@@ -16,7 +16,7 @@ function EventTypeLegend({
             className={`w-4 h-4 mr-2 rounded-sm`}
             style={{ backgroundColor: eventType.color }}
           ></div>
-          <span>{eventType.label}</span>
+          <span className="text-white">{eventType.label}</span>
         </div>
       ))}
     </div>
