@@ -209,7 +209,10 @@ function Home() {
                   You have been accepted to Garuda Hacks 6.0! Please confirm
                   your attendance by clicking the button below.
                 </p>
-                <Button className="w-fit" onClick={() => navigate("/ticket")}>
+                <Button
+                  className="w-fit mt-4"
+                  onClick={() => navigate("/rsvp")}
+                >
                   Confirm Attendance & Get Ticket
                 </Button>
               </GlassyRectangleBackground>
@@ -228,7 +231,10 @@ function Home() {
                     Apply by{" "}
                     <b>
                       {portalConfig
-                        ? format(portalConfig.applicationCloseDate, "MMMM d, yyyy") 
+                        ? format(
+                            portalConfig.applicationCloseDate,
+                            "MMMM d, yyyy"
+                          )
                         : ""}
                     </b>{" "}
                     for a spot at Garuda Hacks 6.0.
@@ -243,7 +249,8 @@ function Home() {
                     ? format(portalConfig.hackathonEndDate, "MMMM d, yyyy")
                     : ""}
                   <br />
-                  <span className="font-bold">Venue:</span> Universitas Multimedia Nusantara (UMN).
+                  <span className="font-bold">Venue:</span> Universitas
+                  Multimedia Nusantara (UMN).
                 </p>
                 {(() => {
                   return (
