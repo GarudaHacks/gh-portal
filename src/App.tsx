@@ -14,6 +14,7 @@ import Faq from "./pages/Faq";
 import Ticketing from "./pages/Ticketing";
 import Application from "./pages/Application";
 import { UserApplicationStatus } from "./types/applicationStatus";
+import Rsvp from "./pages/Rsvp";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading, applicationStatus } = useAuth();
@@ -98,6 +99,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Faq />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/rsvp"
+            element={
+              <ProtectedRoute>
+                <Rsvp />
               </ProtectedRoute>
             }
           />
