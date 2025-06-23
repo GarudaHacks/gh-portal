@@ -328,7 +328,7 @@ const EventSchedule = () => {
 
   return (
     <div className="max-w-full overflow-hidden">
-      <h1 className="text-3xl font-bold text-[#9F3737] mb-4">
+      <h1 className="text-3xl font-bold text-primary mb-4 text-white">
         Day-Of-Events Schedule
       </h1>
 
@@ -340,18 +340,18 @@ const EventSchedule = () => {
         {/* Event type legend*/}
         <EventTypeLegend
           eventTypes={[
-            { type: "main", label: "Main Events", color: "#3b82f6" },
-            { type: "workshop", label: "Workshops", color: "#ec4899" },
-            { type: "activity", label: "Activities", color: "#8b5cf6" },
-            { type: "break", label: "Breaks", color: "#22c55e" },
+            { type: "main", label: "Main Events", color: "#ff0068" },
+            { type: "workshop", label: "Workshops", color: "#7c000f" },
+            { type: "activity", label: "Activities", color: "#2fbeb0" },
+            { type: "break", label: "Breaks", color: "#f7f5dd" },
           ]}
         />
       </div>
 
       {/* Schedule container */}
-      <div className="bg-white rounded-lg overflow-hidden shadow-md">
+      <div className="bg-white/5 backdrop-blur-md rounded-lg overflow-hidden shadow-md border border-white/10">
         {/* Day header */}
-        <div className="font-bold text-xl p-4 bg-[#9F3737] text-[#FFF7F2] border-b border-gray-200">
+        <div className="font-bold text-xl p-4 bg-[#FF0068] text-white border-b border-white/10">
           Hackathon Schedule
         </div>
 
@@ -393,7 +393,7 @@ const EventSchedule = () => {
                 {hourMarkers.map((_, index) => (
                   <div
                     key={`gridline-${index}`}
-                    className="absolute top-0 bottom-0 border-l border-gray-200"
+                    className="absolute top-0 bottom-0 border-l border-white/10"
                     style={{
                       left: `${index * HOUR_WIDTH}px`,
                       height: "100%",

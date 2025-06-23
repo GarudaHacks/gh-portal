@@ -22,7 +22,6 @@ import {
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { format, isValid, parseISO } from "date-fns";
-import { DatePicker } from "@/components/Datepicker";
 import DateOfBirthPicker from "@/components/own-ui/DateOfBirthPicker";
 
 function countWords(text: string): number {

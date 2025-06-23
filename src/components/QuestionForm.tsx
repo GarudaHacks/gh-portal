@@ -66,7 +66,27 @@ function QuestionForm({ isOpen, onClose, onSubmit }: QuestionFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate form data
+    if (
+      !formData.subject.trim() ||
+      !formData.description.trim() ||
+      !formData.location.trim()
+    ) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
     onSubmit(formData);
+
+    // Reset form data
+    setFormData({
+      subject: "",
+      description: "",
+      location: "",
+      categories: [],
+    });
+
     onClose();
   };
 

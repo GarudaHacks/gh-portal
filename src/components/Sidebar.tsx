@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { auth } from "../utils/firebase";
 import { useAuth } from "../context/AuthContext";
 import SidebarTab from "./SidebarTab";
 import toast from "react-hot-toast";
@@ -141,7 +140,7 @@ function Sidebar({ onSidebarToggle }: SidebarProps = {}) {
                 className="w-fit mt-4 rounded-lg bg-background px-3 md:px-4 py-2 flex items-center text-white active:opacity-80"
               >
                 <span className="text-primary font-semibold md:text-lg flex flex-row items-center gap-1">
-                  <LogOut className="m-0"/>
+                  <LogOut className="m-0" />
                   Logout
                 </span>
               </button>

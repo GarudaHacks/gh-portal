@@ -6,7 +6,7 @@ function TimelineHeader({ hourMarkers, hourWidth }: TimelineHeaderProps) {
       {hourMarkers.map((marker, index) => (
         <div
           key={index}
-          className="p-2 text-left text-sm font-medium text-gray-700"
+          className="p-2 text-left text-sm font-medium text-gray-700 bg-white"
           style={{
             width: `${hourWidth}px`,
             minWidth: `${hourWidth}px`,
