@@ -51,6 +51,8 @@ function Home() {
           setUserApplicationStatus(APPLICATION_STATUS.SUBMITTED);
         } else if (data.data === APPLICATION_STATUS.ACCEPTED) {
           setUserApplicationStatus(APPLICATION_STATUS.ACCEPTED);
+        } else if (data.data === APPLICATION_STATUS.CONFIRMED_RSVP) {
+          setUserApplicationStatus(APPLICATION_STATUS.CONFIRMED_RSVP);
         }
       } catch (error) {
         console.error("Error fetching application status:", error);
@@ -83,10 +85,7 @@ function Home() {
 
     const updateTimer = () => {
       const now = new Date().getTime();
-      const usedTime =
-        now < portalConfig.applicationCloseDate.getTime()
-          ? portalConfig.applicationCloseDate.getTime()
-          : portalConfig.hackathonEndDate.getTime();
+      const usedTime = portalConfig.hackathonEndDate.getTime();
       const distance = usedTime - now;
 
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -121,20 +120,20 @@ function Home() {
       ) : (
         <>
           <div className="flex flex-col gap-4">
-            {user?.applicationStatus ===
-              UserApplicationStatus.CONFIRMED_RSVP && (
+            {userApplicationStatus === APPLICATION_STATUS.CONFIRMED_RSVP && (
               <>
                 <div className="flex flex-col gap-4">
                   <h1 className="text-3xl lg:text-5xl font-bold text-white">
                     {greetingHelper()},{" "}
                     {user?.user?.first_name || user?.user?.displayName}!
                   </h1>
+                  <h2 className="text-3xl lg:text-3xl mb-4 font-bold text-white">
+                    See you at Garuda Hacks 6.0!
+                  </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="border rounded-lg p-6 flex flex-col h-full items-center justify-center gap-4">
                       <h3 className="text-xl uppercase font-semibold text-center">
-                        {applicationsOpen
-                          ? "APPLICATIONS CLOSE IN"
-                          : "HACKING CLOSES IN"}
+                        TIME TO HACKATHON
                       </h3>
                       <div className="flex flex-wrap justify-center gap-2 md:gap-4 text-center">
                         <div className="flex flex-col items-center">
@@ -177,15 +176,15 @@ function Home() {
 
                     <div className="border rounded-lg p-6 flex flex-col h-full items-center justify-center gap-4">
                       <h3 className="text-xl uppercase font-semibold text-center">
-                        Event Website
+                        Discord Server
                       </h3>
                       <a
-                        href="https://garudahacks.com"
+                        href="https://discord.gg/5hVnu8t4mw"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors"
                       >
-                        Visit garudahacks.com
+                        Join Discord server
                         <ArrowUpRight className="w-4 h-4" />
                       </a>
                     </div>
