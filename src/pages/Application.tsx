@@ -354,6 +354,7 @@ function Application() {
           } else {
             setIsSubmitting(false);
             toast.error(errorData.message || "Failed to save application");
+            return;
           }
         }
       }
