@@ -29,7 +29,7 @@ export default function HomeStatusNotRsvpd() {
           We will release acceptances on a rolling basis starting from{" "}
           {portalConfig
             ? format(portalConfig.applicationReleaseDate, "MMM d, yyyy")
-            : "Jun 20th, 2025"}
+            : "Jun 25th, 2025"}
           .
         </p>
       </GlassyRectangleBackground>
