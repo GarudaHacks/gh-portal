@@ -179,7 +179,7 @@ function Home() {
                         Discord Server
                       </h3>
                       <a
-                        href="https://discord.gg/5hVnu8t4mw"
+                        href="https://discord.gg/vQw3UeYzFb"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors"
