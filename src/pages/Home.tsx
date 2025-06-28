@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import Page from "../components/Page";
 import { APPLICATION_STATUS } from "@/types/application";
-import { UserApplicationStatus } from "@/types/applicationStatus";
 import HomeStatusNotRsvpd from "@/components/HomeStatusNotRsvpd";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -53,6 +52,8 @@ function Home() {
           setUserApplicationStatus(APPLICATION_STATUS.ACCEPTED);
         } else if (data.data === APPLICATION_STATUS.CONFIRMED_RSVP) {
           setUserApplicationStatus(APPLICATION_STATUS.CONFIRMED_RSVP);
+        } else if (data.data === APPLICATION_STATUS.REJECTED) {
+          setUserApplicationStatus(APPLICATION_STATUS.REJECTED);
         }
       } catch (error) {
         console.error("Error fetching application status:", error);
@@ -265,6 +266,31 @@ function Home() {
                   );
                 })()}
               </div>
+            </div>
+          ) : null}
+
+          {userApplicationStatus === APPLICATION_STATUS.REJECTED ? (
+            <div className="flex flex-col gap-4">
+              <h2 className="text-2xl font-bold text-red-500">
+                Application Status: Rejected
+              </h2>
+              <GlassyRectangleBackground>
+                <div className="flex flex-col gap-4">
+                  <h3 className="text-xl font-semibold text-white">
+                    Thank you for applying
+                  </h3>
+                  <p className="text-gray-300">
+                    We appreciate your interest in Garuda Hacks 6.0. After
+                    careful consideration, we regret to inform you that we are
+                    unable to offer you a spot this year.
+                  </p>
+                  <p className="text-gray-300">
+                    The selection process was highly competitive, and we
+                    encourage you to apply again next year. Thank you for your
+                    passion and effort!
+                  </p>
+                </div>
+              </GlassyRectangleBackground>
             </div>
           ) : null}
         </>
