@@ -207,7 +207,10 @@ function Application() {
         return;
       } else {
         setIsSubmitting(false);
-        toast.error(errorData.message || "Failed to save application.");
+        toast.error(
+          errorData.message ||
+            "Failed to save application.\nPlease log out and log back in to refresh your session."
+        );
         return;
       }
     }
@@ -233,7 +236,8 @@ function Application() {
       const data = await response.json();
       if (!response.ok) {
         toast.error(
-          data.message || "Failed to save application. Please try again later."
+          data.message ||
+            "Failed to save application.\nPlease log out and log back in to refresh your session."
         );
         console.error("Error saving application data:", data);
         return;
@@ -245,7 +249,7 @@ function Application() {
       toast.error(
         error instanceof Error
           ? error.message
-          : "Failed to save application. Please try again later."
+          : "Failed to save application.\nPlease log out and log back in to refresh your session."
       );
     } finally {
       setIsSubmitting(false);
@@ -353,7 +357,10 @@ function Application() {
             return;
           } else {
             setIsSubmitting(false);
-            toast.error(errorData.message || "Failed to save application");
+            toast.error(
+              errorData.message ||
+                "Failed to save application.\nPlease log out and log back in to refresh your session."
+            );
             return;
           }
         }
