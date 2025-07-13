@@ -20,12 +20,8 @@ function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [portalConfig, setPortalConfig] = useState<PortalConfig | null>(null);
 
-  const applicationsOpen =
-    portalConfig?.applicationsOpen ||
-    (portalConfig?.applicationStartDate &&
-      new Date() >= portalConfig.applicationStartDate &&
-      portalConfig?.applicationCloseDate &&
-      new Date() <= portalConfig.applicationCloseDate);
+  // Force applications closed
+  const applicationsOpen = false;
 
   const [timeLeft, setTimeLeft] = useState({
     days: 0,

@@ -54,14 +54,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/home" />} />
           <Route path="/auth" element={<Auth />} />
-          <Route
-            path="/application"
-            element={
-              <ProtectedRoute>
-                <Application />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/application" element={<Navigate to="/home" />} />
           <Route
             path="/home"
             element={
