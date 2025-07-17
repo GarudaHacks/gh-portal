@@ -120,11 +120,11 @@ function Sidebar({ onSidebarToggle }: SidebarProps = {}) {
               iconUrl="/images/icons/calendar_month.svg"
               disabled={!canAccessRestrictedPages}
             />
-            <SidebarTab
+            {/* <SidebarTab
               name="Ticket"
               iconUrl="/images/icons/confirmation_number.svg"
               disabled={!canAccessRestrictedPages}
-            />
+            /> */}
             <SidebarTab
               name="Mentorship"
               iconUrl="/images/icons/group_search.svg"
