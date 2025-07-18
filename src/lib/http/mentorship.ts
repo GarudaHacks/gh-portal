@@ -17,9 +17,9 @@ export async function fetchAllMentors() {
     return data.allMentors
   } catch (error) {
     console.error("Something went wrong when trying to fetch all mentors:", error)
+    return []
   }
 }
-
 
 export async function fetchMyMentorships() {
   try {
@@ -40,5 +40,6 @@ export async function fetchMyMentorships() {
     return data.data
   } catch (error) {
     console.error("Something went wrong when trying to fetch my mentorships:", error)
+    return []
   }
 }

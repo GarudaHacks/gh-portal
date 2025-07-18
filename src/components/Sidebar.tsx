@@ -5,6 +5,7 @@ import SidebarTab from "./SidebarTab";
 import toast from "react-hot-toast";
 import { UserApplicationStatus } from "../types/applicationStatus";
 import { LogOut } from "lucide-react";
+import { Badge } from "./ui/badge";
 
 interface SidebarProps {
   onSidebarToggle?: (isOpen: boolean) => void;
@@ -14,7 +15,7 @@ function Sidebar({ onSidebarToggle }: SidebarProps = {}) {
   const [showMenu, setShowMenu] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { user, signOut, applicationStatus } = useAuth();
+  const { user, signOut, applicationStatus, role } = useAuth();
 
   const navigate = useNavigate();
 
@@ -82,9 +83,8 @@ function Sidebar({ onSidebarToggle }: SidebarProps = {}) {
 
       {/* Sidebar */}
       <div
-        className={`min-h-screen bg-gradient-to-br from-[#001745] to-[#001745] flex flex-col justify-between fixed md:relative z-40 transition-all duration-300 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        } ${isMobile ? "w-[250px]" : "min-w-[15rem] w-[15rem]"}`}
+        className={`min-h-screen bg-gradient-to-br from-[#001745] to-[#001745] flex flex-col justify-between fixed md:relative z-40 transition-all duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+          } ${isMobile ? "w-[250px]" : "min-w-[15rem] w-[15rem]"}`}
       >
         <div className="p-6">
           <div className="text-[#FFF7F2] flex items-center justify-between">
@@ -150,7 +150,8 @@ function Sidebar({ onSidebarToggle }: SidebarProps = {}) {
 
         <div className="p-4 border-t border-white hidden md:block">
           <div className="flex items-center justify-between">
-            <div className="">
+            <div className="flex flex-col gap-1">
+              <Badge variant={"outline"} className="text-white">{role.toUpperCase()}</Badge>
               <div className="text-white font-medium">
                 {user?.displayName || "Guest"}
               </div>
@@ -165,11 +166,10 @@ function Sidebar({ onSidebarToggle }: SidebarProps = {}) {
           <div className="relative">
             <div
               className={`absolute bottom-5 left-20 w-48 bg-white rounded-md shadow-lg py-1 z-10 transition-all duration-200 ease-in-out origin-bottom-right
-							${
-                showMenu
+							${showMenu
                   ? "transform scale-100 opacity-100"
                   : "transform scale-95 opacity-0 pointer-events-none"
-              }
+                }
 						`}
             >
               <button

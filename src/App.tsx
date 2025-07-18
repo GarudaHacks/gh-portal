@@ -15,6 +15,7 @@ import Ticketing from "./pages/Ticketing";
 import Application from "./pages/Application";
 import { UserApplicationStatus } from "./types/applicationStatus";
 import Rsvp from "./pages/Rsvp";
+import MentorDetailPage from "./pages/MentorDetail";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading, applicationStatus } = useAuth();
@@ -89,6 +90,14 @@ function App() {
             }
           />
           <Route
+            path="/mentorship/*"
+            element={
+              <ProtectedRoute>
+                <MentorDetailPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/faq"
             element={
               <ProtectedRoute>
@@ -104,6 +113,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+
           <Route path="*" element={<Navigate to="/auth" />} />
         </Routes>
       </BrowserRouter>
