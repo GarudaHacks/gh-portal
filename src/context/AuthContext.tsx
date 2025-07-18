@@ -89,8 +89,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isActionLoading, setIsActionLoading] = useState<boolean>(false);
   const [isVerifyingEmail, setIsVerifyingEmail] = useState<boolean>(false);
 
-  const applicationStatus =
-    user?.applicationStatus || UserApplicationStatus.NOT_APPLICABLE;
+  const [applicationStatus, setApplicationStatus] = useState<UserApplicationStatus>(
+    UserApplicationStatus.NOT_APPLICABLE
+  );
+
+  const fetchApplicationStatus = async (): Promise<UserApplicationStatus> => {
+    try {
+      const response = await fetch("/api/application/status", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+      const data = await response.json();
+      if (response.ok) {
+        return data.data || UserApplicationStatus.NOT_APPLICABLE;
+      } else {
+        console.error("Error fetching application status:", data.error);
+        return UserApplicationStatus.NOT_APPLICABLE;
+      }
+    } catch (e) {
+      console.error("Error fetching application status:", e);
+      return UserApplicationStatus.NOT_APPLICABLE;
+    }
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -106,14 +129,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         const data = await response.json();
 
-        if (response.ok) {
-          if (data.data.user?.emailVerified) {
-            setUser(data.data.user);
-          } else {
-            setUser(null);
+        if (response.ok && data.data.user?.emailVerified) {
+          setUser(data.data.user);
+          const status = await fetchApplicationStatus();
+          if (mounted) {
+            setApplicationStatus(status);
           }
         } else {
           setUser(null);
+          if (mounted) {
+            setApplicationStatus(UserApplicationStatus.NOT_APPLICABLE);
+          }
         }
       } catch (e) {
         console.error("Error checking session:", e);
@@ -156,6 +182,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (data.user?.emailVerified || data.emailVerified) {
         setUser(data.user || data);
+        const status = await fetchApplicationStatus();
+        setApplicationStatus(status);
       } else {
         setUser(null);
       }
@@ -233,6 +261,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       setUser(data.user || data);
+      const status = await fetchApplicationStatus();
+      setApplicationStatus(status);
       return {
         error: null,
         data: { message: "Login successful", user: data.user || data },
@@ -271,7 +301,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return { error: { message: "Login failed" }, data: null };
     } finally {
       setUser(null);
-      setLoading(false);
+      setApplicationStatus(UserApplicationStatus.NOT_APPLICABLE);
+      setLoading(false)
     }
   };
 

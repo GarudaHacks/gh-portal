@@ -43,14 +43,14 @@ const Rsvp: React.FC = () => {
         body: JSON.stringify({ rsvp: true }), // Add any required payload here
       });
       if (!response.ok) {
-        throw new Error("Failed to confirm RSVP. Please try again.");
+        throw new Error("Failed to confirm RSVP.\nPlease log out and log back in to refresh your session.");
       }
       toast.success("RSVP Confirmed!");
       setShowConfirmDialog(false);
       navigate("/ticket");
     } catch (error: any) {
-      alert(error.message || "Failed to confirm RSVP. Please try again.");
-      toast.error("Failed to confirm RSVP");
+      alert(error.message || "Failed to confirm RSVP.\nPlease log out and log back in to refresh your session.");
+      toast.error("Failed to confirm RSVP.\nPlease log out and log back in to refresh your session.");
     }
   };
 

@@ -103,8 +103,19 @@ function Application() {
         continue;
       } else if (question.type === "datetime") {
         try {
-          const parsedDate = parse(response, "MM/dd/yyyy", new Date());
-          if (parsedDate.toString() !== "Invalid Date") {
+          let parsedDate: Date | null = null;
+          if (response instanceof Date) {
+            parsedDate = response;
+          } else if (typeof response === "string") {
+            // Try parsing as MM/dd/yyyy, fallback to ISO
+            parsedDate = parse(response, "MM/dd/yyyy", new Date());
+            if (parsedDate.toString() === "Invalid Date") {
+              const isoDate = new Date(response);
+              parsedDate =
+                isoDate.toString() !== "Invalid Date" ? isoDate : null;
+            }
+          }
+          if (parsedDate && parsedDate.toString() !== "Invalid Date") {
             formResponse[questionId] = parsedDate.toISOString();
           }
         } catch (e) {
@@ -130,18 +141,30 @@ function Application() {
     };
 
     setIsSubmitting(true);
-    const response = await fetch("/api/application", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        "x-xsrf-token": Cookies.get("XSRF-TOKEN") || "",
-      },
-      credentials: "include",
-      body: JSON.stringify(payload),
-    });
+    let response;
+    try {
+      response = await fetch("/api/application", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "x-xsrf-token": Cookies.get("XSRF-TOKEN") || "",
+        },
+        credentials: "include",
+        body: JSON.stringify(payload),
+      });
+    } catch (err) {
+      setIsSubmitting(false);
+      toast.error("Network error. Please try again.");
+      return;
+    }
 
     if (!response.ok) {
-      const errorData = await response.json();
+      let errorData: any = {};
+      try {
+        errorData = await response.json();
+      } catch (e) {
+        errorData = { message: "Unknown error occurred." };
+      }
 
       if (errorData.details && Array.isArray(errorData.details)) {
         const updatedData = { ...localApplicationState.data };
@@ -171,12 +194,24 @@ function Application() {
           data: updatedData,
         });
 
-        toast.error("There are errors in your application.");
+        const errorMessages = errorData.details
+          .map((error: { field_id: string; message: string }) => error.message)
+          .filter(Boolean)
+          .join("\n");
+        toast.error(
+          errorMessages
+            ? `There are errors in your application:\n${errorMessages}`
+            : "There are errors in your application."
+        );
         setIsSubmitting(false);
         return;
       } else {
         setIsSubmitting(false);
-        toast.error(errorData.message || "Failed to save application.");
+        toast.error(
+          errorData.message ||
+            "Failed to save application.\nPlease log out and log back in to refresh your session."
+        );
+        return;
       }
     }
 
@@ -201,7 +236,8 @@ function Application() {
       const data = await response.json();
       if (!response.ok) {
         toast.error(
-          data.message || "Failed to save application. Please try again later."
+          data.message ||
+            "Failed to save application.\nPlease log out and log back in to refresh your session."
         );
         console.error("Error saving application data:", data);
         return;
@@ -213,7 +249,7 @@ function Application() {
       toast.error(
         error instanceof Error
           ? error.message
-          : "Failed to save application. Please try again later."
+          : "Failed to save application.\nPlease log out and log back in to refresh your session."
       );
     } finally {
       setIsSubmitting(false);
@@ -321,7 +357,11 @@ function Application() {
             return;
           } else {
             setIsSubmitting(false);
-            toast.error(errorData.message || "Failed to save application");
+            toast.error(
+              errorData.message ||
+                "Failed to save application.\nPlease log out and log back in to refresh your session."
+            );
+            return;
           }
         }
       }

@@ -33,9 +33,10 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   // Check if the current route is a restricted page
-  const isRestrictedPage = ["/ticket", "/mentorship"].includes(
+  const isRestrictedPage = ["/schedule", "/ticket", "/mentorship"].includes(
     location.pathname
   );
+
   const canAccessRestrictedPages =
     applicationStatus === UserApplicationStatus.ACCEPTED ||
     applicationStatus === UserApplicationStatus.CONFIRMED_RSVP;
@@ -54,14 +55,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/home" />} />
           <Route path="/auth" element={<Auth />} />
-          <Route
-            path="/application"
-            element={
-              <ProtectedRoute>
-                <Application />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/application" element={<Navigate to="/home" />} />
           <Route
             path="/home"
             element={
@@ -78,14 +72,14 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
+          {/* <Route
             path="/ticket"
             element={
               <ProtectedRoute>
                 <Ticketing />
               </ProtectedRoute>
             }
-          />
+          /> */}
           <Route
             path="/mentorship"
             element={
