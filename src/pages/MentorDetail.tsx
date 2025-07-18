@@ -61,7 +61,6 @@ export default function MentorDetailPage() {
           </div>
         </div>
 
-
         <div className="flex flex-col gap-4">
           <h1 className="font-bold">Mentorship Slots ({mentorshipAppointments?.length})</h1>
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">

@@ -15,6 +15,9 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Textarea } from "./ui/textarea"
 import { MapPinCheck, MonitorSmartphone } from "lucide-react"
+import { useState } from "react"
+import { bookMentorshipAppointment } from "@/lib/http/mentorship"
+import toast from "react-hot-toast"
 
 interface MentorshipSlotAsHackerComponentProps {
   mentorshipAppointment: MentorshipAppointment
@@ -24,30 +27,49 @@ interface MentorshipSlotAsHackerComponentProps {
 export default function MentorshipSlotAsHackerComponent(
   { mentorshipAppointment, isMentorshipOpen }: MentorshipSlotAsHackerComponentProps
 ) {
+  const [inquiry, setInquiry] = useState<string>('')
+  const handleSubmitBook = async () => {
+    try {
+
+      if (!mentorshipAppointment.id) {
+        toast.error("Mentorship ID is not present.")
+        return;
+      }
+      const response = await bookMentorshipAppointment(mentorshipAppointment.id, inquiry)
+
+      console.log("RES", response)
+      toast.success("Successfuly booked mentorship!")
+    } catch (error) {
+      toast.error(`Error: ${error}`)
+    }
+  }
+
   return (
     <div className="border p-4 rounded-xl flex flex-col gap-2 justify-between bg-zinc-500/10">
-      <p className="text-xs text-muted-foreground">Mentorship ID: {mentorshipAppointment.id}</p>
+      <div className="flex flex-row justify-between items-center">
 
-      <div className="flex flex-row gap-2">
-      {mentorshipAppointment.hackerId ? (
-        <Badge variant={"destructive"}>Booked</Badge>
-      ) : (
-        <>
-          {!isTimeElapsed(mentorshipAppointment.startTime) ? (
-            <Badge className="bg-green-500">Available</Badge>
+        <div className="flex flex-row gap-2">
+          {mentorshipAppointment.hackerId ? (
+            <Badge variant={"destructive"}>Booked</Badge>
           ) : (
-            <Badge variant={"outline"}>Time Elapsed</Badge>
+            <>
+              {!isTimeElapsed(mentorshipAppointment.startTime) ? (
+                <Badge className="bg-green-500">Available</Badge>
+              ) : (
+                <Badge variant={"outline"}>Time Elapsed</Badge>
+              )}
+            </>
           )}
-        </>
-      )}
 
-      <Badge className="text-xs flex flex-row items-center gap-1">{mentorshipAppointment.location.toUpperCase()}
-        {mentorshipAppointment.location === 'online' ? (
-          <MonitorSmartphone size={16} />
-        ) : (
-          <MapPinCheck size={16} />
-        )}
-      </Badge>
+          <Badge className="text-xs flex flex-row items-center gap-1">{mentorshipAppointment.location.toUpperCase()}
+            {mentorshipAppointment.location === 'online' ? (
+              <MonitorSmartphone size={16} />
+            ) : (
+              <MapPinCheck size={16} />
+            )}
+          </Badge>
+        </div>
+        <p className="text-xs text-muted-foreground">Mentorship ID: {mentorshipAppointment.id}</p>
       </div>
       <div>
 
@@ -77,11 +99,11 @@ export default function MentorshipSlotAsHackerComponent(
               </AlertDialogDescription>
             </AlertDialogHeader>
 
-            <Textarea placeholder="Your inquiry here..." className="text-white" />
+            <Textarea onChange={(e) => setInquiry(e.target.value)} placeholder="Your inquiry here..." className="text-white" />
 
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction>Continue</AlertDialogAction>
+              <AlertDialogAction onClick={handleSubmitBook}>Continue</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

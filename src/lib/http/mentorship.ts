@@ -1,3 +1,5 @@
+import Cookies from "js-cookie"
+
 export async function fetchMentorshipConfig() {
   try {
     const response = await fetch("/api/mentorship/config", {
@@ -103,5 +105,31 @@ export async function fetchMentorshipAppointmentsByMentorId(mentorId: string) {
     return data
   } catch (error) {
     console.error("Something went wrong when trying to fetch mentorship appointments:", error)
+  }
+}
+
+export async function bookMentorshipAppointment(mentorshipAppointmentId: string, hackerDescription: string) {
+  try {
+    const response = await fetch("/api/mentorship/mentorships", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        "x-xsrf-token": Cookies.get("XSRF-TOKEN") || ""
+      },
+      body: JSON.stringify({
+        mentorshipAppointmentId,
+        hackerDescription
+      })
+    })
+    const data = await response.json()
+    if (!response.ok) {
+      console.error("Error when booking a mentorship appointment. Please try again later.")
+      return
+    }
+    console.log(data)
+    return data
+  } catch (error) {
+    console.error("Error when trying to book a mentorship appointment:", error)
   }
 }

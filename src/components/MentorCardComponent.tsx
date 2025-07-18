@@ -18,7 +18,7 @@ export default function MentorCardComponent(
   { mentor }: MentorCardComponentProps
 ) {
   return (
-    <Card className="bg-transparent">
+    <Card className="bg-transparent hover:bg-zinc-200/10 transition-all">
       <Link to={`/mentorship/${mentor.id}`} className="w-full">
         <CardHeader className="text-center">
           <CardTitle className="flex flex-col gap-2 items-center">
