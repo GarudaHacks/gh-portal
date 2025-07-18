@@ -8,12 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 interface MentorCardComponentProps {
   mentor: FirestoreMentor
@@ -32,7 +26,7 @@ export default function MentorCardComponent(
         {mentor.specialization && <CardDescription>{mentor.specialization.toUpperCase()}</CardDescription>}
       </CardHeader>
       <CardContent>
-        <p>{mentor.intro}</p>
+        <p className="text-center text-sm">{mentor.intro}</p>
       </CardContent>
     </Card>
   )
