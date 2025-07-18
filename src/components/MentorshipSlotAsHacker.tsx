@@ -3,15 +3,6 @@ import { Button } from "./ui/button"
 import { epochToStringDate, isTimeElapsed } from "@/utils/dateUtils"
 import { Badge } from "./ui/badge"
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -34,7 +25,7 @@ export default function MentorshipSlotAsHackerComponent(
   { mentorshipAppointment, isMentorshipOpen }: MentorshipSlotAsHackerComponentProps
 ) {
   return (
-    <div className="border p-4 rounded-xl flex flex-col gap-2 justify-between">
+    <div className="border p-4 rounded-xl flex flex-col gap-2 justify-between bg-zinc-500/10">
       <p className="text-xs text-muted-foreground">Mentorship ID: {mentorshipAppointment.id}</p>
 
       <div className="flex flex-row gap-2">
