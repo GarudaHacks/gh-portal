@@ -6,13 +6,14 @@ import toast from "react-hot-toast";
 import { UserApplicationStatus } from "../types/applicationStatus";
 import { LogOut } from "lucide-react";
 import { Badge } from "./ui/badge";
+import { UserRole } from "@/types/auth";
+import { Button } from "./ui/button";
 
 interface SidebarProps {
   onSidebarToggle?: (isOpen: boolean) => void;
 }
 
 function Sidebar({ onSidebarToggle }: SidebarProps = {}) {
-  const [showMenu, setShowMenu] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { user, signOut, applicationStatus, role } = useAuth();
@@ -55,7 +56,8 @@ function Sidebar({ onSidebarToggle }: SidebarProps = {}) {
 
   const canAccessRestrictedPages =
     applicationStatus === UserApplicationStatus.ACCEPTED ||
-    applicationStatus === UserApplicationStatus.CONFIRMED_RSVP;
+    applicationStatus === UserApplicationStatus.CONFIRMED_RSVP ||
+    role === UserRole.MENTOR;
 
   return (
     <>
@@ -115,25 +117,40 @@ function Sidebar({ onSidebarToggle }: SidebarProps = {}) {
         <div className="flex-1">
           <nav className="py-2">
             <SidebarTab name="Home" iconUrl="/images/icons/cottage.svg" />
-            <SidebarTab
-              name="Schedule"
-              iconUrl="/images/icons/calendar_month.svg"
-              disabled={!canAccessRestrictedPages}
-            />
-            {/* <SidebarTab
-              name="Ticket"
-              iconUrl="/images/icons/confirmation_number.svg"
-              disabled={!canAccessRestrictedPages}
-            /> */}
-            <SidebarTab
-              name="Mentorship"
-              iconUrl="/images/icons/group_search.svg"
-              disabled={!canAccessRestrictedPages}
-            />
-            <SidebarTab
-              name="FAQ"
-              iconUrl="/images/icons/contact_support.svg"
-            />
+
+            {/* Sidebar if user is a mentor */}
+            {role === UserRole.MENTOR ? (
+              <SidebarTab
+                name="Mentoring"
+                iconUrl="/images/icons/group_search.svg"
+                disabled={!canAccessRestrictedPages}
+              />
+            ) : (
+              <>
+                <SidebarTab
+                  name="Schedule"
+                  iconUrl="/images/icons/calendar_month.svg"
+                  disabled={!canAccessRestrictedPages}
+                />
+
+                {/* <SidebarTab
+                  name="Ticket"
+                  iconUrl="/images/icons/confirmation_number.svg"
+                  disabled={!canAccessRestrictedPages}
+                /> */}
+
+                <SidebarTab
+                  name="Mentorship"
+                  iconUrl="/images/icons/group_search.svg"
+                  disabled={!canAccessRestrictedPages}
+                />
+                <SidebarTab
+                  name="FAQ"
+                  iconUrl="/images/icons/contact_support.svg"
+                />
+              </>
+            )}
+
             {isMobile && (
               <button
                 onClick={handleLogout}
@@ -149,38 +166,22 @@ function Sidebar({ onSidebarToggle }: SidebarProps = {}) {
         </div>
 
         <div className="p-4 border-t border-white hidden md:block">
-          <div className="flex items-center justify-between">
-            <div className="flex flex-col gap-1">
-              <Badge variant={"outline"} className="text-white">{role.toUpperCase()}</Badge>
+          <div className="flex flex-col items-center justify-between">
+            <div className="flex flex-col gap-4 w-full">
+              <Badge variant={"default"} className="text-white">{role.toUpperCase()}</Badge>
               <div className="text-white font-medium">
-                {user?.displayName || "Guest"}
+                <p>{user?.displayName || "Guest"}</p>
+                <p className="text-xs text-muted-foreground">{user?.email}</p>
               </div>
-            </div>
-            <button
-              onClick={() => setShowMenu(!showMenu)}
-              className="text-white hover:bg-[#FF0068] rounded-full"
-            >
-              <img src="/images/icons/more_vert.svg" width={20} height={20} />
-            </button>
-          </div>
-          <div className="relative">
-            <div
-              className={`absolute bottom-5 left-20 w-48 bg-white rounded-md shadow-lg py-1 z-10 transition-all duration-200 ease-in-out origin-bottom-right
-							${showMenu
-                  ? "transform scale-100 opacity-100"
-                  : "transform scale-95 opacity-0 pointer-events-none"
-                }
-						`}
-            >
-              <button
+              <Button
                 onClick={handleLogout}
-                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                className="rounded-full"
+                size={"sm"}
+                variant={"outline"}
               >
-                <span className="flex flex-row items-center gap-1">
-                  <LogOut />
-                  Logout
-                </span>
-              </button>
+                Log out
+                <LogOut />
+              </Button>
             </div>
           </div>
         </div>
