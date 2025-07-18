@@ -1,3 +1,24 @@
+export async function fetchMentorshipConfig() {
+  try {
+    const response = await fetch("/api/mentorship/config", {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    const data = await response.json()
+    
+    if (!response.ok) {
+      console.error("Error when fetching mentorship config. Please try again later.")
+    }
+
+    return data.data
+  } catch (error) {
+    console.error("Something went wrong trying to fetch mentorship config")
+  }
+}
+
 export async function fetchAllMentors() {
   try {
     const response = await fetch("/api/mentorship/mentors", {
