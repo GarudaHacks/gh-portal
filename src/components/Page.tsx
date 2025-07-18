@@ -26,21 +26,17 @@ function Page({ title, description, children }: PageProps) {
     };
   }, []);
 
-  return (
-    <div className="flex flex-col md:flex-row min-h-screen text-white bg-gradient-to-tr from-[#020f2a] to-[#001745]">
-      <Sidebar onSidebarToggle={(isOpen) => setSidebarOpen(isOpen)} />
-      <div
-        className={`flex-1 overflow-hidden transition-all duration-300 ${
-          isMobile ? "pl-0" : "md:pl-[0rem]"
-        } ${isMobile && sidebarOpen ? "filter blur-sm" : ""}`}
-      >
-        <PageHeader title={title} description={description} />
-        <div className="px-4 md:px-10 py-4 overflow-hidden max-w-full">
-          {children}
-        </div>
-      </div>
+return (
+  <div className="flex h-screen text-white bg-gradient-to-tr from-[#020f2a] to-[#001745] overflow-hidden">
+    <Sidebar onSidebarToggle={(isOpen) => setSidebarOpen(isOpen)} />
+    <div className="flex-1 flex flex-col">
+      <PageHeader title={title} description={description} />
+      <main className="flex-1 overflow-y-auto p-4 md:p-10">
+        {children}
+      </main>
     </div>
-  );
+  </div>
+);
 }
 
 export default Page;
