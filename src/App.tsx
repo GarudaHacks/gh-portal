@@ -97,7 +97,7 @@ function App() {
             }
           />
           <Route
-            path="/mentorship/*"
+            path="/mentorship/:mentorId"
             element={
               <ProtectedRoute>
                 <MentorDetailPage />

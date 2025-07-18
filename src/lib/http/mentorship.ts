@@ -8,7 +8,7 @@ export async function fetchMentorshipConfig() {
       },
     })
     const data = await response.json()
-    
+
     if (!response.ok) {
       console.error("Error when fetching mentorship config. Please try again later.")
     }
@@ -42,6 +42,27 @@ export async function fetchAllMentors() {
   }
 }
 
+export async function fetchMentorById(mentorId: string) {
+  try {
+    const response = await fetch(`/api/mentorship/mentors/${mentorId}`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    const data = await response.json()
+    if (!response.ok) {
+      console.error("Error when trying to fetch mentor details...")
+      return
+    }
+
+    return data.data
+  } catch (error) {
+    console.error("Something went wrong when trying to fetch mentor detail:", error)
+  }
+}
+
 export async function fetchMyMentorships() {
   try {
     const response = await fetch("/api/mentorship/my-mentorships", {
@@ -62,5 +83,25 @@ export async function fetchMyMentorships() {
   } catch (error) {
     console.error("Something went wrong when trying to fetch my mentorships:", error)
     return []
+  }
+}
+
+export async function fetchMentorshipAppointmentsByMentorId(mentorId: string) {
+  try {
+    const response = await fetch(`/api/mentorship/mentorships/${mentorId}`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    const data = await response.json()
+    if (!response.ok) {
+      console.error("Error when trying to fetch mentorship appointments. Please try again later.")
+      return []
+    }
+    return data
+  } catch (error) {
+    console.error("Something went wrong when trying to fetch mentorship appointments:", error)
   }
 }

@@ -9,3 +9,7 @@ export function epochToStringDate(epochSecond: number) {
     const start = `${startDay} ${startTimestamp}`
     return start
 }
+
+export function isTimeElapsed(epochSecond: number) {
+  return (Date.now() / 1000) > epochSecond;
+}
