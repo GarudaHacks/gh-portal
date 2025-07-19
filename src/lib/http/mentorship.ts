@@ -65,9 +65,17 @@ export async function fetchMentorById(mentorId: string) {
   }
 }
 
-export async function fetchMyMentorships() {
+export async function fetchMyMentorships(upcomingOnly?: boolean, recentOnly?: boolean) {
   try {
-    const response = await fetch("/api/mentorship/my-mentorships", {
+    let params;
+    if (upcomingOnly) {
+      params = `upcomingOnly=true`
+    } else if (recentOnly) {
+      params = `recentOnly=true`
+    }
+
+    const reqLink = `/api/mentorship/my-mentorships?${params}`
+    const response = await fetch(reqLink, {
       method: "GET",
       credentials: "include",
       headers: {
