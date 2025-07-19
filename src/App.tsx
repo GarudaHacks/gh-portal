@@ -15,11 +15,14 @@ import Ticketing from "./pages/Ticketing";
 import Application from "./pages/Application";
 import { UserApplicationStatus } from "./types/applicationStatus";
 import Rsvp from "./pages/Rsvp";
+import MentorDetailPage from "./pages/MentorDetail";
+import { UserRole } from "./types/auth";
+import Mentoring from "./pages/Mentoring";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading, applicationStatus } = useAuth();
+  const { user, loading, applicationStatus, role } = useAuth();
   const location = useLocation();
-
+  
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -27,24 +30,29 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
       </div>
     );
   }
-
+  
   if (!user) {
     return <Navigate to="/auth" />;
   }
-
-  // Check if the current route is a restricted page
-  const isRestrictedPage = ["/schedule", "/ticket", "/mentorship"].includes(
-    location.pathname
-  );
-
-  const canAccessRestrictedPages =
-    applicationStatus === UserApplicationStatus.ACCEPTED ||
-    applicationStatus === UserApplicationStatus.CONFIRMED_RSVP;
-
-  if (isRestrictedPage && !canAccessRestrictedPages) {
+  
+  const mentorAllowedRoutes = ["/home", "/mentoring"];
+  
+  if (role === "mentor" && !mentorAllowedRoutes.includes(location.pathname)) {
     return <Navigate to="/home" />;
   }
-
+  
+  if (role !== "mentor") {
+    const isRestrictedPage = ["/schedule", "/ticket", "/mentorship"].includes(
+      location.pathname
+    );
+    const canAccessRestrictedPages =
+      applicationStatus === UserApplicationStatus.ACCEPTED ||
+      applicationStatus === UserApplicationStatus.CONFIRMED_RSVP;
+      
+    if (isRestrictedPage && !canAccessRestrictedPages) {
+      return <Navigate to="/home" />;
+    }
+  }
   return children;
 };
 
@@ -89,6 +97,22 @@ function App() {
             }
           />
           <Route
+            path="/mentorship/:mentorId"
+            element={
+              <ProtectedRoute>
+                <MentorDetailPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/mentoring"
+            element={
+              <ProtectedRoute>
+                <Mentoring />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/faq"
             element={
               <ProtectedRoute>
@@ -104,6 +128,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+
           <Route path="*" element={<Navigate to="/auth" />} />
         </Routes>
       </BrowserRouter>

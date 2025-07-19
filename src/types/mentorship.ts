@@ -1,3 +1,9 @@
+export interface MentorshipConfig {
+    isMentorshipOpen: boolean;
+    mentoringStart: number;
+    mentoringEnd: number;
+}
+
 /**
  * Mentor type of user.
  */
