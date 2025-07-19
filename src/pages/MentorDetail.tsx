@@ -50,11 +50,10 @@ export default function MentorDetailPage() {
           </div>
 
           <div className="flex flex-col gap-2 ">
-            <h2 className="text-2xl font-bold">{mentor?.name}</h2>
-            <h3 className="text-muted-foreground">{mentor?.email}</h3>
-            <p className="">
-              Discord: <span className="text-muted-foreground font-mono w-fit p-1 rounded-full text-sm">{mentor?.discordUsername}</span></p>
-            <p className="">Specialization: {mentor?.specialization.toUpperCase()}</p>
+            {mentor?.name && <h2 className="text-2xl font-bold">{mentor?.name}</h2>}
+            {mentor?.email && <h3 className="text-muted-foreground">{mentor?.email}</h3>}
+            {mentor?.discordUsername && <p className="">Discord: <span className="text-muted-foreground font-mono w-fit p-1 rounded-full text-sm">{mentor?.discordUsername}</span></p>}
+            {mentor?.specialization && <p className="">Specialization: {mentor?.specialization.toUpperCase()}</p>}
             <div>
               <p className="text-sm">{mentor?.intro}</p>
             </div>
@@ -62,12 +61,19 @@ export default function MentorDetailPage() {
         </div>
 
         <div className="flex flex-col gap-4">
-          <h1 className="font-bold">Mentorship Slots ({mentorshipAppointments?.length})</h1>
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-            {mentorshipAppointments?.map((mentorshipAppointment) => (
-              <MentorshipSlotAsHackerComponent key={mentorshipAppointment.id} mentorshipAppointment={mentorshipAppointment} isMentorshipOpen={mentorshipConfig?.isMentorshipOpen || false} />
-            ))}
-          </div>
+          <h1 className="font-bold">Mentorship Slots {mentorshipAppointments && <>({mentorshipAppointments?.length})</>}</h1>
+
+          {mentorshipAppointments ? (
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+              {mentorshipAppointments?.map((mentorshipAppointment) => (
+                <MentorshipSlotAsHackerComponent key={mentorshipAppointment.id} mentorshipAppointment={mentorshipAppointment} isMentorshipOpen={mentorshipConfig?.isMentorshipOpen || false} />
+              ))}
+            </div>
+          ) : (
+            <div>
+              <p>No mentorship available for this mentor</p>
+            </div>
+          )}
         </div>
       </div>
     </Page>
