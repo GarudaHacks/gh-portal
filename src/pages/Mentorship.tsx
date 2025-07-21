@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Page from "../components/Page";
-import { FirestoreMentor, MentorshipAppointment, MentorshipConfig } from "@/types/mentorship";
+import { FirestoreMentor, MentorshipAppointmentResponseAsHacker, MentorshipConfig } from "@/types/mentorship";
 import { fetchAllMentors, fetchMentorshipConfig, fetchMyMentorships } from "@/lib/http/mentorship";
 import MentorshipAppointmentCardComponent from "@/components/MentorshipAppointmentCard";
 import MentorCardComponent from "@/components/MentorCardComponent";
@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 function Mentorship() {
   const [loading, setLoading] = useState(false)
   const [mentorshipConfig, setMentorshipConfig] = useState<MentorshipConfig>()
-  const [myMentorships, setMyMentorships] = useState<MentorshipAppointment[]>()
+  const [myMentorships, setMyMentorships] = useState<MentorshipAppointmentResponseAsHacker[]>()
   const [allMentors, setAllMentors] = useState<FirestoreMentor[]>([])
   const [filteredMentors, setFilteredMentors] =  useState<FirestoreMentor[]>([])
   const [filterCategories, setFilterCategories] = useState<string[]>([])
@@ -56,7 +56,6 @@ function Mentorship() {
     };
   }, []);
 
-  // Filter mentors when filterCategories changes
   useEffect(() => {
     if (filterCategories.length === 0) {
       setFilteredMentors(allMentors);

@@ -20,6 +20,7 @@ import { useEffect, useState } from "react"
 import { getMentorProfilePicture } from "@/utils/firebaseUtils"
 import { Button } from "./ui/button"
 import { formatSpecialization } from "@/utils/stringUtils"
+import { Link } from "react-router-dom"
 
 interface MentorCardComponentProps {
   mentor: FirestoreMentor,
@@ -35,7 +36,6 @@ export default function MentorCardComponent(
   }, [mentor])
 
   return (
-    // <Link to={`/mentorship/${mentor.id}`} className="w-full">
     <Dialog>
       <DialogTrigger asChild>
         <Card className="hover:bg-zinc-200/10 bg-blue-950/50 transition-all h-full">
@@ -65,10 +65,11 @@ export default function MentorCardComponent(
           </DialogDescription>
         </DialogHeader>
 
-        <Button>Book Mentor</Button>
+        <Link to={`/mentors/${mentor.id}`}>
+          <Button className="w-full">Book Mentor</Button>
+        </Link>
       </DialogContent>
     </Dialog>
 
-    // </Link>
   )
 }

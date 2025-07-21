@@ -18,6 +18,7 @@ import Rsvp from "./pages/Rsvp";
 import MentorDetailPage from "./pages/MentorDetail";
 import { UserRole } from "./types/auth";
 import Mentoring from "./pages/Mentoring";
+import BookMentorshipPage from "./pages/BookMentorship";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading, applicationStatus, role } = useAuth();
@@ -97,10 +98,10 @@ function App() {
             }
           />
           <Route
-            path="/mentorship/:mentorId"
+            path="/mentors/:mentorId"
             element={
               <ProtectedRoute>
-                <MentorDetailPage />
+                <BookMentorshipPage />
               </ProtectedRoute>
             }
           />

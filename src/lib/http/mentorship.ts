@@ -101,7 +101,7 @@ export async function fetchMyMentorships(upcomingOnly?: boolean, recentOnly?: bo
 
 export async function fetchMentorshipAppointmentsByMentorId(mentorId: string) {
   try {
-    const response = await fetch(`/api/mentorship/mentorships/${mentorId}`, {
+    const response = await fetch(`/api/mentorship/hacker/mentorships/?mentorId=${mentorId}`, {
       method: "GET",
       credentials: "include",
       headers: {
@@ -113,34 +113,33 @@ export async function fetchMentorshipAppointmentsByMentorId(mentorId: string) {
       console.error("Error when trying to fetch mentorship appointments. Please try again later.")
       return []
     }
-    return data
+    return data.data
   } catch (error) {
     console.error("Something went wrong when trying to fetch mentorship appointments:", error)
   }
 }
 
-export async function bookMentorshipAppointment(mentorshipAppointmentId: string, hackerDescription: string) {
+export async function bookMentorshipAppointment(payload: any) {
   try {
-    const response = await fetch("/api/mentorship/mentorships", {
+    const response = await fetch("/api/mentorship/hacker/mentorships/book", {
       method: "POST",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
         "x-xsrf-token": Cookies.get("XSRF-TOKEN") || ""
       },
-      body: JSON.stringify({
-        mentorshipAppointmentId,
-        hackerDescription
-      })
-    })
-    const data = await response.json()
+      body: JSON.stringify(payload)
+    });
+    const data = await response.json();
     if (!response.ok) {
-      console.error("Error when booking a mentorship appointment. Please try again later.")
-      return
+      if (response.status === 400) {
+        throw new Error(data.error || "Booking limit reached. Please select fewer slots or try different slots.");
+      }
+      throw new Error(data.error || `HTTP error! Status: ${response.status}`);
     }
-    console.log(data)
-    return data
+    return data;
   } catch (error) {
-    console.error("Error when trying to book a mentorship appointment:", error)
+    console.error("Error when trying to book a mentorship appointment:", error);
+    throw error;
   }
 }
