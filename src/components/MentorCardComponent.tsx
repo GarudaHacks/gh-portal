@@ -19,6 +19,7 @@ import {
 import { useEffect, useState } from "react"
 import { getMentorProfilePicture } from "@/utils/firebaseUtils"
 import { Button } from "./ui/button"
+import { formatSpecialization } from "@/utils/stringUtils"
 
 interface MentorCardComponentProps {
   mentor: FirestoreMentor,
@@ -43,7 +44,7 @@ export default function MentorCardComponent(
               <img src={profilePictureUrl || '/images/logo/gh_logo.svg'} width={500} height={500} alt="profile picture" className="rounded-full w-2/3 md:w-3/5 aspect-square border" />
               <p className="text-xl">{mentor.name}</p>
             </CardTitle>
-            {mentor.specialization && <CardDescription className="text-gray-400">{mentor.specialization.toUpperCase()}</CardDescription>}
+            {mentor.specialization && <CardDescription className="text-gray-400">{formatSpecialization(mentor.specialization)}</CardDescription>}
           </CardHeader>
           <CardContent>
             <p className="text-center text-sm line-clamp-4 text-pretty">{mentor.intro}</p>
@@ -56,7 +57,7 @@ export default function MentorCardComponent(
             <CardTitle className="flex flex-col gap-2 items-center">
               <img src={profilePictureUrl || '/images/logo/gh_logo.svg'} width={500} height={500} alt="profile picture" className="rounded-full w-2/3 md:w-3/5 aspect-square border" />
               <p className="text-xl text-white">{mentor.name}</p>
-              {mentor.specialization && <CardDescription className="text-gray-400">{mentor.specialization.toUpperCase()}</CardDescription>}
+              {mentor.specialization && <CardDescription className="text-gray-400">{formatSpecialization(mentor.specialization)}</CardDescription>}
             </CardTitle>
           </DialogTitle>
           <DialogDescription className="text-center text-white">
