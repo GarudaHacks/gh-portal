@@ -6,12 +6,25 @@ import MentorshipAppointmentCardComponent from "@/components/MentorshipAppointme
 import MentorCardComponent from "@/components/MentorCardComponent";
 import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { Badge } from "@/components/ui/badge";
 
 function Mentorship() {
   const [loading, setLoading] = useState(false)
   const [mentorshipConfig, setMentorshipConfig] = useState<MentorshipConfig>()
   const [myMentorships, setMyMentorships] = useState<MentorshipAppointment[]>()
-  const [allMentors, setAllMentors] = useState<FirestoreMentor[]>()
+  const [allMentors, setAllMentors] = useState<FirestoreMentor[]>([])
+  const [filteredMentors, setFilteredMentors] =  useState<FirestoreMentor[]>([])
+  const [filterCategories, setFilterCategories] = useState<string[]>([])
+
+  const CATEGORIES = [
+    "backend",
+    "frontend",
+    "developer",
+    "designer",
+    "data scientist",
+    "product manager",
+    "entrepreneur",
+  ]
 
   useEffect(() => {
     let isMounted = true;
@@ -43,6 +56,30 @@ function Mentorship() {
     };
   }, []);
 
+  // Filter mentors when filterCategories changes
+  useEffect(() => {
+    if (filterCategories.length === 0) {
+      setFilteredMentors(allMentors);
+    } else {
+      setFilteredMentors(
+        allMentors.filter((mentor) =>
+          filterCategories.some((category) =>
+            mentor.specialization?.toLowerCase().includes(category.toLowerCase())
+          )
+        )
+      );
+    }
+  }, [filterCategories, allMentors]);
+
+  const handleSelectCategory = (category: string) => {
+    setFilterCategories((prev: any) => {
+      if (prev.includes(category)) {
+        return prev.filter((c: string) => c !== category);
+      }
+      return [...prev, category];
+    });
+  };
+
   return (
     <Page
       title="Mentorship"
@@ -53,7 +90,6 @@ function Mentorship() {
           <Loader2 className="animate-spin" />
         </div>
       ) : (
-
         <div className="flex flex-col gap-4">
           <div id="mentorship-period" className="bg-zinc-50/20 p-4 rounded-xl">
             {mentorshipConfig?.isMentorshipOpen ? (
@@ -82,15 +118,36 @@ function Mentorship() {
             <div id="mentors-list" className="flex flex-col gap-4">
               <div className="flex flex-col gap-2">
                 <h2 className="font-semibold text-xl">Garuda Hacks 6.0 Mentors</h2>
-                {allMentors && allMentors.length > 0 ? (  
+
+               <div id="mentorship-categories" className="w-full max-w-full overflow-x-auto overflow-y-hidden pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 scroll-smooth mb-4">
+                  <div className="flex flex-nowrap gap-2 min-w-max">
+                    {CATEGORIES.map((category,i) => (
+                      <Badge 
+                        className="text-white whitespace-nowrap flex-shrink-0 cursor-pointer" 
+                        variant={filterCategories?.includes(category) ? 'default' : 'outline'} 
+                        key={i} 
+                        onClick={() => handleSelectCategory(category)}
+                      >
+                        {category.toUpperCase()}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
+
+                {filteredMentors.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4">
-                    {allMentors.map((m) => (
+                    {filteredMentors.map((m) => (
                       <MentorCardComponent key={m.id} mentor={m} />
                     ))}
                   </div>
                 ) : (
                   <div>
-                    <p className="text-muted-foreground">No mentors available.</p>
+                    <p className="text-muted-foreground">
+                      {filterCategories.length > 0
+                        ? "No mentors match the selected categories."
+                        : "No mentors available."}
+                    </p>
                   </div>
                 )}
               </div>
