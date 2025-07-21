@@ -19,6 +19,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { cancelMentorshipAppointment } from "@/lib/http/mentorship"
+import toast from "react-hot-toast"
+import { useNavigate } from "react-router-dom"
 
 interface MentorshipAppointmentCardComponentProps {
   mentorshipAppointment: MentorshipAppointmentResponseAsHacker
@@ -37,6 +40,28 @@ const renderer = ({ hours, minutes, seconds, completed }: { hours: number, minut
 export default function MentorshipAppointmentCardComponent(
   { mentorshipAppointment }: MentorshipAppointmentCardComponentProps
 ) {
+  const navigate = useNavigate()
+
+  const handleCancelAppointment = async () => {
+    try {
+      const payload = {
+        id: mentorshipAppointment.id
+      };
+      const res = await cancelMentorshipAppointment(payload);
+      toast.success(res.message || "Mentorship slots booked successfully!");
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000)
+    } catch (error: any) {
+      console.error("Error booking mentorship:", error);
+      if (error.message.includes("limit reached")) {
+        toast.error("Booking limit reached. Please select fewer slots or try different slots.");
+      } else {
+        toast.error(error.message || "Failed to book mentorship slots");
+      }
+    }
+  }
+
   return (
     <div className="border bg-blue-950/50 hover:bg-zinc-200/10 rounded-xl p-4 flex flex-col gap-4 h-fit">
       <div className="grid grid-cols-6 gap-4 items-center justify-between">
@@ -77,7 +102,7 @@ export default function MentorshipAppointmentCardComponent(
                   You can cancel your mentorship session up to 45 minutes before the appointment.
                 </DialogDescription>
               </DialogHeader>
-              <Button variant={"destructive"} className="">Cancel Mentorship</Button>
+              <Button variant={"destructive"} className="" onClick={handleCancelAppointment}>Cancel Mentorship</Button>
             </DialogContent>
           </Dialog>
         </div>

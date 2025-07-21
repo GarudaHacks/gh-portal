@@ -143,3 +143,25 @@ export async function bookMentorshipAppointment(payload: any) {
     throw error;
   }
 }
+
+export async function cancelMentorshipAppointment(payload: any) {
+  try {
+    const response = await fetch("/api/mentorship/hacker/mentorships/cancel", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        "x-xsrf-token": Cookies.get("XSRF-TOKEN") || ""
+      },
+      body: JSON.stringify(payload)
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || `HTTP error! Status: ${response.status}`);
+    }
+    return data;
+  } catch (error) {
+    console.error("Error when trying to book a mentorship appointment:", error);
+    throw error;
+  }
+}
