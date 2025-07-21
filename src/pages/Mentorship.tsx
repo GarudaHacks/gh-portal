@@ -7,6 +7,7 @@ import MentorCardComponent from "@/components/MentorCardComponent";
 import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { Badge } from "@/components/ui/badge";
+import InstructionMentorshipForHacker from "@/components/InstructionMentorshipForHacker";
 
 function Mentorship() {
   const [loading, setLoading] = useState(false)
@@ -90,12 +91,13 @@ function Mentorship() {
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          <div id="mentorship-period" className="bg-zinc-50/20 p-4 rounded-xl">
+          <div id="mentorship-period" className="bg-zinc-50/20 p-4 rounded-xl flex flex-col gap-2">
             {mentorshipConfig?.isMentorshipOpen ? (
-              <h1 className="text-xl">✅ Mentorship is currently open</h1>
+              <h1 className="text-xl lg:text-2xl">✅ Mentorship is currently open</h1>
             ) : (
-              <h1 className="text-xl">⚠️ Mentorship is currently closed</h1>
+              <h1 className="text-xl lg:text-2xl">⚠️ Mentorship is currently closed</h1>
             )}
+           <InstructionMentorshipForHacker />
           </div>
 
           <div className="flex flex-col gap-8">
