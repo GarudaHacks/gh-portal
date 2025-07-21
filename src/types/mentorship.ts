@@ -29,3 +29,19 @@ export interface MentorshipAppointmentResponseAsHacker {
   location: string; // offline or online
   offlineLocation?: string; // to be filled if the location is offline
 }
+
+export interface MentorshipAppointmentResponseAsMentor {
+	id?: string;
+  startTime: number;
+  endTime: number;
+  mentorId: string;
+  hackerId?: string;
+  hackerName?: string;
+  teamName?: string;
+  hackerDescription?: string; // desc given needed by hacker
+  location: string; // offline or online
+  offlineLocation?: string; // to be filled if the location is offline
+  mentorMarkAsDone?: boolean;
+  mentorMarkAsAfk?: boolean; // mark if this team is AFK
+  mentorNotes?: string // to give this appointment a note
+}

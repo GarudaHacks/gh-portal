@@ -1,13 +1,13 @@
 import MentorshipSlotAsMentorComponent from "@/components/MentorshipSlotAsMentor";
 import Page from "@/components/Page";
 import { fetchMyMentorships } from "@/lib/http/mentorship";
-import { MentorshipAppointment } from "@/types/mentorship";
+import { MentorshipAppointmentResponseAsMentor } from "@/types/mentorship";
 import { useEffect, useState } from "react";
 
 export default function Mentoring() {
 
-  const [upcomingMentorshipAppointments, setUpcomingMentorshipAppointments] = useState<MentorshipAppointment[]>()
-  const [recentMentorshipAppointments, setRecentMentorshipAppointments] = useState<MentorshipAppointment[]>()
+  const [upcomingMentorshipAppointments, setUpcomingMentorshipAppointments] = useState<MentorshipAppointmentResponseAsMentor[]>()
+  const [recentMentorshipAppointments, setRecentMentorshipAppointments] = useState<MentorshipAppointmentResponseAsMentor[]>()
 
   useEffect(() => {
     fetchMyMentorships(true).then((res) => {
