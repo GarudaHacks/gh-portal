@@ -84,7 +84,7 @@ function Mentorship() {
                 <h2 className="font-semibold text-xl">Garuda Hacks 6.0 Mentors</h2>
                 <p className="text-sm text-zinc-300">Meet our mentors here!</p>
                 {allMentors && allMentors.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4">
                     {allMentors.map((m) => (
                       <MentorCardComponent key={m.id} mentor={m} />
                     ))}
