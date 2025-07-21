@@ -247,7 +247,6 @@ export default function BookMentorshipPage() {
       <div className="fixed bottom-0 left-0 right-0 bg-background border-t p-4 lg:relative">
         <div className="flex flex-col gap-4">
           <p className="text-center">Selected {selectedSlots.length} of 2 mentorship slots</p>
-
           <Dialog>
             <DialogTrigger asChild>
               <div className="flex flex-col items-center justify-center">
