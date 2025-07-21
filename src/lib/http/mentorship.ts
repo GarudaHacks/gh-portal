@@ -21,9 +21,12 @@ export async function fetchMentorshipConfig() {
   }
 }
 
+/**
+ * Get all available mentors
+ */
 export async function fetchAllMentors() {
   try {
-    const response = await fetch("/api/mentorship/mentors", {
+    const response = await fetch("/api/mentorship/hacker/mentors", {
       method: "GET",
       credentials: "include",
       headers: {
@@ -37,7 +40,7 @@ export async function fetchAllMentors() {
       return []
     }
 
-    return data.allMentors
+    return data.data
   } catch (error) {
     console.error("Something went wrong when trying to fetch all mentors:", error)
     return []
@@ -46,7 +49,7 @@ export async function fetchAllMentors() {
 
 export async function fetchMentorById(mentorId: string) {
   try {
-    const response = await fetch(`/api/mentorship/mentors/${mentorId}`, {
+    const response = await fetch(`/api/mentorship/hacker/mentors/${mentorId}`, {
       method: "GET",
       credentials: "include",
       headers: {
@@ -74,7 +77,7 @@ export async function fetchMyMentorships(upcomingOnly?: boolean, recentOnly?: bo
       params = `recentOnly=true`
     }
 
-    const reqLink = `/api/mentorship/my-mentorships?${params}`
+    const reqLink = `/api/mentorship/hacker/my-mentorships?${params}`
     const response = await fetch(reqLink, {
       method: "GET",
       credentials: "include",

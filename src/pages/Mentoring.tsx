@@ -27,7 +27,7 @@ export default function Mentoring() {
         <h1 className="text-2xl">Upcoming Mentoring Schedule</h1>
 
         {upcomingMentorshipAppointments && upcomingMentorshipAppointments?.length > 0 ? (
-          <div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {upcomingMentorshipAppointments?.map((mentorshipAppointment) => (
               <MentorshipSlotAsMentorComponent key={mentorshipAppointment.id} mentorshipAppointment={mentorshipAppointment} />
             ))}
