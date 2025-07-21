@@ -250,7 +250,9 @@ export default function BookMentorshipPage() {
 
           <Dialog>
             <DialogTrigger asChild>
-              <Button className="w-full" disabled={selectedSlots.length === 0}>Book</Button>
+              <div className="flex flex-col items-center justify-center">
+                <Button className="w-fit" size={"lg"} disabled={selectedSlots.length === 0}>Book</Button>
+              </div>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader className="text-white">

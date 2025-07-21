@@ -19,7 +19,7 @@ export default function MentorshipSlotAsHackerComponent({
   const isDisabled = mentorshipAppointment.hackerId || isTimeElapsed(mentorshipAppointment.startTime);
 
   return (
-    <div className="border p-4 rounded-xl flex flex-row gap-2 justify-between bg-zinc-500/10 items-center">
+    <div className={`border p-4 rounded-xl flex flex-row gap-2 justify-between items-center ${mentorshipAppointment.hackerId ? ' bg-zinc-500/40' : ' bg-zinc-500/10'}`}>
       <div className="flex flex-col gap-2">
         <div className="flex flex-row justify-between items-center gap-2">
           {mentorshipAppointment.hackerId ? (
@@ -35,17 +35,6 @@ export default function MentorshipSlotAsHackerComponent({
               )}
             </>
           )}
-
-          {mentorshipAppointment.location && (
-            <Badge className="text-xs flex flex-row items-center gap-1">
-              {mentorshipAppointment.location.toUpperCase()}
-              {mentorshipAppointment.location === "online" ? (
-                <MonitorSmartphone size={16} />
-              ) : (
-                <MapPinCheck size={16} />
-              )}
-            </Badge>
-          )}
         </div>
         <div className="flex flex-col gap-4">
           <p className="text-white">
@@ -55,6 +44,7 @@ export default function MentorshipSlotAsHackerComponent({
           <p className="text-white">
             {(mentorshipAppointment.endTime - mentorshipAppointment.startTime) / 60} minutes
           </p>
+          {!mentorshipAppointment.hackerId && <p className="text-white text-sm">Mentor is available <span className="font-bold">{mentorshipAppointment.location}</span></p>}
         </div>
       </div>
       <div>

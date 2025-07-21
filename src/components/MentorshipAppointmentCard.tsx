@@ -1,4 +1,4 @@
-import { MentorshipAppointment } from "@/types/mentorship"
+import { MentorshipAppointmentResponseAsHacker } from "@/types/mentorship"
 import { epochToStringDate } from "@/utils/dateUtils"
 import { Badge } from "./ui/badge"
 import { ChevronDown, MapPinCheck, MonitorSmartphone, Video } from "lucide-react"
@@ -11,7 +11,7 @@ import {
 import { Button } from "./ui/button"
 
 interface MentorshipAppointmentCardComponentProps {
-  mentorshipAppointment: MentorshipAppointment
+  mentorshipAppointment: MentorshipAppointmentResponseAsHacker
 }
 
 export default function MentorshipAppointmentCardComponent(
@@ -21,8 +21,8 @@ export default function MentorshipAppointmentCardComponent(
     <div className="border rounded-xl p-4 flex flex-col gap-4">
       <div className="flex justify-between items-center">
         <div className='flex flex-row items-center gap-2'>
-          <Badge className="bg-green-500">Booked</Badge>
-          <Badge className="text-xs flex flex-row items-center gap-1">{mentorshipAppointment.location.toUpperCase()}
+          <Badge variant={"default"} className="bg-green-500">Booked</Badge>
+          <Badge variant={"outline"} className="text-white flex flex-row items-center gap-1">{mentorshipAppointment.location.toUpperCase()}
             {mentorshipAppointment.location === 'online' ? (
               <MonitorSmartphone size={16} />
             ) : (
@@ -30,9 +30,6 @@ export default function MentorshipAppointmentCardComponent(
             )}
           </Badge>
         </div>
-        <p className="text-end text-xs text-muted-foreground">
-          Mentorship ID: {mentorshipAppointment.id}
-        </p>
       </div>
 
       <div>
@@ -71,7 +68,6 @@ export default function MentorshipAppointmentCardComponent(
           </Alert>
         </CollapsibleContent>
       </Collapsible>
-
     </div>
   )
 }
