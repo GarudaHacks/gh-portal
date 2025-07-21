@@ -31,7 +31,7 @@ type AppointmentState = 'upcoming' | 'ongoing' | 'completed';
 
 const getAppointmentState = (startTime: number, endTime: number): AppointmentState => {
   const now = Date.now() / 1000; // Convert to seconds
-  
+
   if (now < startTime) {
     return 'upcoming';
   } else if (now >= startTime && now <= endTime) {
@@ -60,8 +60,8 @@ const OngoingRenderer = ({ hours, minutes, seconds, completed }: { hours: number
 export default function MentorshipAppointmentCardAsMentorComponent(
   { mentorshipAppointment }: MentorshipAppointmentCardComponentProps
 ) {
-  const appointmentState = useMemo(() => 
-    getAppointmentState(mentorshipAppointment.startTime, mentorshipAppointment.endTime), 
+  const appointmentState = useMemo(() =>
+    getAppointmentState(mentorshipAppointment.startTime, mentorshipAppointment.endTime),
     [mentorshipAppointment.startTime, mentorshipAppointment.endTime]
   );
 
@@ -107,7 +107,7 @@ export default function MentorshipAppointmentCardAsMentorComponent(
             <div className='flex flex-row items-center gap-2'>
               {mentorshipAppointment.hackerId && (<Badge variant={"default"} className="bg-green-500">Booked</Badge>)}
               {config.statusBadge}
-              
+
               <Badge variant={"outline"} className="text-white flex flex-row items-center gap-1">{mentorshipAppointment.location.toUpperCase()}
                 {mentorshipAppointment.location === 'online' ? (
                   <MonitorSmartphone size={16} />
@@ -126,7 +126,7 @@ export default function MentorshipAppointmentCardAsMentorComponent(
           <div>
             {config.countdown}
           </div>
-          
+
           {mentorshipAppointment.hackerDescription && (
             <div className="flex flex-col gap-2">
               <p className="text-sm text-gray-500">Hacker Inquiry</p>
@@ -136,9 +136,9 @@ export default function MentorshipAppointmentCardAsMentorComponent(
         </div>
 
         <div className="col-span-1 flex flex-col gap-2 items-center text-sm">
-          <Button 
-            variant={config.buttonVariant} 
-            className="w-full" 
+          <Button
+            variant={config.buttonVariant}
+            className="w-full"
             disabled={config.buttonDisabled}
           >
             <img src="/images/icons/zoom-icon.svg" width={32} height={32} className="h-6" />
@@ -182,13 +182,15 @@ export default function MentorshipAppointmentCardAsMentorComponent(
                 <ol className="list-decimal p-4">
                   {mentorshipAppointment.location === 'online' ? (
                     <>
-                      <li>Reach out to the hacker to confirm whether the mentorship will be conducted via Zoom or another communication platform, such as Discord.</li>
-                      <li>You can always use the Zoom link by joining the Breakout Room designated for your mentor.</li>
+                      <li>Ideally, hacker will reach you first.</li>
+                      <li>When they do so, please confirm whether the mentorship will be conducted via Zoom or another communication platform, such as Discord.</li>
+                      <li>You can always use the Zoom link by joining the Breakout Room designated for you.</li>
                     </>
                   ) : (
                     <>
-                      <li>Reach out to the hacker to confirm the location of your meeting.</li>
-                      <li>You may use the Zoom link instead and join the Breakout Room designated for your mentor. The decision is up to you and the hacker.</li>
+                      <li>Ideally, hacker will reach you first.</li>
+                      <li>Reach out to the hacker to confirm the location of your meeting in the venue.</li>
+                      <li>You may use the Zoom link instead and join the Breakout Room designated for you. The decision is up to you and the hacker.</li>
                     </>
                   )}
                 </ol>
