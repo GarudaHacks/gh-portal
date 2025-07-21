@@ -17,8 +17,9 @@ import { UserApplicationStatus } from "./types/applicationStatus";
 import Rsvp from "./pages/Rsvp";
 import MentorDetailPage from "./pages/MentorDetail";
 import { UserRole } from "./types/auth";
-import Mentoring from "./pages/Mentoring";
+import MentoringPage from "./pages/Mentoring";
 import BookMentorshipPage from "./pages/BookMentorship";
+import AllSchedulePage from "./pages/AllSchedules";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading, applicationStatus, role } = useAuth();
@@ -36,7 +37,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     return <Navigate to="/auth" />;
   }
   
-  const mentorAllowedRoutes = ["/home", "/mentoring"];
+  const mentorAllowedRoutes = ["/home", "/mentoring", "/schedules"];
   
   if (role === "mentor" && !mentorAllowedRoutes.includes(location.pathname)) {
     return <Navigate to="/home" />;
@@ -109,7 +110,15 @@ function App() {
             path="/mentoring"
             element={
               <ProtectedRoute>
-                <Mentoring />
+                <MentoringPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/schedules"
+            element={
+              <ProtectedRoute>
+                <AllSchedulePage />
               </ProtectedRoute>
             }
           />

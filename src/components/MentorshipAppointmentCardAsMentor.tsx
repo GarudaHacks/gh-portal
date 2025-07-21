@@ -1,4 +1,4 @@
-import { MentorshipAppointmentResponseAsHacker } from "@/types/mentorship"
+import { MentorshipAppointmentResponseAsHacker, MentorshipAppointmentResponseAsMentor } from "@/types/mentorship"
 import { epochToStringDate } from "@/utils/dateUtils"
 import { Badge } from "./ui/badge"
 import { ChevronDown, Lightbulb, MapPinCheck, MonitorSmartphone, MoreHorizontalIcon, Video } from "lucide-react"
@@ -21,44 +21,25 @@ import {
 } from "@/components/ui/dialog"
 import { cancelMentorshipAppointment } from "@/lib/http/mentorship"
 import toast from "react-hot-toast"
+import { useState } from "react"
 
 interface MentorshipAppointmentCardComponentProps {
-  mentorshipAppointment: MentorshipAppointmentResponseAsHacker
+  mentorshipAppointment: MentorshipAppointmentResponseAsMentor
 }
 
-const Completionist = () => <span>Mentoring started</span>;
+const Completionist = () => <span className="font-semibold text-sm">Mentoring started...</span>;
 
 const renderer = ({ hours, minutes, seconds, completed }: { hours: number, minutes: number, seconds: number, completed: boolean }) => {
   if (completed) {
     return <Completionist />;
   } else {
-    return <span>In {zeroPad(hours)}:{zeroPad(minutes)}:{zeroPad(seconds)}</span>;
+    return <span className="font-semibold text-sm">In {zeroPad(hours)}:{zeroPad(minutes)}:{zeroPad(seconds)}</span>;
   }
 };
 
-export default function MentorshipAppointmentCardComponent(
+export default function MentorshipAppointmentCardAsMentorComponent(
   { mentorshipAppointment }: MentorshipAppointmentCardComponentProps
 ) {
-
-  const handleCancelAppointment = async () => {
-    try {
-      const payload = {
-        id: mentorshipAppointment.id
-      };
-      const res = await cancelMentorshipAppointment(payload);
-      toast.success(res.message || "Mentorship slots booked successfully!");
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000)
-    } catch (error: any) {
-      console.error("Error booking mentorship:", error);
-      if (error.message.includes("limit reached")) {
-        toast.error("Booking limit reached. Please select fewer slots or try different slots.");
-      } else {
-        toast.error(error.message || "Failed to book mentorship slots");
-      }
-    }
-  }
 
   return (
     <div className="border bg-blue-950/50 hover:bg-zinc-200/10 rounded-xl p-4 flex flex-col gap-4 h-fit">
@@ -66,7 +47,8 @@ export default function MentorshipAppointmentCardComponent(
         <div className="col-span-5 flex flex-col gap-4">
           <div className="flex justify-between items-center">
             <div className='flex flex-row items-center gap-2'>
-              <Badge variant={"default"} className="bg-green-500">Booked</Badge>
+              {mentorshipAppointment.hackerId && (<Badge variant={"default"} className="bg-green-500">Booked</Badge>)}
+
               <Badge variant={"outline"} className="text-white flex flex-row items-center gap-1">{mentorshipAppointment.location.toUpperCase()}
                 {mentorshipAppointment.location === 'online' ? (
                   <MonitorSmartphone size={16} />
@@ -78,31 +60,21 @@ export default function MentorshipAppointmentCardComponent(
           </div>
 
           <div>
-            {epochToStringDate(mentorshipAppointment.startTime)} -{' '}
+            {epochToStringDate(mentorshipAppointment.startTime)} - {' '}
             {epochToStringDate(mentorshipAppointment.endTime)}{' '}
           </div>
 
-          <div><Countdown date={mentorshipAppointment.startTime * 1000} renderer={renderer} /></div>
+          <div>
+            {/* if timeNow < startTime : show countdown */}
+            <Countdown date={mentorshipAppointment.startTime * 1000} renderer={renderer} />
+            {/* if time now > startTime and time now < endTime : show in progress */}
+            {/* {else show ended} */}
+          </div>
           <p className="line-clamp-3 text-xs">{mentorshipAppointment.hackerDescription}</p>
         </div>
 
         <div className="col-span-1 flex flex-col gap-2 items-center text-sm">
           <Button variant={"outline"} className="w-full"><img src="/images/icons/zoom-icon.svg" width={32} height={32} className="h-6" /></Button>
-          <Button variant={"outline"} className="w-full"><img src="/images/icons/discord-icon.svg" width={32} height={32} className="h-6" /></Button>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant={"outline"} className="w-full"><MoreHorizontalIcon /></Button>
-            </DialogTrigger>
-            <DialogContent className="text-white">
-              <DialogHeader>
-                <DialogTitle>Mentorship Detail</DialogTitle>
-                <DialogDescription className="text-white">
-                  You can cancel your mentorship session up to 45 minutes before the appointment.
-                </DialogDescription>
-              </DialogHeader>
-              <Button variant={"destructive"} className="" onClick={handleCancelAppointment}>Cancel Mentorship</Button>
-            </DialogContent>
-          </Dialog>
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-import { MentorshipAppointment } from "@/types/mentorship"
+import { MentorshipAppointmentResponseAsMentor } from "@/types/mentorship"
 import { Button } from "./ui/button"
 import { epochToStringDate, isTimeElapsed } from "@/utils/dateUtils"
 import { Badge } from "./ui/badge"
@@ -21,7 +21,7 @@ import toast from "react-hot-toast"
 import { Separator } from "./ui/separator"
 
 interface MentorshipSlotAsMentorComponentProps {
-  mentorshipAppointment: MentorshipAppointment
+  mentorshipAppointment: MentorshipAppointmentResponseAsMentor
 }
 
 export default function MentorshipSlotAsMentorComponent(

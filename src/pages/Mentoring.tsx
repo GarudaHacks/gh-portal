@@ -1,19 +1,20 @@
+import MentorshipAppointmentCardAsMentorComponent from "@/components/MentorshipAppointmentCardAsMentor";
 import MentorshipSlotAsMentorComponent from "@/components/MentorshipSlotAsMentor";
 import Page from "@/components/Page";
-import { fetchMyMentorships } from "@/lib/http/mentorship";
+import { mentorFetchMyMentorships } from "@/lib/http/mentorship";
 import { MentorshipAppointmentResponseAsMentor } from "@/types/mentorship";
 import { useEffect, useState } from "react";
 
-export default function Mentoring() {
+export default function MentoringPage() {
 
   const [upcomingMentorshipAppointments, setUpcomingMentorshipAppointments] = useState<MentorshipAppointmentResponseAsMentor[]>()
   const [recentMentorshipAppointments, setRecentMentorshipAppointments] = useState<MentorshipAppointmentResponseAsMentor[]>()
 
   useEffect(() => {
-    fetchMyMentorships(true).then((res) => {
+    mentorFetchMyMentorships(6, true, false, true, false).then((res) => {
       setUpcomingMentorshipAppointments(res)
     })
-    fetchMyMentorships(false, true).then((res) => {
+    mentorFetchMyMentorships().then((res) => {
       setRecentMentorshipAppointments(res)
     })
   }, [])
@@ -29,7 +30,7 @@ export default function Mentoring() {
         {upcomingMentorshipAppointments && upcomingMentorshipAppointments?.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {upcomingMentorshipAppointments?.map((mentorshipAppointment) => (
-              <MentorshipSlotAsMentorComponent key={mentorshipAppointment.id} mentorshipAppointment={mentorshipAppointment} />
+              <MentorshipAppointmentCardAsMentorComponent key={mentorshipAppointment.id} mentorshipAppointment={mentorshipAppointment} />
             ))}
           </div>
         ) : (

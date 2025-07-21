@@ -165,3 +165,48 @@ export async function cancelMentorshipAppointment(payload: any) {
     throw error;
   }
 }
+
+
+/**
+ * MENTOR ENDPOINTS
+ */
+
+export async function mentorFetchMyMentorships(limit?: number, upcomingOnly?: boolean, recentOnly?: boolean, isBooked?: boolean, isAvailable?: boolean) {
+  try {
+    let params = '?';
+    if (limit) {
+      params += `limit=${limit}`;
+    }
+
+    if (upcomingOnly) {
+      params += `&upcomingOnly=true`
+    } else if (recentOnly) {
+      params += `&recentOnly=true`
+    }
+
+    if (isBooked) {
+      params += `&isBooked=true`
+    } else if (isAvailable) {
+      params += `&isAvailable=true`
+    }
+
+    const reqLink = `/api/mentorship/mentor/my-mentorships${params}`
+    const response = await fetch(reqLink, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+
+    const data = await response.json()
+    if (!response.ok) {
+      console.error("Error when fetching my mentorships for mentors...")
+      return []
+    }
+    return data.data
+  } catch (error) {
+    console.error("Something went wrong when trying to fetch my mentorships for mentorships:", error)
+    return []
+  }
+}
