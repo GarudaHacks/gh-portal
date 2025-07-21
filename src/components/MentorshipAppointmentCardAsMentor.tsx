@@ -22,6 +22,12 @@ import {
 import { cancelMentorshipAppointment } from "@/lib/http/mentorship"
 import toast from "react-hot-toast"
 import { useState, useMemo } from "react"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 interface MentorshipAppointmentCardComponentProps {
   mentorshipAppointment: MentorshipAppointmentResponseAsMentor
@@ -129,8 +135,14 @@ export default function MentorshipAppointmentCardAsMentorComponent(
 
           {mentorshipAppointment.hackerDescription && (
             <div className="flex flex-col gap-2">
-              <p className="text-sm text-gray-500">Hacker Inquiry</p>
-              <p className="line-clamp-3 text-xs">{mentorshipAppointment.hackerDescription}</p>
+              <Accordion type="single" collapsible className="w-fit">
+                <AccordionItem value="item-1" className="border-0">
+                  <AccordionTrigger>Hacker Inquiry</AccordionTrigger>
+                  <AccordionContent>
+                    {mentorshipAppointment.hackerDescription}
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </div>
           )}
         </div>
