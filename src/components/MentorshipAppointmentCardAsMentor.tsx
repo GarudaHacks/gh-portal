@@ -1,7 +1,7 @@
-import { MentorshipAppointmentResponseAsHacker, MentorshipAppointmentResponseAsMentor } from "@/types/mentorship"
+import { MentorshipAppointmentResponseAsMentor } from "@/types/mentorship"
 import { epochToStringDate } from "@/utils/dateUtils"
 import { Badge } from "./ui/badge"
-import { ChevronDown, Lightbulb, MapPinCheck, MonitorSmartphone, MoreHorizontalIcon, Video, Clock, CheckCircle, MoreVerticalIcon } from "lucide-react"
+import { Lightbulb, MapPinCheck, MonitorSmartphone, MoreHorizontalIcon, Video, Clock, CheckCircle, CheckCheck, Flag } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { titleCase } from "title-case";
 import Countdown, { zeroPad } from 'react-countdown';
@@ -19,9 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { cancelMentorshipAppointment } from "@/lib/http/mentorship"
-import toast from "react-hot-toast"
-import { useState, useMemo } from "react"
+import { useMemo } from "react"
 import {
   Accordion,
   AccordionContent,
@@ -29,6 +27,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { useNavigate } from "react-router-dom"
+import MentorEditAppointmentComponent from "./MentorEditAppointmentComponent"
 
 interface MentorshipAppointmentCardComponentProps {
   mentorshipAppointment: MentorshipAppointmentResponseAsMentor
@@ -111,12 +110,11 @@ export default function MentorshipAppointmentCardAsMentorComponent(
     <div className={`border rounded-xl p-4 flex flex-col gap-4 h-fit ${config.bgColor}`}>
       <div className="flex gap-4 items-center justify-between">
         <div className="lex flex-col gap-4 w-full">
-          <div className="flex justify-between items-start w-full">
+          <div className="flex justify-between items-start w-full gap-4">
             <div className="flex flex-col gap-4">
-              <div className='flex flex-row items-center gap-2'>
+              <div className='flex flex-row items-center gap-2 flex-wrap'>
                 {mentorshipAppointment.hackerId && (<Badge variant={"default"} className="bg-green-500">Booked</Badge>)}
                 {config.statusBadge}
-
                 <Badge variant={"outline"} className="text-white flex flex-row items-center gap-1">{mentorshipAppointment.location.toUpperCase()}
                   {mentorshipAppointment.location === 'online' ? (
                     <MonitorSmartphone size={16} />
@@ -124,8 +122,12 @@ export default function MentorshipAppointmentCardAsMentorComponent(
                     <MapPinCheck size={16} />
                   )}
                 </Badge>
+                {mentorshipAppointment.mentorMarkAsDone && (<Badge variant={"outline"} className="text-green-500 border-green-500"><CheckCheck /> Marked as Done</Badge>)}
+                {mentorshipAppointment.mentorMarkAsAfk && (<Badge variant={"outline"} className="text-yellow-500 border-yellow-500"><Flag /> Marked as AFK</Badge>)}
               </div>
-
+              <div>
+                {mentorshipAppointment.teamName && <span className="font-bold text-sm">Team Name: {mentorshipAppointment.teamName}</span>}
+              </div>
               <div>
                 {epochToStringDate(mentorshipAppointment.startTime)} - {' '}
                 {epochToStringDate(mentorshipAppointment.endTime)}{' '}
@@ -143,21 +145,17 @@ export default function MentorshipAppointmentCardAsMentorComponent(
                     <MoreHorizontalIcon />
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="text-white min-w-5xl">
+                <DialogContent className="text-white max-h-[80vh] overflow-y-scroll">
                   <DialogHeader className="text-white">
                     <DialogTitle>Mentorship Detail</DialogTitle>
                     <h2 className="text-xs text-muted-foreground">Ref ID: {mentorshipAppointment.id}</h2>
-
                     <DialogDescription className="text-white">
-
                     </DialogDescription>
                   </DialogHeader>
 
                   <div className="flex flex-col gap-4">
-
                     <div className="border p-4 rounded-lg">
                       <h3 className="font-semibold">Hacker and Team Detail</h3>
-
                       {mentorshipAppointment.hackerId ? (
                         <div className="mt-2 text-sm">
                           <p>Hacker Name: {mentorshipAppointment.hackerName}</p>
@@ -187,6 +185,8 @@ export default function MentorshipAppointmentCardAsMentorComponent(
                       </div>
                     )}
                   </div>
+                  <div className="h-2"></div>
+                  <MentorEditAppointmentComponent mentorshipAppointment={mentorshipAppointment} />
                 </DialogContent>
               </Dialog>
               <div className="flex flex-col gap-2 items-center text-sm">
@@ -203,19 +203,6 @@ export default function MentorshipAppointmentCardAsMentorComponent(
 
             </div>
           </div>
-
-          {mentorshipAppointment.hackerDescription && (
-            <div className="flex flex-col gap-2">
-              <Accordion type="single" collapsible className="w-fit">
-                <AccordionItem value="item-1" className="border-0">
-                  <AccordionTrigger>Hacker Inquiry</AccordionTrigger>
-                  <AccordionContent>
-                    {mentorshipAppointment.hackerDescription}
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </div>
-          )}
         </div>
       </div>
 

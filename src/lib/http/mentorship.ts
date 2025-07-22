@@ -223,7 +223,29 @@ export async function mentorFetchMyMentorship(id: string) {
     const data = await response.json()
     if (!response.ok) {
       console.error("Error when trying to fetch mentorship appointments. Please try again later.")
-      return 
+      return
+    }
+    return data.data
+  } catch (error) {
+    console.error("Something went wrong when trying to fetch mentorship appointments:", error)
+    return
+  }
+}
+
+export async function mentorUpdateMyMentorship(id: string, payload: any) {
+  try {
+    const response = await fetch(`/api/mentorship/mentor/my-mentorships/${id}`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        "x-xsrf-token": Cookies.get("XSRF-TOKEN") || ""
+      },
+      body: JSON.stringify(payload)
+    })
+    const data = await response.json()
+    if (!response.ok) {
+      console.error("Error when fetching my mentorships for mentors...")
     }
     return data.data
   } catch (error) {
