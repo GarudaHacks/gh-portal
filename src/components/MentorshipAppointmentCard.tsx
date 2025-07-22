@@ -82,7 +82,7 @@ export default function MentorshipAppointmentCardComponent(
             {epochToStringDate(mentorshipAppointment.endTime)}{' '}
           </div>
 
-          <div><Countdown date={mentorshipAppointment.startTime * 1000} renderer={renderer} /></div>
+          <div>In <Countdown date={mentorshipAppointment.startTime * 1000} renderer={renderer} /></div>
           <p className="line-clamp-3 text-xs">{mentorshipAppointment.hackerDescription}</p>
         </div>
 

@@ -1,7 +1,7 @@
 import { MentorshipAppointmentResponseAsHacker, MentorshipAppointmentResponseAsMentor } from "@/types/mentorship"
 import { epochToStringDate } from "@/utils/dateUtils"
 import { Badge } from "./ui/badge"
-import { ChevronDown, Lightbulb, MapPinCheck, MonitorSmartphone, MoreHorizontalIcon, Video, Clock, CheckCircle } from "lucide-react"
+import { ChevronDown, Lightbulb, MapPinCheck, MonitorSmartphone, MoreHorizontalIcon, Video, Clock, CheckCircle, MoreVerticalIcon } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { titleCase } from "title-case";
 import Countdown, { zeroPad } from 'react-countdown';
@@ -28,6 +28,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { useNavigate } from "react-router-dom"
 
 interface MentorshipAppointmentCardComponentProps {
   mentorshipAppointment: MentorshipAppointmentResponseAsMentor
@@ -66,6 +67,7 @@ const OngoingRenderer = ({ hours, minutes, seconds, completed }: { hours: number
 export default function MentorshipAppointmentCardAsMentorComponent(
   { mentorshipAppointment }: MentorshipAppointmentCardComponentProps
 ) {
+  const navigate = useNavigate()
   const appointmentState = useMemo(() =>
     getAppointmentState(mentorshipAppointment.startTime, mentorshipAppointment.endTime),
     [mentorshipAppointment.startTime, mentorshipAppointment.endTime]
@@ -107,30 +109,63 @@ export default function MentorshipAppointmentCardAsMentorComponent(
 
   return (
     <div className={`border rounded-xl p-4 flex flex-col gap-4 h-fit ${config.bgColor}`}>
-      <div className="grid grid-cols-6 gap-4 items-center justify-between">
-        <div className="col-span-5 flex flex-col gap-4">
-          <div className="flex justify-between items-center">
-            <div className='flex flex-row items-center gap-2'>
-              {mentorshipAppointment.hackerId && (<Badge variant={"default"} className="bg-green-500">Booked</Badge>)}
-              {config.statusBadge}
+      <div className="flex gap-4 items-center justify-between">
+        <div className="lex flex-col gap-4 w-full">
+          <div className="flex justify-between items-start w-full">
+            <div className="flex flex-col gap-4">
+              <div className='flex flex-row items-center gap-2'>
+                {mentorshipAppointment.hackerId && (<Badge variant={"default"} className="bg-green-500">Booked</Badge>)}
+                {config.statusBadge}
 
-              <Badge variant={"outline"} className="text-white flex flex-row items-center gap-1">{mentorshipAppointment.location.toUpperCase()}
-                {mentorshipAppointment.location === 'online' ? (
-                  <MonitorSmartphone size={16} />
-                ) : (
-                  <MapPinCheck size={16} />
-                )}
-              </Badge>
+                <Badge variant={"outline"} className="text-white flex flex-row items-center gap-1">{mentorshipAppointment.location.toUpperCase()}
+                  {mentorshipAppointment.location === 'online' ? (
+                    <MonitorSmartphone size={16} />
+                  ) : (
+                    <MapPinCheck size={16} />
+                  )}
+                </Badge>
+              </div>
+
+              <div>
+                {epochToStringDate(mentorshipAppointment.startTime)} - {' '}
+                {epochToStringDate(mentorshipAppointment.endTime)}{' '}
+              </div>
+
+              <div>
+                {config.countdown}
+              </div>
+
             </div>
-          </div>
+            <div className=" flex flex-col items-end gap-2">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant={"ghost"} size={"icon"}>
+                    <MoreHorizontalIcon />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Are you absolutely sure?</DialogTitle>
+                    <DialogDescription>
+                      This action cannot be undone. This will permanently delete your account
+                      and remove your data from our servers.
+                    </DialogDescription>
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog>
+              <div className="flex flex-col gap-2 items-center text-sm">
 
-          <div>
-            {epochToStringDate(mentorshipAppointment.startTime)} - {' '}
-            {epochToStringDate(mentorshipAppointment.endTime)}{' '}
-          </div>
+                <Button
+                  variant={config.buttonVariant}
+                  className="w-full"
+                  disabled={config.buttonDisabled}
+                >
+                  <img src="/images/icons/zoom-icon.svg" width={32} height={32} className="h-6" />
+                </Button>
+                <span className="text-xs text-center">{config.buttonText}</span>
+              </div>
 
-          <div>
-            {config.countdown}
+            </div>
           </div>
 
           {mentorshipAppointment.hackerDescription && (
@@ -145,17 +180,6 @@ export default function MentorshipAppointmentCardAsMentorComponent(
               </Accordion>
             </div>
           )}
-        </div>
-
-        <div className="col-span-1 flex flex-col gap-2 items-center text-sm">
-          <Button
-            variant={config.buttonVariant}
-            className="w-full"
-            disabled={config.buttonDisabled}
-          >
-            <img src="/images/icons/zoom-icon.svg" width={32} height={32} className="h-6" />
-          </Button>
-          <span className="text-xs text-center">{config.buttonText}</span>
         </div>
       </div>
 
@@ -212,5 +236,9 @@ export default function MentorshipAppointmentCardAsMentorComponent(
         </CollapsibleContent>
       </Collapsible>
     </div>
+
+
+
+
   )
 }

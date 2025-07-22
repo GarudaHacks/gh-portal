@@ -20,11 +20,12 @@ import { UserRole } from "./types/auth";
 import MentoringPage from "./pages/Mentoring";
 import BookMentorshipPage from "./pages/BookMentorship";
 import AllSchedulePage from "./pages/AllSchedules";
+import MentorshipDetailPage from "./pages/MentorshipDetail";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading, applicationStatus, role } = useAuth();
   const location = useLocation();
-  
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -32,17 +33,17 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
       </div>
     );
   }
-  
+
   if (!user) {
     return <Navigate to="/auth" />;
   }
-  
-  const mentorAllowedRoutes = ["/home", "/mentoring", "/schedules"];
-  
+
+  const mentorAllowedRoutes = ["/home", "/mentoring", "/schedules", "/mentoring/*", "/mentors/*"];
+
   if (role === "mentor" && !mentorAllowedRoutes.includes(location.pathname)) {
     return <Navigate to="/home" />;
   }
-  
+
   if (role !== "mentor") {
     const isRestrictedPage = ["/schedule", "/ticket", "/mentorship"].includes(
       location.pathname
@@ -50,7 +51,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     const canAccessRestrictedPages =
       applicationStatus === UserApplicationStatus.ACCEPTED ||
       applicationStatus === UserApplicationStatus.CONFIRMED_RSVP;
-      
+
     if (isRestrictedPage && !canAccessRestrictedPages) {
       return <Navigate to="/home" />;
     }
@@ -111,6 +112,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <MentoringPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/mentoring/:id"
+            element={
+              <ProtectedRoute>
+                <MentorshipDetailPage />
               </ProtectedRoute>
             }
           />

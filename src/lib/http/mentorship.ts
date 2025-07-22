@@ -210,3 +210,24 @@ export async function mentorFetchMyMentorships(limit?: number, upcomingOnly?: bo
     return []
   }
 }
+
+export async function mentorFetchMyMentorship(id: string) {
+  try {
+    const response = await fetch(`/api/mentorship/mentor/my-mentorships/${id}`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    const data = await response.json()
+    if (!response.ok) {
+      console.error("Error when trying to fetch mentorship appointments. Please try again later.")
+      return 
+    }
+    return data.data
+  } catch (error) {
+    console.error("Something went wrong when trying to fetch mentorship appointments:", error)
+    return
+  }
+}
