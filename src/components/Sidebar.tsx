@@ -120,11 +120,18 @@ function Sidebar({ onSidebarToggle }: SidebarProps = {}) {
 
             {/* Sidebar if user is a mentor */}
             {role === UserRole.MENTOR ? (
-              <SidebarTab
-                name="Mentoring"
-                iconUrl="/images/icons/group_search.svg"
-                disabled={!canAccessRestrictedPages}
-              />
+              <>
+                <SidebarTab
+                  name="Mentoring"
+                  iconUrl="/images/icons/group_search.svg"
+                  disabled={!canAccessRestrictedPages}
+                />
+                <SidebarTab
+                  name="Schedules"
+                  iconUrl="/images/icons/calendar_month.svg"
+                  disabled={!canAccessRestrictedPages}
+                />
+              </>
             ) : (
               <>
                 <SidebarTab

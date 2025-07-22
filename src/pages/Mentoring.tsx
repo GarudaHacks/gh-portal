@@ -1,20 +1,24 @@
-import MentorshipSlotAsMentorComponent from "@/components/MentorshipSlotAsMentor";
+import MentorshipAppointmentCardAsMentorComponent from "@/components/MentorshipAppointmentCardAsMentor";
 import Page from "@/components/Page";
-import { fetchMyMentorships } from "@/lib/http/mentorship";
-import { MentorshipAppointment } from "@/types/mentorship";
+import { mentorFetchMyMentorships } from "@/lib/http/mentorship";
+import { MentorshipAppointmentResponseAsMentor } from "@/types/mentorship";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
-export default function Mentoring() {
+export default function MentoringPage() {
 
-  const [upcomingMentorshipAppointments, setUpcomingMentorshipAppointments] = useState<MentorshipAppointment[]>()
-  const [recentMentorshipAppointments, setRecentMentorshipAppointments] = useState<MentorshipAppointment[]>()
+  const [upcomingMentorshipAppointments, setUpcomingMentorshipAppointments] = useState<MentorshipAppointmentResponseAsMentor[]>()
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    fetchMyMentorships(true).then((res) => {
+    setLoading(true)
+    mentorFetchMyMentorships(undefined, true, false, true, false).then((res) => {
       setUpcomingMentorshipAppointments(res)
-    })
-    fetchMyMentorships(false, true).then((res) => {
-      setRecentMentorshipAppointments(res)
+      setLoading(false)
+    }).catch((err) => {
+      toast.error(err)
+      setLoading(false)
     })
   }, [])
 
@@ -24,32 +28,31 @@ export default function Mentoring() {
       description="Your upcoming mentoring schedule"
     >
       <div className="flex flex-col gap-4">
-        <h1 className="text-2xl">Upcoming Mentoring Schedule</h1>
 
-        {upcomingMentorshipAppointments && upcomingMentorshipAppointments?.length > 0 ? (
-          <div>
-            {upcomingMentorshipAppointments?.map((mentorshipAppointment) => (
-              <MentorshipSlotAsMentorComponent key={mentorshipAppointment.id} mentorshipAppointment={mentorshipAppointment} />
-            ))}
+        {loading ? (
+          <div className="flex flex-col w-full min-h-screen justify-center items-center">
+            <Loader2 className="animate-spin" />
           </div>
         ) : (
-          <div className="flex flex-col items-center w-full">
-            <p className="text-muted text-sm">You have no upcoming mentorships.</p>
+          <div className="flex flex-col gap-4">
+
+            <h1 className="text-2xl">Upcoming Mentoring Schedule ({upcomingMentorshipAppointments?.length ? upcomingMentorshipAppointments.length : '0'})</h1>
+
+            {upcomingMentorshipAppointments && upcomingMentorshipAppointments?.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {upcomingMentorshipAppointments?.map((mentorshipAppointment) => (
+                  <MentorshipAppointmentCardAsMentorComponent key={mentorshipAppointment.id} mentorshipAppointment={mentorshipAppointment} />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center w-full">
+                <p className="text-muted text-sm">You have no upcoming mentorships.</p>
+              </div>
+            )}
           </div>
+
         )}
 
-        <h1 className="text-2xl">Past Mentorings</h1>
-        {recentMentorshipAppointments && recentMentorshipAppointments?.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {recentMentorshipAppointments?.map((mentorshipAppointment) => (
-              <MentorshipSlotAsMentorComponent key={mentorshipAppointment.id} mentorshipAppointment={mentorshipAppointment} />
-            ))}
-          </div>
-        ) : (
-          <div className="flex flex-col items-center w-full">
-            <p className="text-muted text-sm">You have no upcoming mentorships.</p>
-          </div>
-        )}
       </div>
     </Page>
   )
