@@ -177,6 +177,7 @@ export default function MentorshipAppointmentCardAsMentorComponent(
                         <div></div>
                       )}
                     </div>
+
                     {mentorshipAppointment.offlineLocation && (
                       <div className="border p-4 rounded-lg">
                         <h3 className="font-semibold">Hacker Location</h3>
@@ -248,7 +249,7 @@ export default function MentorshipAppointmentCardAsMentorComponent(
                   ) : (
                     <>
                       <li>Ideally, hacker will reach you out on Discord first.</li>
-                      <li>Reach out to the hacker to confirm the location of your meeting in the venue.</li>
+                      <li>Discuss with the hacker to confirm the location of your meeting in the venue.</li>
                       <li>You may use the Zoom link instead and join the Breakout Room designated for you. The decision is up to you and the hacker.</li>
                     </>
                   )}

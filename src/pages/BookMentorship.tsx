@@ -47,7 +47,8 @@ import { useAuth } from "@/context/AuthContext";
 
 const formSchema = z.object({
   teamName: z.string().min(1, "Team name is required"),
-  hackerDescription: z.string().min(1, "Description is required").max(1000, "Description must be 1000 characters or less")
+  hackerDescription: z.string().min(1, "Description is required").max(1000, "Description must be 1000 characters or less"),
+  offlineLocation: z.string().optional(),
 })
 
 export default function BookMentorshipPage() {
@@ -67,6 +68,7 @@ export default function BookMentorshipPage() {
     defaultValues: {
       teamName: "",
       hackerDescription: "",
+      offlineLocation: ""
     },
   })
 
@@ -128,7 +130,8 @@ export default function BookMentorshipPage() {
           id: slot.id,
           hackerName: user?.displayName || "Anonymous Hacker",
           teamName: values.teamName,
-          hackerDescription: values.hackerDescription
+          hackerDescription: values.hackerDescription,
+          offlineLocation: values.offlineLocation,
         }))
       };
       const res = await bookMentorshipAppointment(payload);
@@ -385,6 +388,26 @@ export default function BookMentorshipPage() {
                     )}
                   />
 
+                  {selectedSlots.some((slot) => slot.location === "offline") && (
+                    <FormField
+                      control={form.control}
+                      name="offlineLocation"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-white">Offline Location</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Enter the offline location"
+                              className="bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-primary"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+
                   <div className="rounded-lg p-4">
                     <p className="text-sm text-gray-300 text-center">
                       Please honor your booking. Mentors may mark you as absent if you fail to attend the scheduled session.
@@ -395,7 +418,7 @@ export default function BookMentorshipPage() {
                     <AlertDialogTrigger asChild>
                       <Button
                         type="button"
-                        className="w-full bg-blue-600 hover:bg-blue-700 py-3"
+                        className="w-full py-3"
                         disabled={isBookingLoading}
                       >
                         {isBookingLoading ? (
@@ -423,7 +446,7 @@ export default function BookMentorshipPage() {
                         {selectedSlots.map((slot, index) => (
                           <div key={slot.id} className=" border border-gray-700 rounded-lg p-4">
                             <div className="flex items-center gap-2 mb-2">
-                              <Calendar className="w-4 h-4 text-blue-400" />
+                              <Calendar className="w-4 h-4 " />
                               <span className="font-medium">Session {index + 1}</span>
                             </div>
                             <div className="text-sm space-y-1">
@@ -445,7 +468,7 @@ export default function BookMentorshipPage() {
                           Cancel
                         </AlertDialogCancel>
                         <AlertDialogAction
-                          className="bg-blue-600 hover:bg-blue-700"
+                          className=""
                           onClick={() => form.handleSubmit(onSubmit)()}
                           disabled={isBookingLoading}
                         >
