@@ -8,10 +8,10 @@ import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { Badge } from "@/components/ui/badge";
 import InstructionMentorshipForHacker from "@/components/InstructionMentorshipForHacker";
+import MentorshipStatusBarAsHacker from "@/components/MentorshipStatusBarAsHacker";
 
 function Mentorship() {
   const [loading, setLoading] = useState(false)
-  const [mentorshipConfig, setMentorshipConfig] = useState<MentorshipConfig>()
   const [myMentorships, setMyMentorships] = useState<MentorshipAppointmentResponseAsHacker[]>()
   const [allMentors, setAllMentors] = useState<FirestoreMentor[]>([])
   const [filteredMentors, setFilteredMentors] =  useState<FirestoreMentor[]>([])
@@ -32,13 +32,11 @@ function Mentorship() {
     setLoading(true);
 
     Promise.all([
-      fetchMentorshipConfig(),
       fetchMyMentorships(),
       fetchAllMentors(),
     ])
-      .then(([configRes, myMentorshipsRes, allMentorsRes]) => {
+      .then(([myMentorshipsRes, allMentorsRes]) => {
         if (isMounted) {
-          setMentorshipConfig(configRes);
           setMyMentorships(myMentorshipsRes);
           setAllMentors(allMentorsRes);
           setLoading(false);
@@ -91,15 +89,7 @@ function Mentorship() {
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          <div id="mentorship-period" className="bg-zinc-50/20 p-4 rounded-xl flex flex-col gap-2">
-            {mentorshipConfig?.isMentorshipOpen ? (
-              <h1 className="text-xl lg:text-2xl">✅ Mentorship is currently open</h1>
-            ) : (
-              <h1 className="text-xl lg:text-2xl">⚠️ Mentorship is currently closed</h1>
-            )}
-           <InstructionMentorshipForHacker />
-          </div>
-
+          <MentorshipStatusBarAsHacker />
           <div className="flex flex-col gap-8">
             <div id="upcoming-mentorships" className="flex flex-col gap-4">
               <h2 className="font-semibold text-xl">Mentorship Requests</h2>

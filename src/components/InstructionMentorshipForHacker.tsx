@@ -13,8 +13,8 @@ export default function InstructionMentorshipForHacker() {
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant={"link"} className="text-white">
-            Read Mentorship Guide
+          <Button variant={"link"} className="text-white p-0">
+            📕 Read Mentorship Guide
           </Button>
         </DialogTrigger>
         <DialogContent className="text-white">
@@ -22,13 +22,13 @@ export default function InstructionMentorshipForHacker() {
             <DialogTitle className="text-white">📋 Mentorship Guide</DialogTitle>
           </DialogHeader>
 
-          <div className="flex flex-col gap-4 max-h-[70vh] overflow-y-auto">
+          <div className="flex flex-col gap-4 max-h-[70vh] overflow-y-auto text-sm">
             <div className="p-4 border rounded-lg flex flex-col">
               <h4 className="scroll-m-20 text-lg font-semibold tracking-tight">
                 General Instructions
               </h4>
 
-              <div className="max-h-screen overflow-y-scroll">
+              <div>
                 <ul className="my-6 ml-6 list-decimal [&>li]:mt-2">
                   <li>Mentorship slots are available on a first-come, first-served basis.</li>
                   <li>Only one team member needs to sign up for a mentorship slot, and the appointment will be booked under their name.</li>
@@ -41,24 +41,27 @@ export default function InstructionMentorshipForHacker() {
                 </ul>
               </div>
             </div>
+
             <div className="p-4 border rounded-lg flex flex-col">
               <h4 className="scroll-m-20 text-lg font-semibold tracking-tight">
-                🟢 Do
+                🟢 Dos
               </h4>
 
-              <div className="max-h-screen overflow-y-scroll">
+              <div> {/* Removed max-h-screen overflow-y-scroll */}
                 <ul className="my-6 ml-6 list-decimal [&>li]:mt-2">
+                  <li>Be proactive in initiating the discussion. Reach out to mentors first through Discord.</li>
                   <li>Prepare questions in advance to make the most of your limited time with the mentor.</li>
                   <li>Be accountable for your booking, as mentors will confirm your attendance in our system.</li>
                 </ul>
               </div>
             </div>
+
             <div className="p-4 border rounded-lg flex flex-col">
               <h4 className="scroll-m-20 text-lg font-semibold tracking-tight">
-                🚩 Don't
+                🚩 Don'ts
               </h4>
 
-              <div className="max-h-screen overflow-y-scroll">
+              <div>
                 <ul className="my-6 ml-6 list-decimal [&>li]:mt-2">
                   <li>Show disrespect toward mentors.</li>
                   <li>Request direct contributions to your codebase, monetary support, tools, or similar assistance.</li>
