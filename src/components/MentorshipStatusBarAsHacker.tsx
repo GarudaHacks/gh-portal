@@ -19,7 +19,7 @@ export default function MentorshipStatusBarAsHacker() {
       ) : (
         <div>
           <h1 className="text-xl lg:text-2xl">⚠️ Mentorship is currently closed</h1>
-          <h2 className="text-sm">Mentorship will open at 24th July 2PM - 25th July 8PM</h2>
+          <h2 className="text-sm">Mentorship will be available from July 24th at 2 PM to July 25th at 8 PM. You can start booking mentors one hour prior.</h2>
         </div>
       )}
       <InstructionMentorshipForHacker />
