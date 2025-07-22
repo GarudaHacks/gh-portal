@@ -5,7 +5,7 @@ import { bookMentorshipAppointment, fetchMentorById, fetchMentorshipAppointments
 import { FirestoreMentor, MentorshipAppointmentResponseAsHacker } from "@/types/mentorship";
 import { getMentorProfilePicture } from "@/utils/firebaseUtils";
 import { formatSpecialization } from "@/utils/stringUtils";
-import { ChevronLeft, Loader2 } from "lucide-react";
+import { ChevronLeft, Loader2, Calendar, Clock, MapPin, User, CheckCircle2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
@@ -85,9 +85,12 @@ export default function BookMentorshipPage() {
     ])
       .then(([mentorData, pictureUrl, slots]) => {
         if (isMounted) {
+          const sortedSlots = slots.sort((a: MentorshipAppointmentResponseAsHacker, b: MentorshipAppointmentResponseAsHacker) =>
+            new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+          );
           setMentor(mentorData);
           setProfilePictureUrl(pictureUrl);
-          setMentorshipSlots(slots);
+          setMentorshipSlots(sortedSlots);
           setLoading(false);
         }
       })
@@ -146,75 +149,94 @@ export default function BookMentorshipPage() {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen w-full">
-        <Loader2 className="animate-spin h-8 w-8" />
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="animate-spin h-12 w-12" />
+          <p className="text-gray-300">Loading mentorship details...</p>
+        </div>
       </div>
     );
   }
 
   if (!mentor) {
     return (
-      <div className="p-4 flex flex-col gap-4">
-        <Button variant="outline" onClick={() => navigate(-1)}>
-          <ChevronLeft /> Back
+      <div className="min-h-screen bg-blue-950 p-4 flex flex-col gap-4">
+        <Button variant="outline" onClick={() => navigate(-1)} className="w-fit bg-gray-800 border-gray-700 text-white hover:bg-gray-700">
+          <ChevronLeft className="w-4 h-4 mr-2" /> Back
         </Button>
-        <p className="text-center">Mentor not found.</p>
+        <div className="flex-1 flex items-center justify-center">
+          <Card className=" border-gray-700">
+            <CardContent className="p-8 text-center">
+              <p className="text-gray-300 text-lg">Mentor not found.</p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col h-screen">
-      <div className="sticky top-0 p-4 bg-background z-10">
-        <Button variant="outline" onClick={() => navigate(-1)} className="w-fit">
-          <ChevronLeft /> Back
+    <div className="flex flex-col h-screen ">
+      {/* Header */}
+      <div className="sticky top-0 p-4 backdrop-blur-sm border-b border-gray-800 z-10">
+        <Button variant="outline" onClick={() => navigate(-1)} className="w-fit text-white ">
+          <ChevronLeft className="w-4 h-4 mr-2" /> Back to Mentors
         </Button>
       </div>
 
       <div className="flex-1 overflow-hidden">
-        <div className="p-4 grid grid-cols-1 lg:grid-cols-3 gap-4 h-full">
+        <div className="p-4 grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
+          {/* Left Panel - Mentor Profile */}
           <div className="lg:col-span-1">
-            <Card id="desktop-card" className="lg:block hidden bg-blue-950/50 transition-all">
-              <CardHeader className="text-center">
-                <CardTitle className="flex flex-col gap-2 items-center">
+            {/* Desktop View */}
+            <Card className="lg:block hidden bg-gray-800/30 backdrop-blur-sm">
+              <CardHeader className="text-center pb-4">
+                <div className="relative mx-auto w-32 h-32 mb-4">
                   <img
                     src={profilePictureUrl || "/images/logo/gh_logo.svg"}
-                    width={500}
-                    height={500}
                     alt="profile picture"
-                    className="rounded-full w-2/3 md:w-3/5 aspect-square border"
+                    className="w-full h-full rounded-full object-cover border"
                   />
-                  <p className="text-xl">{mentor.name}</p>
-                </CardTitle>
+                </div>
+                <CardTitle className="text-2xl text-white font-bold">{mentor.name}</CardTitle>
                 {mentor.specialization && (
-                  <CardDescription className="text-gray-400">
+                  <CardDescription className=" font-medium text-lg">
                     {formatSpecialization(mentor.specialization)}
                   </CardDescription>
                 )}
               </CardHeader>
-              <CardContent>
-                <p className="text-center text-sm text-pretty">{mentor.intro}</p>
+              <CardContent className="px-6 pb-6">
+                <div className="space-y-4">
+                  <div className="rounded-lg p-4">
+                    <h3 className="text-white font-semibold mb-2 flex items-center gap-2">
+                      <User className="w-4 h-4 " />
+                      About
+                    </h3>
+                    <p className="text-gray-300 text-sm leading-relaxed">{mentor.intro}</p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
+            {/* Mobile View */}
             <div className="lg:hidden">
-              <Card className="bg-blue-950/50">
+              <Card className="bg-gray-800/30 border-gray-700 backdrop-blur-sm">
                 <CardContent className="p-4">
-                  <div className="flex items-center gap-4">
-                    <img
-                      src={profilePictureUrl || "/images/logo/gh_logo.svg"}
-                      width={80}
-                      height={80}
-                      alt="profile picture"
-                      className="rounded-full w-20 h-20 border flex-shrink-0"
-                    />
+                  <div className="flex items-start gap-4">
+                    <div className="relative">
+                      <img
+                        src={profilePictureUrl || "/images/logo/gh_logo.svg"}
+                        alt="profile picture"
+                        className="w-16 h-16 rounded-full object-cover border flex-shrink-0"
+                      />
+                    </div>
                     <div className="min-w-0 flex-1">
                       <h2 className="text-lg font-bold text-white truncate">{mentor.name}</h2>
                       {mentor.specialization && (
-                        <p className="text-sm text-gray-400 mb-2">
+                        <p className="text-sm font-medium mb-2">
                           {formatSpecialization(mentor.specialization)}
                         </p>
                       )}
-                      <p className="text-xs text-gray-300 line-clamp-4">{mentor.intro}</p>
+                      <p className="text-xs text-gray-300 line-clamp-3">{mentor.intro}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -222,17 +244,38 @@ export default function BookMentorshipPage() {
             </div>
           </div>
 
-          <div className="lg:col-span-2 flex flex-col overflow-hidden pb-20 lg:pb-0">
-            <h1 className="text-2xl font-bold mb-4 text-white">Mentoring Schedules ({mentorshipSlots?.length})</h1>
+          {/* Right Panel - Mentoring Slots */}
+          <div className="lg:col-span-2 flex flex-col overflow-hidden pb-24 lg:pb-0">
+            <div className="flex items-center gap-3 mb-6">
+              <Calendar className="w-6 h-6 " />
+              <h1 className="text-2xl font-bold text-white">
+                Available Sessions
+                <span className="ml-2 text-lg font-normal text-gray-400">
+                  ({mentorshipSlots?.length || 0} slots)
+                </span>
+              </h1>
+            </div>
+
             <div className="flex-1 overflow-y-auto">
               {mentorshipSlots === null ? (
-                <div className="flex justify-center">
-                  <Loader2 className="animate-spin h-6 w-6" />
+                <div className="flex justify-center items-center h-64">
+                  <div className="flex flex-col items-center gap-3">
+                    <Loader2 className="animate-spin h-8 w-8 " />
+                    <p className="text-gray-300">Loading available slots...</p>
+                  </div>
                 </div>
               ) : mentorshipSlots.length === 0 ? (
-                <p className="text-center">No mentoring slots available.</p>
+                <div className="flex items-center justify-center h-64">
+                  <Card className="bg-gray-800/30 border-gray-700">
+                    <CardContent className="p-8 text-center">
+                      <Calendar className="w-12 h-12 text-gray-500 mx-auto mb-4" />
+                      <p className="text-gray-300 text-lg mb-2">No slots available</p>
+                      <p className="text-gray-500 text-sm">This mentor doesn't have any open time slots right now.</p>
+                    </CardContent>
+                  </Card>
+                </div>
               ) : (
-                <div className="grid gap-4">
+                <div className="grid gap-4 pb-4">
                   {mentorshipSlots.map((slot) => (
                     <MentorshipSlotAsHackerComponent
                       key={slot.id}
@@ -248,25 +291,64 @@ export default function BookMentorshipPage() {
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-background border-t p-4 lg:relative">
-        <div className="flex flex-col gap-4">
-          <p className="text-center">Selected {selectedSlots.length} of 2 mentorship slots</p>
+      {/* Bottom Fixed Panel - Booking Actions */}
+      <div className="fixed bottom-0 left-0 right-0  backdrop-blur-sm border-t  p-4 lg:relative lg:bg-transparent lg:border-0">
+        <div className="flex flex-col gap-4 max-w-4xl mx-auto">
+          {/* Selection Summary */}
+          <div className="flex items-center justify-center gap-4">
+            <div className="flex items-center gap-2 text-sm text-gray-300">
+              <CheckCircle2 className="w-4 h-4 " />
+              <span>Selected <strong className="text-white">{selectedSlots.length}</strong> of <strong className="text-white">2</strong> slots</span>
+            </div>
+            {selectedSlots.length > 0 && (
+              <div className="text-xs text-gray-500">
+                ({selectedSlots.reduce((total, slot) => total + (slot.endTime - slot.startTime) / 60, 0)} minutes total)
+              </div>
+            )}
+          </div>
+
+          {selectedSlots.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
+              {selectedSlots.map((slot, index) => (
+                <div key={slot.id} className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
+                  <div className="flex items-center gap-2 text-sm">
+                    <Clock className="w-3 h-3 text-blue-400" />
+                    <span className="text-white font-medium">
+                      {epochToStringDate(slot.startTime)} - {epochToStringDate(slot.endTime)}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-gray-400 mt-1">
+                    <MapPin className="w-3 h-3" />
+                    <span className="capitalize">{slot.location}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Book Button */}
           <Dialog>
             <DialogTrigger asChild>
               <div className="flex flex-col items-center justify-center">
-                <Button className="w-fit" size={"lg"} disabled={selectedSlots.length === 0}>Book</Button>
+                <Button
+                  className="w-full max-w-md text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 disabled:opacity-50"
+                  size="lg"
+                  disabled={selectedSlots.length === 0}
+                >
+                  {selectedSlots.length === 0 ? 'Select slots to continue' : `Book ${selectedSlots.length} Session${selectedSlots.length > 1 ? 's' : ''}`}
+                </Button>
               </div>
             </DialogTrigger>
-            <DialogContent>
-              <DialogHeader className="text-white">
-                <DialogTitle>Booking Details</DialogTitle>
-                <DialogDescription>
-                  This booking will be made under your name for your team
+            <DialogContent className="bg-gray-900 border-gray-700 text-white max-w-md">
+              <DialogHeader>
+                <DialogTitle className="text-xl">Complete Your Booking</DialogTitle>
+                <DialogDescription className="text-gray-400">
+                  Fill in your team details to book the selected mentorship sessions
                 </DialogDescription>
               </DialogHeader>
 
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   <FormField
                     control={form.control}
                     name="teamName"
@@ -274,7 +356,11 @@ export default function BookMentorshipPage() {
                       <FormItem>
                         <FormLabel className="text-white">Team Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="Team name" className="text-white" {...field} />
+                          <Input
+                            placeholder="Enter your team name"
+                            className="bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-primary"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -285,43 +371,92 @@ export default function BookMentorshipPage() {
                     name="hackerDescription"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white">Inquiry</FormLabel>
+                        <FormLabel className="text-white">What do you need help with?</FormLabel>
                         <FormControl>
-                          <Textarea className="text-white" placeholder="I need help with..." maxLength={1000} {...field} />
+                          <Textarea
+                            className="bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-blue-500 min-h-[100px]"
+                            placeholder="Describe what you'd like to discuss or get help with during the mentorship session..."
+                            maxLength={1000}
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <p className="text-sm text-gray-50 text-center text-pretty">
-                    Please honor the booking you made. The mentor may mark you as AFK if you fail to attend the session.
-                  </p>
+
+                  <div className="rounded-lg p-4">
+                    <p className="text-sm text-gray-300 text-center">
+                      Please honor your booking. Mentors may mark you as absent if you fail to attend the scheduled session.
+                    </p>
+                  </div>
+
                   <AlertDialog>
-                    <AlertDialogTrigger asChild className="w-full">
-                      <Button type="button" className="flex gap-2 items-center">Book Now
-                        {isBookingLoading && <Loader2 className="animate-spin"/>}
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        type="button"
+                        className="w-full bg-blue-600 hover:bg-blue-700 py-3"
+                        disabled={isBookingLoading}
+                      >
+                        {isBookingLoading ? (
+                          <>
+                            <Loader2 className="animate-spin w-4 h-4 mr-2" />
+                            Processing...
+                          </>
+                        ) : (
+                          'Review & Confirm Booking'
+                        )}
                       </Button>
                     </AlertDialogTrigger>
-                    <AlertDialogContent className="text-white">
+                    <AlertDialogContent className="bg-gray-900 border-gray-700 text-white">
                       <AlertDialogHeader>
-                        <AlertDialogTitle>Confirm Booking</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          You will book these slots
+                        <AlertDialogTitle className="flex items-center gap-2">
+                          <CheckCircle2 className="w-5 h-5 text-green-500" />
+                          Confirm Your Booking
+                        </AlertDialogTitle>
+                        <AlertDialogDescription className="text-gray-400">
+                          Review your selected sessions before confirming
                         </AlertDialogDescription>
                       </AlertDialogHeader>
 
-                      <div className="flex flex-col gap-4">
-                        {selectedSlots.map((slot) => (
-                          <div key={slot.id} className="p-4 border rounded-lg text-center">
-                            <p>{epochToStringDate(slot.startTime)} - {epochToStringDate(slot.endTime)}</p>
+                      <div className="space-y-3 my-4">
+                        {selectedSlots.map((slot, index) => (
+                          <div key={slot.id} className=" border border-gray-700 rounded-lg p-4">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Calendar className="w-4 h-4 text-blue-400" />
+                              <span className="font-medium">Session {index + 1}</span>
+                            </div>
+                            <div className="text-sm space-y-1">
+                              <div className="flex items-center gap-2">
+                                <Clock className="w-3 h-3 text-gray-400" />
+                                <span>{epochToStringDate(slot.startTime)} - {epochToStringDate(slot.endTime)}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <MapPin className="w-3 h-3 text-gray-400" />
+                                <span className="capitalize">{slot.location}</span>
+                              </div>
+                            </div>
                           </div>
                         ))}
                       </div>
+
                       <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction className="flex items-center gap-2" type="submit" onClick={() => form.handleSubmit(onSubmit)()}>
-                          Continue
-                          {isBookingLoading && <Loader2 className="animate-spin"/>}
+                        <AlertDialogCancel className="bg-gray-800 border-gray-600 text-white hover:bg-gray-700">
+                          Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                          className="bg-blue-600 hover:bg-blue-700"
+                          onClick={() => form.handleSubmit(onSubmit)()}
+                          disabled={isBookingLoading}
+                        >
+                          {isBookingLoading ? (
+                            <>
+                              <Loader2 className="animate-spin w-4 h-4 mr-2" />
+                              Booking...
+                            </>
+                          ) : (
+                            'Confirm Booking'
+                          )}
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
