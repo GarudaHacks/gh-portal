@@ -30,7 +30,7 @@ const EventSchedule = () => {
   const hackathonEndDate = new Date("2025-07-26T22:00:00");
   const totalHours = Math.ceil(
     (hackathonEndDate.getTime() - hackathonStartDate.getTime()) /
-      (1000 * 60 * 60)
+    (1000 * 60 * 60)
   );
 
   const eventDays = useMemo(() => {
@@ -327,54 +327,54 @@ const EventSchedule = () => {
   };
 
   return (
-    <div className="max-w-full overflow-hidden">
-      <h1 className="text-3xl font-bold text-primary mb-4 text-white">
-        Day-Of-Events Schedule
-      </h1>
+    <div className="max-w-xl lg:max-w-3xl xl:max-w-5xl 2xl:max-w-6xl">
+      <div className="max-w-full overflow-hidden">
+        <h1 className="text-3xl font-bold text-primary mb-4 text-white">
+          Day-Of-Events Schedule
+        </h1>
 
-      {/* Header*/}
-      <div className="flex flex-col sm:flex-row justify-between mb-4 gap-4">
-        {/* Day indicator*/}
-        <DayIndicator currentDay={currentDay} eventDays={eventDays} />
+        {/* Header*/}
+        <div className="flex flex-col sm:flex-row justify-between mb-4 gap-4">
+          {/* Day indicator*/}
+          <DayIndicator currentDay={currentDay} eventDays={eventDays} />
 
-        {/* Event type legend*/}
-        <EventTypeLegend
-          eventTypes={[
-            { type: "main", label: "Main Events", color: "#ff0068" },
-            { type: "workshop", label: "Workshops", color: "#7c000f" },
-            { type: "activity", label: "Activities", color: "#2fbeb0" },
-            { type: "break", label: "Breaks", color: "#f7f5dd" },
-          ]}
-        />
-      </div>
-
-      {/* Schedule container */}
-      <div className="bg-white/5 backdrop-blur-md rounded-lg overflow-hidden shadow-md border border-white/10">
-        {/* Day header */}
-        <div className="font-bold text-xl p-4 bg-[#FF0068] text-white border-b border-white/10">
-          Hackathon Schedule
+          {/* Event type legend*/}
+          <EventTypeLegend
+            eventTypes={[
+              { type: "main", label: "Main Events", color: "#ff0068" },
+              { type: "workshop", label: "Workshops", color: "#7c000f" },
+              { type: "activity", label: "Activities", color: "#2fbeb0" },
+              { type: "break", label: "Breaks", color: "#f7f5dd" },
+            ]}
+          />
         </div>
 
-        {/* Timeline container */}
-        <div
-          className="relative overflow-x-auto"
-          ref={timelineRef}
-          onScroll={handleScroll}
-        >
-          {/* Time markers*/}
-          {!isMobile && (
-            <TimelineHeader hourMarkers={hourMarkers} hourWidth={HOUR_WIDTH} />
-          )}
+        {/* Schedule container */}
+        <div className="bg-white/5 backdrop-blur-md rounded-lg overflow-hidden shadow-md border border-white/10">
+          {/* Day header */}
+          <div className="font-bold text-xl p-4 bg-[#FF0068] text-white border-b border-white/10">
+            Hackathon Schedule
+          </div>
 
-          {/* Content container with appropriate height for all rows */}
+          {/* Timeline container */}
           <div
-            className={`relative max-w-full ${
-              isMobile ? "h-auto" : "h-[500px]"
-            }`}
-            style={{
-              minHeight: isMobile
-                ? "auto"
-                : `${organizedTimeSlots.reduce(
+            className="relative overflow-x-auto"
+            ref={timelineRef}
+            onScroll={handleScroll}
+          >
+            {/* Time markers*/}
+            {!isMobile && (
+              <TimelineHeader hourMarkers={hourMarkers} hourWidth={HOUR_WIDTH} />
+            )}
+
+            {/* Content container with appropriate height for all rows */}
+            <div
+              className={`relative max-w-full ${isMobile ? "h-auto" : "h-[500px]"
+                }`}
+              style={{
+                minHeight: isMobile
+                  ? "auto"
+                  : `${organizedTimeSlots.reduce(
                     (height, slot) =>
                       Math.max(
                         height,
@@ -382,31 +382,32 @@ const EventSchedule = () => {
                       ),
                     0
                   )}px`,
-            }}
-          >
-            {/* Vertical time grid lines */}
-            {!isMobile && (
-              <div
-                className="absolute inset-0"
-                style={{ width: `${totalWidth}px` }}
-              >
-                {hourMarkers.map((_, index) => (
-                  <div
-                    key={`gridline-${index}`}
-                    className="absolute top-0 bottom-0 border-l border-white/10"
-                    style={{
-                      left: `${index * HOUR_WIDTH}px`,
-                      height: "100%",
-                      zIndex: 1,
-                    }}
-                  ></div>
-                ))}
-              </div>
-            )}
+              }}
+            >
+              {/* Vertical time grid lines */}
+              {!isMobile && (
+                <div
+                  className="absolute inset-0"
+                  style={{ width: `${totalWidth}px` }}
+                >
+                  {hourMarkers.map((_, index) => (
+                    <div
+                      key={`gridline-${index}`}
+                      className="absolute top-0 bottom-0 border-l border-white/10"
+                      style={{
+                        left: `${index * HOUR_WIDTH}px`,
+                        height: "100%",
+                        zIndex: 1,
+                      }}
+                    ></div>
+                  ))}
+                </div>
+              )}
 
-            {/* Events grid */}
-            <div className="relative" style={{ zIndex: 2 }}>
-              {isMobile ? renderMobileSchedule() : renderDesktopSchedule()}
+              {/* Events grid */}
+              <div className="relative" style={{ zIndex: 2 }}>
+                {isMobile ? renderMobileSchedule() : renderDesktopSchedule()}
+              </div>
             </div>
           </div>
         </div>

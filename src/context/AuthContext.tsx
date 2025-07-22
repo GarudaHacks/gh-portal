@@ -8,6 +8,8 @@ import {
 import { User } from "@/model/User.ts";
 import Cookies from "js-cookie";
 import { UserApplicationStatus } from "../types/applicationStatus";
+import { UserRole } from "@/types/auth";
+import { fetchMyRole } from "@/lib/http/auth";
 
 export interface LoginCredentials {
   email: string;
@@ -25,6 +27,7 @@ export interface AuthContextType {
   loading: boolean;
   isActionLoading: boolean;
   applicationStatus: UserApplicationStatus;
+  role: UserRole;
   loginWithEmailPassword: (credentials: LoginCredentials) => Promise<{
     error: {
       message: string;
@@ -76,6 +79,7 @@ const AuthContext = createContext<AuthContextType>({
   loading: true,
   isActionLoading: false,
   applicationStatus: UserApplicationStatus.NOT_APPLICABLE,
+  role: UserRole.HACKER,
   loginWithEmailPassword: async () => ({ error: null, data: null }),
   signUpWithEmailPassword: async () => ({ error: null, data: null }),
   loginWithGoogle: async () => ({ error: null, data: null }),
@@ -89,8 +93,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isActionLoading, setIsActionLoading] = useState<boolean>(false);
   const [isVerifyingEmail, setIsVerifyingEmail] = useState<boolean>(false);
 
-  const applicationStatus =
-    user?.applicationStatus || UserApplicationStatus.NOT_APPLICABLE;
+  const [applicationStatus, setApplicationStatus] = useState<UserApplicationStatus>(
+    UserApplicationStatus.NOT_APPLICABLE
+  );
+  const [role, setRole] = useState<UserRole>(UserRole.HACKER);
+
+  const fetchApplicationStatus = async (): Promise<UserApplicationStatus> => {
+    try {
+      const response = await fetch("/api/application/status", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+      const data = await response.json();
+      if (response.ok) {
+        return data.data || UserApplicationStatus.NOT_APPLICABLE;
+      } else {
+        console.error("Error fetching application status:", data.error);
+        return UserApplicationStatus.NOT_APPLICABLE;
+      }
+    } catch (e) {
+      console.error("Error fetching application status:", e);
+      return UserApplicationStatus.NOT_APPLICABLE;
+    }
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -106,15 +134,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         const data = await response.json();
 
-        if (response.ok) {
-          if (data.data.user?.emailVerified) {
-            setUser(data.data.user);
-          } else {
-            setUser(null);
+        if (response.ok && data.data.user?.emailVerified) {
+          setUser(data.data.user);
+          const status = await fetchApplicationStatus();
+          if (mounted) {
+            setApplicationStatus(status);
           }
         } else {
           setUser(null);
+          if (mounted) {
+            setApplicationStatus(UserApplicationStatus.NOT_APPLICABLE);
+          }
         }
+
+        fetchMyRole().then((res) => {
+          setRole(res)
+        })
       } catch (e) {
         console.error("Error checking session:", e);
         if (mounted) {
@@ -156,9 +191,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (data.user?.emailVerified || data.emailVerified) {
         setUser(data.user || data);
+        const status = await fetchApplicationStatus();
+        setApplicationStatus(status);
       } else {
         setUser(null);
       }
+
+      fetchMyRole().then((res) => {
+        setRole(res)
+      })
 
       return {
         error: null,
@@ -233,6 +274,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       setUser(data.user || data);
+      const status = await fetchApplicationStatus();
+      setApplicationStatus(status);
+
+      fetchMyRole().then((res) => {
+        setRole(res)
+      })
       return {
         error: null,
         data: { message: "Login successful", user: data.user || data },
@@ -271,7 +318,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return { error: { message: "Login failed" }, data: null };
     } finally {
       setUser(null);
-      setLoading(false);
+      setApplicationStatus(UserApplicationStatus.NOT_APPLICABLE);
+      setLoading(false)
     }
   };
 
@@ -312,6 +360,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         loading,
         isActionLoading,
         applicationStatus,
+        role,
         loginWithEmailPassword,
         loginWithGoogle,
         signUpWithEmailPassword,

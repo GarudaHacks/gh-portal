@@ -1,178 +1,155 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Page from "../components/Page";
-import QuestionForm, { QuestionFormData } from "../components/QuestionForm";
-
-interface Ticket {
-  id: string;
-  subject: string;
-  description: string;
-  status: "waiting" | "claimed" | "resolved";
-  submittedAt: string;
-  categories: string[];
-}
+import { FirestoreMentor, MentorshipAppointmentResponseAsHacker, MentorshipConfig } from "@/types/mentorship";
+import { fetchAllMentors, fetchMentorshipConfig, fetchMyMentorships } from "@/lib/http/mentorship";
+import MentorshipAppointmentCardComponent from "@/components/MentorshipAppointmentCard";
+import MentorCardComponent from "@/components/MentorCardComponent";
+import { Loader2 } from "lucide-react";
+import toast from "react-hot-toast";
+import { Badge } from "@/components/ui/badge";
+import InstructionMentorshipForHacker from "@/components/InstructionMentorshipForHacker";
+import MentorshipStatusBarAsHacker from "@/components/MentorshipStatusBarAsHacker";
 
 function Mentorship() {
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [loading, setLoading] = useState(false)
+  const [mentorshipConfig, setMentorshipConfig] = useState<MentorshipConfig>()
+  const [myMentorships, setMyMentorships] = useState<MentorshipAppointmentResponseAsHacker[]>()
+  const [allMentors, setAllMentors] = useState<FirestoreMentor[]>([])
+  const [filteredMentors, setFilteredMentors] =  useState<FirestoreMentor[]>([])
+  const [filterCategories, setFilterCategories] = useState<string[]>([])
 
-  const handleSubmitQuestion = (formData: QuestionFormData) => {
-    const newTicket: Ticket = {
-      id: Date.now().toString(),
-      subject: formData.subject,
-      description: formData.description,
-      status: "waiting",
-      submittedAt: new Date().toLocaleString("en-US", {
-        month: "short",
-        day: "numeric",
-        hour: "numeric",
-        minute: "numeric",
-        hour12: true,
-      }),
-      categories: formData.categories,
+  const CATEGORIES = [
+    "backend",
+    "frontend",
+    "developer",
+    "designer",
+    "data scientist",
+    "product manager",
+    "entrepreneur",
+  ]
+
+  useEffect(() => {
+    let isMounted = true;
+    setLoading(true);
+
+    Promise.all([
+      fetchMyMentorships(),
+      fetchAllMentors(),
+      fetchMentorshipConfig(),
+    ])
+      .then(([myMentorshipsRes, allMentorsRes, mentorshipConfig]) => {
+        if (isMounted) {
+          setMyMentorships(myMentorshipsRes);
+          setAllMentors(allMentorsRes);
+          setMentorshipConfig(mentorshipConfig)
+          setLoading(false);
+        }
+      })
+      .catch((error) => {
+        if (isMounted) {
+          console.error('Error fetching data:', error);
+          setLoading(false);
+          toast.error("Failed to load data", error)
+        }
+      });
+
+    return () => {
+      isMounted = false;
     };
+  }, []);
 
-    setTickets([newTicket, ...tickets]);
-    // Show success notification
-    setShowNotification(true);
-    setTimeout(() => setShowNotification(false), 5000);
+  useEffect(() => {
+    if (filterCategories.length === 0) {
+      setFilteredMentors(allMentors);
+    } else {
+      setFilteredMentors(
+        allMentors.filter((mentor) =>
+          filterCategories.some((category) =>
+            mentor.specialization?.toLowerCase().includes(category.toLowerCase())
+          )
+        )
+      );
+    }
+  }, [filterCategories, allMentors]);
+
+  const handleSelectCategory = (category: string) => {
+    setFilterCategories((prev: any) => {
+      if (prev.includes(category)) {
+        return prev.filter((c: string) => c !== category);
+      }
+      return [...prev, category];
+    });
   };
-
-  const [showNotification, setShowNotification] = useState(false);
 
   return (
     <Page
       title="Mentorship"
       description="Submit a request or question to a mentor for help on your project."
     >
-      <div className="flex flex-col gap-6">
-        <div className="flex gap-4 justify-between items-center">
-          <h1 className="text-2xl font-bold">
-            Have a question? Ask our mentors!
-          </h1>
-          <button
-            className="bg-[#9F3737] text-white px-4 py-2 rounded-md flex items-center gap-2"
-            onClick={() => setIsFormOpen(true)}
-          >
-            <span className="font-medium">New Question</span>
-          </button>
+      {loading ? (
+        <div className="w-full min-h-screen flex flex-col items-center justify-center">
+          <Loader2 className="animate-spin" />
         </div>
-
-        {/* Step-by-step guide */}
-        <div className="border border-[#E5D1D1] rounded-lg p-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="flex flex-col items-left text-left">
-              <div className="w-10 h-10 rounded-full bg-[#9F3737] text-white flex items-center justify-center mb-3">
-                1
-              </div>
-              <p className="font-medium">
-                Submit your request or question by clicking{" "}
-                <span className="font-bold">New Question</span>. Select all
-                relevant tags!
-              </p>
+      ) : (
+        <div className="flex flex-col gap-4">
+          <MentorshipStatusBarAsHacker />
+          <div className="flex flex-col gap-8">
+            <div id="upcoming-mentorships" className="flex flex-col gap-4">
+              <h2 className="font-semibold text-xl">Mentorship Requests</h2>
+              {myMentorships && myMentorships.length > 0 ? (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  {myMentorships.map((m) => (
+                    <MentorshipAppointmentCardComponent key={m.id} mentorshipAppointment={m} />
+                  ))}
+                </div>
+              ) : (
+                <div>
+                  <p className="text-muted-foreground">You are currently do not have any mentorships request.</p>
+                </div>
+              )}
             </div>
 
-            <div className="flex flex-col items-left text-left">
-              <div className="w-10 h-10 rounded-full bg-[#9F3737] text-white flex items-center justify-center mb-3">
-                2
-              </div>
-              <p className="font-medium">
-                Get notified on the portal and Discord when your request has
-                been claimed.
-              </p>
-            </div>
+            <div id="mentors-list" className="flex flex-col gap-4">
+              <div className="flex flex-col gap-2">
+                <h2 className="font-semibold text-xl">Garuda Hacks 6.0 Mentors</h2>
 
-            <div className="flex flex-col items-left text-left">
-              <div className="w-10 h-10 rounded-full bg-[#9F3737] text-white flex items-center justify-center mb-3">
-                3
+               <div id="mentorship-categories" className="w-full max-w-full overflow-x-auto overflow-y-hidden pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 scroll-smooth mb-4">
+                  <div className="flex flex-nowrap gap-2 min-w-max">
+                    {CATEGORIES.map((category,i) => (
+                      <Badge 
+                        className="text-white whitespace-nowrap flex-shrink-0 cursor-pointer" 
+                        variant={filterCategories?.includes(category) ? 'default' : 'outline'} 
+                        key={i} 
+                        onClick={() => handleSelectCategory(category)}
+                      >
+                        {category.toUpperCase()}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
+
+                {filteredMentors.length > 0 ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4">
+                    {filteredMentors.map((m) => (
+                      <MentorCardComponent key={m.id} mentor={m} isMentorshipOpen={mentorshipConfig?.isMentorshipOpen || false} />
+                    ))}
+                  </div>
+                ) : (
+                  <div>
+                    <p className="text-muted-foreground">
+                      {filterCategories.length > 0
+                        ? "No mentors match the selected categories."
+                        : "No mentors available."}
+                    </p>
+                  </div>
+                )}
               </div>
-              <p className="font-medium">
-                Follow the instructions on Discord to find your mentor!
-              </p>
             </div>
           </div>
         </div>
-
-        {/* Tickets section */}
-        <div className="mt-4">
-          <h2 className="text-xl font-bold mb-4">Your Tickets</h2>
-
-          {tickets.length > 0 ? (
-            <div className="space-y-4">
-              {tickets.map((ticket) => (
-                <div key={ticket.id} className="border rounded-lg p-4">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <div className="inline-block px-2 py-1 bg-gray-200 text-gray-800 rounded-md text-sm mb-2">
-                        {ticket.status === "waiting"
-                          ? "Waiting"
-                          : ticket.status === "claimed"
-                          ? "Claimed"
-                          : "Resolved"}
-                      </div>
-                      <h3 className="text-lg font-medium">{ticket.subject}</h3>
-                      <p className="text-gray-700 mt-1">{ticket.description}</p>
-
-                      <div className="mt-3">
-                        <span className="text-sm text-gray-500">Category</span>
-                        <div className="flex flex-wrap gap-2 mt-1">
-                          {ticket.categories.map((category) => (
-                            <span
-                              key={category}
-                              className="px-2 py-1 bg-gray-100 text-gray-700 rounded-md text-xs"
-                            >
-                              {category}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      Submitted {ticket.submittedAt}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12 border rounded-lg">
-              <h3 className="text-xl font-medium text-[#9F3737] mb-2">
-                Nothing here so far!
-              </h3>
-              <p className="text-gray-600">
-                Create a new question and it will pop up here.
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Question Form Modal */}
-      <QuestionForm
-        isOpen={isFormOpen}
-        onClose={() => setIsFormOpen(false)}
-        onSubmit={handleSubmitQuestion}
-      />
-
-      {/* Success Notification */}
-      {showNotification && (
-        <div className="fixed bottom-4 right-4 bg-[#9F3737] text-white px-4 py-3 rounded-md shadow-lg flex items-center gap-2 animate-fade-in-up">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-          </svg>
-          <span>Your ticket has been submitted!</span>
-        </div>
       )}
+
     </Page>
   );
 }
