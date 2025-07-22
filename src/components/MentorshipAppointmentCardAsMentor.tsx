@@ -143,14 +143,50 @@ export default function MentorshipAppointmentCardAsMentorComponent(
                     <MoreHorizontalIcon />
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Are you absolutely sure?</DialogTitle>
-                    <DialogDescription>
-                      This action cannot be undone. This will permanently delete your account
-                      and remove your data from our servers.
+                <DialogContent className="text-white min-w-5xl">
+                  <DialogHeader className="text-white">
+                    <DialogTitle>Mentorship Detail</DialogTitle>
+                    <h2 className="text-xs text-muted-foreground">Ref ID: {mentorshipAppointment.id}</h2>
+
+                    <DialogDescription className="text-white">
+
                     </DialogDescription>
                   </DialogHeader>
+
+                  <div className="flex flex-col gap-4">
+
+                    <div className="border p-4 rounded-lg">
+                      <h3 className="font-semibold">Hacker and Team Detail</h3>
+
+                      {mentorshipAppointment.hackerId ? (
+                        <div className="mt-2 text-sm">
+                          <p>Hacker Name: {mentorshipAppointment.hackerName}</p>
+                          <p>Team Name: {mentorshipAppointment.teamName}</p>
+                        </div>
+                      ) : (
+                        <p className="text-muted-foreground">This slot has not been booked by any hacker.</p>
+                      )}
+                    </div>
+
+                    <div className="border p-4 rounded-lg">
+                      <h3 className="font-semibold">Hacker Inquiry</h3>
+
+                      {mentorshipAppointment.hackerDescription ? (
+                        <div className="mt-2 text-sm">
+                          <p>{mentorshipAppointment.hackerDescription}</p>
+                        </div>
+                      ) : (
+                        <div></div>
+                      )}
+                    </div>
+                    {mentorshipAppointment.offlineLocation && (
+                      <div className="border p-4 rounded-lg">
+                        <h3 className="font-semibold">Hacker Location</h3>
+
+                        <p className="mt-2">Location: {mentorshipAppointment.offlineLocation}</p>
+                      </div>
+                    )}
+                  </div>
                 </DialogContent>
               </Dialog>
               <div className="flex flex-col gap-2 items-center text-sm">
@@ -218,13 +254,13 @@ export default function MentorshipAppointmentCardAsMentorComponent(
                 <ol className="list-decimal p-4">
                   {mentorshipAppointment.location === 'online' ? (
                     <>
-                      <li>Ideally, hacker will reach you first.</li>
-                      <li>When they do so, please confirm whether the mentorship will be conducted via Zoom or another communication platform, such as Discord.</li>
+                      <li>Ideally, hacker will reach you out on Discord first.</li>
+                      <li>When they do so, please confirm whether the mentorship will be conducted via Zoom or another communication platform.</li>
                       <li>You can always use the Zoom link by joining the Breakout Room designated for you.</li>
                     </>
                   ) : (
                     <>
-                      <li>Ideally, hacker will reach you first.</li>
+                      <li>Ideally, hacker will reach you out on Discord first.</li>
                       <li>Reach out to the hacker to confirm the location of your meeting in the venue.</li>
                       <li>You may use the Zoom link instead and join the Breakout Room designated for you. The decision is up to you and the hacker.</li>
                     </>
