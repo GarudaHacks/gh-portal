@@ -11,12 +11,8 @@ import Home from "./pages/Home";
 import Schedule from "./pages/Schedule";
 import Mentorship from "./pages/Mentorship";
 import Faq from "./pages/Faq";
-import Ticketing from "./pages/Ticketing";
-import Application from "./pages/Application";
 import { UserApplicationStatus } from "./types/applicationStatus";
 import Rsvp from "./pages/Rsvp";
-import MentorDetailPage from "./pages/MentorDetail";
-import { UserRole } from "./types/auth";
 import MentoringPage from "./pages/Mentoring";
 import BookMentorshipPage from "./pages/BookMentorship";
 import AllSchedulePage from "./pages/AllSchedules";
@@ -83,14 +79,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-          {/* <Route
-            path="/ticket"
-            element={
-              <ProtectedRoute>
-                <Ticketing />
-              </ProtectedRoute>
-            }
-          /> */}
           <Route
             path="/mentorship"
             element={

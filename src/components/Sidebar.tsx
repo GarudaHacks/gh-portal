@@ -128,7 +128,7 @@ function Sidebar({ onSidebarToggle }: SidebarProps = {}) {
                 />
                 <SidebarTab
                   name="Schedules"
-                  iconUrl="/images/icons/group_search.svg"
+                  iconUrl="/images/icons/calendar_month.svg"
                   disabled={!canAccessRestrictedPages}
                 />
               </>

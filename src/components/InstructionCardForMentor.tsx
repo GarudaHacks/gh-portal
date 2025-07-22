@@ -25,6 +25,7 @@ export default function InstructionCardForMentorComponent(
             <li>You can mark a schedule as completed once the mentorship session is finished.</li>
             <li>You can add comments to each schedule before or after appointments.</li>
             <li>You can mark a schedule as AFK if a hacker does not attend.</li>
+            <li>Do not forget to join our Discord channel! <a href="https://discord.gg/Ag8tB3tQ" className="underline">https://discord.gg/Ag8tB3tQ</a></li>
           </ul>
         </div>
 
