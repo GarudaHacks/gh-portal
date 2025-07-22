@@ -1,7 +1,7 @@
 import { MentorshipAppointmentResponseAsHacker } from "@/types/mentorship"
 import { epochToStringDate } from "@/utils/dateUtils"
 import { Badge } from "./ui/badge"
-import { ChevronDown, Lightbulb, MapPinCheck, MonitorSmartphone, MoreHorizontalIcon, Video } from "lucide-react"
+import { ChevronDown, Lightbulb, Loader2, MapPinCheck, MonitorSmartphone, MoreHorizontalIcon, Video } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { titleCase } from "title-case";
 import Countdown, { zeroPad } from 'react-countdown';
@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dialog"
 import { cancelMentorshipAppointment } from "@/lib/http/mentorship"
 import toast from "react-hot-toast"
+import { useState } from "react"
 
 interface MentorshipAppointmentCardComponentProps {
   mentorshipAppointment: MentorshipAppointmentResponseAsHacker
@@ -39,8 +40,10 @@ const renderer = ({ hours, minutes, seconds, completed }: { hours: number, minut
 export default function MentorshipAppointmentCardComponent(
   { mentorshipAppointment }: MentorshipAppointmentCardComponentProps
 ) {
+  const [loading, setLoading] = useState(false)
 
   const handleCancelAppointment = async () => {
+    setLoading(true)
     try {
       const payload = {
         id: mentorshipAppointment.id
@@ -57,6 +60,8 @@ export default function MentorshipAppointmentCardComponent(
       } else {
         toast.error(error.message || "Failed to book mentorship slots");
       }
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -100,7 +105,10 @@ export default function MentorshipAppointmentCardComponent(
                   You can cancel your mentorship session up to 45 minutes before the appointment.
                 </DialogDescription>
               </DialogHeader>
-              <Button variant={"destructive"} className="" onClick={handleCancelAppointment}>Cancel Mentorship</Button>
+              <Button variant={"destructive"} className="flex gap-2 items-center" onClick={handleCancelAppointment}>
+                Cancel Mentorship
+                {loading && <Loader2 className="animate-spin"/>}
+              </Button>
             </DialogContent>
           </Dialog>
         </div>

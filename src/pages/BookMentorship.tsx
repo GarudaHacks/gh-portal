@@ -60,6 +60,7 @@ export default function BookMentorshipPage() {
   const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(null);
   const [mentorshipSlots, setMentorshipSlots] = useState<MentorshipAppointmentResponseAsHacker[] | null>(null);
   const [selectedSlots, setSelectedSlots] = useState<MentorshipAppointmentResponseAsHacker[]>([]);
+  const [isBookingLoading, setIsBookingLoading] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -70,7 +71,7 @@ export default function BookMentorshipPage() {
   })
 
   if (!mentorId) {
-    return <Navigate to="/home" />;
+    return <Navigate to="/mentorship" />;
   }
 
   useEffect(() => {
@@ -117,6 +118,7 @@ export default function BookMentorshipPage() {
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsBookingLoading(true)
     try {
       const payload = {
         mentorships: selectedSlots.map((slot) => ({
@@ -136,6 +138,8 @@ export default function BookMentorshipPage() {
       } else {
         toast.error(error.message || "Failed to book mentorship slots");
       }
+    } finally {
+      setIsBookingLoading(false)
     }
   }
 
@@ -294,7 +298,9 @@ export default function BookMentorshipPage() {
                   </p>
                   <AlertDialog>
                     <AlertDialogTrigger asChild className="w-full">
-                      <Button type="button">Book Now</Button>
+                      <Button type="button" className="flex gap-2 items-center">Book Now
+                        {isBookingLoading && <Loader2 className="animate-spin"/>}
+                      </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent className="text-white">
                       <AlertDialogHeader>
@@ -313,8 +319,9 @@ export default function BookMentorshipPage() {
                       </div>
                       <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction type="submit" onClick={() => form.handleSubmit(onSubmit)()}>
+                        <AlertDialogAction className="flex items-center gap-2" type="submit" onClick={() => form.handleSubmit(onSubmit)()}>
                           Continue
+                          {isBookingLoading && <Loader2 className="animate-spin"/>}
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>

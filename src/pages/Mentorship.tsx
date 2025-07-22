@@ -12,6 +12,7 @@ import MentorshipStatusBarAsHacker from "@/components/MentorshipStatusBarAsHacke
 
 function Mentorship() {
   const [loading, setLoading] = useState(false)
+  const [mentorshipConfig, setMentorshipConfig] = useState<MentorshipConfig>()
   const [myMentorships, setMyMentorships] = useState<MentorshipAppointmentResponseAsHacker[]>()
   const [allMentors, setAllMentors] = useState<FirestoreMentor[]>([])
   const [filteredMentors, setFilteredMentors] =  useState<FirestoreMentor[]>([])
@@ -34,11 +35,13 @@ function Mentorship() {
     Promise.all([
       fetchMyMentorships(),
       fetchAllMentors(),
+      fetchMentorshipConfig(),
     ])
-      .then(([myMentorshipsRes, allMentorsRes]) => {
+      .then(([myMentorshipsRes, allMentorsRes, mentorshipConfig]) => {
         if (isMounted) {
           setMyMentorships(myMentorshipsRes);
           setAllMentors(allMentorsRes);
+          setMentorshipConfig(mentorshipConfig)
           setLoading(false);
         }
       })
@@ -129,7 +132,7 @@ function Mentorship() {
                 {filteredMentors.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4">
                     {filteredMentors.map((m) => (
-                      <MentorCardComponent key={m.id} mentor={m} />
+                      <MentorCardComponent key={m.id} mentor={m} isMentorshipOpen={mentorshipConfig?.isMentorshipOpen || false} />
                     ))}
                   </div>
                 ) : (

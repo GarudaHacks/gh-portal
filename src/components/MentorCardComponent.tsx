@@ -1,4 +1,4 @@
-import { FirestoreMentor } from "@/types/mentorship"
+import { FirestoreMentor, MentorshipConfig } from "@/types/mentorship"
 import {
   Card,
   CardAction,
@@ -24,10 +24,11 @@ import { Link } from "react-router-dom"
 
 interface MentorCardComponentProps {
   mentor: FirestoreMentor,
+  isMentorshipOpen?: boolean
 }
 
 export default function MentorCardComponent(
-  { mentor }: MentorCardComponentProps
+  { mentor, isMentorshipOpen }: MentorCardComponentProps
 ) {
   const [profilePictureUrl, setProfilePictureUrl] = useState('')
 
@@ -65,9 +66,11 @@ export default function MentorCardComponent(
           </DialogDescription>
         </DialogHeader>
 
+        {isMentorshipOpen && (
         <Link to={`/mentors/${mentor.id}`}>
           <Button className="w-full">Book Mentor</Button>
         </Link>
+        )}
       </DialogContent>
     </Dialog>
 
