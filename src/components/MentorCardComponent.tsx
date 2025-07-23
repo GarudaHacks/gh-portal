@@ -59,6 +59,8 @@ export default function MentorCardComponent(
               <img src={profilePictureUrl || '/images/logo/gh_logo.svg'} width={500} height={500} alt="profile picture" className="rounded-full w-2/3 md:w-3/5 aspect-square border" />
               <p className="text-xl text-white">{mentor.name}</p>
               {mentor.specialization && <CardDescription className="text-gray-400">{formatSpecialization(mentor.specialization)}</CardDescription>}
+              <p className="text-sm">Email: <span className="font-mono">{mentor.email}</span></p>
+              <p className="text-sm">Discord Username: <span className="font-mono">{mentor.discordUsername}</span></p>
             </CardTitle>
           </DialogTitle>
           <DialogDescription className="text-center text-white">
@@ -67,9 +69,9 @@ export default function MentorCardComponent(
         </DialogHeader>
 
         {isMentorshipOpen && (
-        <Link to={`/mentors/${mentor.id}`}>
-          <Button className="w-full">Book Mentor</Button>
-        </Link>
+          <Link to={`/mentors/${mentor.id}`}>
+            <Button className="w-full">Book Mentor</Button>
+          </Link>
         )}
       </DialogContent>
     </Dialog>
