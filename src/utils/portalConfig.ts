@@ -73,3 +73,5 @@ export function clearPortalConfigCache(): void {
   cachedConfig = null;
   cacheTimestamp = 0;
 }
+
+export const MENTORSHIP_ZOOM_LINK = "";

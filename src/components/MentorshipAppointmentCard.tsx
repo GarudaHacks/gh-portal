@@ -22,6 +22,7 @@ import {
 import { cancelMentorshipAppointment } from "@/lib/http/mentorship"
 import toast from "react-hot-toast"
 import { useState } from "react"
+import { MENTORSHIP_ZOOM_LINK } from "@/utils/portalConfig"
 
 interface MentorshipAppointmentCardComponentProps {
   mentorshipAppointment: MentorshipAppointmentResponseAsHacker
@@ -92,8 +93,11 @@ export default function MentorshipAppointmentCardComponent(
         </div>
 
         <div className="col-span-1 flex flex-col gap-2 items-center text-sm">
-          <Button variant={"outline"} className="w-full"><img src="/images/icons/zoom-icon.svg" width={32} height={32} className="h-6" /></Button>
-          <Button variant={"outline"} className="w-full"><img src="/images/icons/discord-icon.svg" width={32} height={32} className="h-6" /></Button>
+          <Button variant={"outline"} className="w-full">
+            <a href={MENTORSHIP_ZOOM_LINK} target="_blank" rel="noopener noreferrer">
+              <img src="/images/icons/zoom-icon.svg" width={32} height={32} className="h-6" />
+            </a>
+          </Button>
           <Dialog>
             <DialogTrigger asChild>
               <Button variant={"outline"} className="w-full"><MoreHorizontalIcon /></Button>
@@ -107,7 +111,7 @@ export default function MentorshipAppointmentCardComponent(
               </DialogHeader>
               <Button variant={"destructive"} className="flex gap-2 items-center" onClick={handleCancelAppointment}>
                 Cancel Mentorship
-                {loading && <Loader2 className="animate-spin"/>}
+                {loading && <Loader2 className="animate-spin" />}
               </Button>
             </DialogContent>
           </Dialog>

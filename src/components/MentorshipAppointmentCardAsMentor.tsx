@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/accordion"
 import { useNavigate } from "react-router-dom"
 import MentorEditAppointmentComponent from "./MentorEditAppointmentComponent"
+import { MENTORSHIP_ZOOM_LINK } from "@/utils/portalConfig"
 
 interface MentorshipAppointmentCardComponentProps {
   mentorshipAppointment: MentorshipAppointmentResponseAsMentor
@@ -197,7 +198,9 @@ export default function MentorshipAppointmentCardAsMentorComponent(
                   className="w-full"
                   disabled={config.buttonDisabled}
                 >
-                  <img src="/images/icons/zoom-icon.svg" width={32} height={32} className="h-6" />
+                  <a href={MENTORSHIP_ZOOM_LINK} target="_blank" rel="noopener noreferrer">
+                    <img src="/images/icons/zoom-icon.svg" width={32} height={32} className="h-6" />
+                  </a>
                 </Button>
                 <span className="text-xs text-center">{config.buttonText}</span>
               </div>
