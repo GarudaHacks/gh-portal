@@ -84,7 +84,7 @@ function Home() {
 
     const updateTimer = () => {
       const now = new Date().getTime();
-      const usedTime = portalConfig.hackathonEndDate.getTime();
+      const usedTime = portalConfig.hackathonStartDate.getTime();
       const distance = usedTime - now;
 
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -136,7 +136,7 @@ function Home() {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="border rounded-lg p-6 flex flex-col h-full items-center justify-center gap-4">
                           <h3 className="text-xl uppercase font-semibold text-center">
-                            TIME TO HACKATHON
+                            TIME BEFORE HACKATHON BEGINS
                           </h3>
                           <div className="flex flex-wrap justify-center gap-2 md:gap-4 text-center">
                             <div className="flex flex-col items-center">
