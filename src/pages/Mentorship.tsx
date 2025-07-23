@@ -14,8 +14,9 @@ function Mentorship() {
   const [loading, setLoading] = useState(false)
   const [mentorshipConfig, setMentorshipConfig] = useState<MentorshipConfig>()
   const [myMentorships, setMyMentorships] = useState<MentorshipAppointmentResponseAsHacker[]>()
+  const [myPastMentorships, setMyPastMentorships] = useState<MentorshipAppointmentResponseAsHacker[]>()
   const [allMentors, setAllMentors] = useState<FirestoreMentor[]>([])
-  const [filteredMentors, setFilteredMentors] =  useState<FirestoreMentor[]>([])
+  const [filteredMentors, setFilteredMentors] = useState<FirestoreMentor[]>([])
   const [filterCategories, setFilterCategories] = useState<string[]>([])
 
   const CATEGORIES = [
@@ -34,12 +35,14 @@ function Mentorship() {
 
     Promise.all([
       fetchMyMentorships(),
+      fetchMyMentorships(false, true),
       fetchAllMentors(),
       fetchMentorshipConfig(),
     ])
-      .then(([myMentorshipsRes, allMentorsRes, mentorshipConfig]) => {
+      .then(([myMentorshipsRes, myPastMentorships, allMentorsRes, mentorshipConfig]) => {
         if (isMounted) {
           setMyMentorships(myMentorshipsRes);
+          setMyPastMentorships(myPastMentorships)
           setAllMentors(allMentorsRes);
           setMentorshipConfig(mentorshipConfig)
           setLoading(false);
@@ -109,17 +112,30 @@ function Mentorship() {
               )}
             </div>
 
+            {myPastMentorships && myPastMentorships.length > 0 ? (
+              <div id="upcoming-mentorships" className="flex flex-col gap-4">
+                <h2 className="font-semibold text-xl">Past Mentoring Requests</h2>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  {myPastMentorships.map((m) => (
+                    <MentorshipAppointmentCardComponent key={m.id} mentorshipAppointment={m} />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <></>
+            )}
+
             <div id="mentors-list" className="flex flex-col gap-4">
               <div className="flex flex-col gap-2">
                 <h2 className="font-semibold text-xl">Garuda Hacks 6.0 Mentors</h2>
 
-               <div id="mentorship-categories" className="w-full max-w-full overflow-x-auto overflow-y-hidden pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 scroll-smooth mb-4">
+                <div id="mentorship-categories" className="w-full max-w-full overflow-x-auto overflow-y-hidden pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 scroll-smooth mb-4">
                   <div className="flex flex-nowrap gap-2 min-w-max">
-                    {CATEGORIES.map((category,i) => (
-                      <Badge 
-                        className="text-white whitespace-nowrap flex-shrink-0 cursor-pointer" 
-                        variant={filterCategories?.includes(category) ? 'default' : 'outline'} 
-                        key={i} 
+                    {CATEGORIES.map((category, i) => (
+                      <Badge
+                        className="text-white whitespace-nowrap flex-shrink-0 cursor-pointer"
+                        variant={filterCategories?.includes(category) ? 'default' : 'outline'}
+                        key={i}
                         onClick={() => handleSelectCategory(category)}
                       >
                         {category.toUpperCase()}
