@@ -197,6 +197,7 @@ export default function MentorshipAppointmentCardAsMentorComponent(
                   variant={config.buttonVariant}
                   className="w-full"
                   disabled={config.buttonDisabled}
+                  asChild
                 >
                   <a href={MENTORSHIP_ZOOM_LINK} target="_blank" rel="noopener noreferrer">
                     <img src="/images/icons/zoom-icon.svg" width={32} height={32} className="h-6" />
