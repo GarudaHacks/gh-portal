@@ -101,7 +101,7 @@ export async function fetchMyMentorships(upcomingOnly?: boolean, recentOnly?: bo
 
 export async function fetchMentorshipAppointmentsByMentorId(mentorId: string) {
   try {
-    const response = await fetch(`/api/mentorship/hacker/mentorships/?mentorId=${mentorId}`, {
+    const response = await fetch(`/api/mentorship/hacker/mentorshipss/?mentorId=${mentorId}`, {
       method: "GET",
       credentials: "include",
       headers: {
