@@ -133,8 +133,7 @@ export async function fetchMentorshipAppointments(mentorId: string) {
     return querySnapshot.docs.map((doc: any) => ({
       ...doc.data(),
       id: doc.id,
-      submittedAt: doc.data().submittedAt,
-    })) as MentorshipAppointmentResponseAsMentor[];
+    })) as MentorshipAppointmentResponseAsMentor[]; 
   } catch (error) {
     console.error(`Error: ${error}`)
   }
