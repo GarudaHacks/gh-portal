@@ -136,6 +136,7 @@ export async function fetchMentorshipAppointments(mentorId: string) {
     })) as MentorshipAppointmentResponseAsMentor[]; 
   } catch (error) {
     console.error(`Error: ${error}`)
+    console.error(`Error: ${(error as Error).message}`)
   }
 }
 
