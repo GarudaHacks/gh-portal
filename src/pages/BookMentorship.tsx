@@ -1,7 +1,7 @@
 import MentorshipSlotAsHackerComponent from "@/components/MentorshipSlotAsHacker";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { bookMentorshipAppointment, fetchMentorById, fetchMentorshipAppointments, fetchMentorshipAppointmentsByMentorId } from "@/lib/http/mentorship";
+import { bookMentorshipAppointment, fetchMentorById, fetchMentorshipAppointmentsByMentorId } from "@/lib/http/mentorship";
 import { FirestoreMentor, MentorshipAppointmentResponseAsHacker } from "@/types/mentorship";
 import { getMentorProfilePicture } from "@/utils/firebaseUtils";
 import { formatSpecialization } from "@/utils/stringUtils";
@@ -83,7 +83,7 @@ export default function BookMentorshipPage() {
     Promise.all([
       fetchMentorById(mentorId),
       fetchMentorById(mentorId).then((mentorData) => getMentorProfilePicture(mentorData.name)),
-      fetchMentorshipAppointments(mentorId),
+      fetchMentorshipAppointmentsByMentorId(mentorId),
     ])
       .then(([mentorData, pictureUrl, slots]) => {
         if (isMounted) {

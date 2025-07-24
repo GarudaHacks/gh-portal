@@ -122,23 +122,23 @@ export async function fetchMentorshipAppointmentsByMentorId(mentorId: string) {
   }
 }
 
-export async function fetchMentorshipAppointments(mentorId: string) {
-  try {
-      const q = query(
-      collection(db, "mentorships"),
-      where("mentorId", "==", mentorId),
-    );
-    const querySnapshot = await getDocs(q);
+// export async function fetchMentorshipAppointments(mentorId: string) {
+//   try {
+//       const q = query(
+//       collection(db, "mentorships"),
+//       where("mentorId", "==", mentorId),
+//     );
+//     const querySnapshot = await getDocs(q);
 
-    return querySnapshot.docs.map((doc: any) => ({
-      ...doc.data(),
-      id: doc.id,
-    })) as MentorshipAppointmentResponseAsMentor[]; 
-  } catch (error) {
-    console.error(`Error: ${error}`)
-    console.error(`Error: ${(error as Error).message}`)
-  }
-}
+//     return querySnapshot.docs.map((doc: any) => ({
+//       ...doc.data(),
+//       id: doc.id,
+//     })) as MentorshipAppointmentResponseAsMentor[]; 
+//   } catch (error) {
+//     console.error(`Error: ${error}`)
+//     console.error(`Error: ${(error as Error).message}`)
+//   }
+// }
 
 export async function bookMentorshipAppointment(payload: any) {
   try {
