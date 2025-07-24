@@ -46,7 +46,7 @@ export default function MentorEditAppointmentComponent({ mentorshipAppointment }
           placeholder="Add your notes here..."
         />
         <p className="text-sm text-muted-foreground">
-          Use this box to add comments or notes, such as recommendations, mentorship notes, or reminders about the inquiry. These notes are private and can be edited before or after the scheduled appointment.
+          Use this box to add comments or notes, such as recommendations, mentorship notes, or reminders about the inquiry. These notes are <span className="font-semibold">private to you only</span> and can be edited before or after the scheduled appointment.
         </p>
       </div>
       <div className="flex flex-col gap-2">
