@@ -109,6 +109,7 @@ export async function fetchMentorshipAppointmentsByMentorId(mentorId: string) {
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
+        'Cache-Control': 'no-cache'
       },
     })
     const data = await response.json()
