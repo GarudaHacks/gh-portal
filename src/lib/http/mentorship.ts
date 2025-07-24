@@ -1,3 +1,6 @@
+import { MentorshipAppointmentResponseAsMentor } from "@/types/mentorship"
+import { db } from "@/utils/firebase"
+import { collection, getDocs, query, where } from "firebase/firestore"
 import Cookies from "js-cookie"
 
 export async function fetchMentorshipConfig() {
@@ -116,6 +119,24 @@ export async function fetchMentorshipAppointmentsByMentorId(mentorId: string) {
     return data.data
   } catch (error) {
     console.error("Something went wrong when trying to fetch mentorship appointments:", error)
+  }
+}
+
+export async function fetchMentorshipAppointments(mentorId: string) {
+  try {
+      const q = query(
+      collection(db, "mentorships"),
+      where("mentorId", "==", mentorId),
+    );
+    const querySnapshot = await getDocs(q);
+
+    return querySnapshot.docs.map((doc: any) => ({
+      ...doc.data(),
+      id: doc.id,
+      submittedAt: doc.data().submittedAt,
+    })) as MentorshipAppointmentResponseAsMentor[];
+  } catch (error) {
+    console.error(`Error: ${error}`)
   }
 }
 

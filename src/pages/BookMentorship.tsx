@@ -1,7 +1,7 @@
 import MentorshipSlotAsHackerComponent from "@/components/MentorshipSlotAsHacker";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { bookMentorshipAppointment, fetchMentorById, fetchMentorshipAppointmentsByMentorId } from "@/lib/http/mentorship";
+import { bookMentorshipAppointment, fetchMentorById, fetchMentorshipAppointments, fetchMentorshipAppointmentsByMentorId } from "@/lib/http/mentorship";
 import { FirestoreMentor, MentorshipAppointmentResponseAsHacker } from "@/types/mentorship";
 import { getMentorProfilePicture } from "@/utils/firebaseUtils";
 import { formatSpecialization } from "@/utils/stringUtils";
@@ -83,11 +83,11 @@ export default function BookMentorshipPage() {
     Promise.all([
       fetchMentorById(mentorId),
       fetchMentorById(mentorId).then((mentorData) => getMentorProfilePicture(mentorData.name)),
-      fetchMentorshipAppointmentsByMentorId(mentorId),
+      fetchMentorshipAppointments(mentorId),
     ])
       .then(([mentorData, pictureUrl, slots]) => {
         if (isMounted) {
-          const sortedSlots = slots.sort((a: MentorshipAppointmentResponseAsHacker, b: MentorshipAppointmentResponseAsHacker) =>
+          const sortedSlots = slots!.sort((a: MentorshipAppointmentResponseAsHacker, b: MentorshipAppointmentResponseAsHacker) =>
             new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
           );
           setMentor(mentorData);
