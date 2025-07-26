@@ -25,12 +25,12 @@ function Home() {
   // Force applications closed
   const applicationsOpen = false;
 
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
+  // const [timeLeft, setTimeLeft] = useState({
+  //   days: 0,
+  //   hours: 0,
+  //   minutes: 0,
+  //   seconds: 0,
+  // });
 
   useEffect(() => {
     const fetchApplicationStatus = async () => {
@@ -84,20 +84,20 @@ function Home() {
 
     const updateTimer = () => {
       const now = new Date().getTime();
-      const usedTime = portalConfig.hackathonEndDate.getTime();
-      const distance = usedTime - now;
+      // const usedTime = portalConfig.hackathonEndDate.getTime();
+      // const distance = usedTime - now;
 
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor(distance / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      // const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      // const hours = Math.floor(distance / (1000 * 60 * 60));
+      // const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      // const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-      if (distance <= 0) {
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-        clearInterval(timerInterval);
-      } else {
-        setTimeLeft({ days, hours, minutes, seconds });
-      }
+      // if (distance <= 0) {
+      //   setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      //   clearInterval(timerInterval);
+      // } else {
+      //   setTimeLeft({ days, hours, minutes, seconds });
+      // }
     };
 
     updateTimer();
