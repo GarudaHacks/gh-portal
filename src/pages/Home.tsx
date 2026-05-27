@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import Page from "../components/Page";
-import { APPLICATION_STATUS } from "@/types/application";
 import HomeStatusNotRsvpd from "@/components/HomeStatusNotRsvpd";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -11,101 +10,34 @@ import { greetingHelper } from "@/utils/homeUtils";
 import GlassyRectangleBackground from "@/components/RedGradientBackground";
 import { fetchPortalConfig, PortalConfig } from "@/utils/portalConfig";
 import { UserRole } from "@/types/auth";
+import { UserApplicationStatus } from "@/types/applicationStatus";
 import InstructionCardForMentorComponent from "@/components/InstructionCardForMentor";
 
+// Force applications closed
+const applicationsOpen = false;
+
 function Home() {
-  const { user, role } = useAuth();
+  const { user, role, applicationStatus } = useAuth();
   const navigate = useNavigate();
 
-  const [userApplicationStatus, setUserApplicationStatus] =
-    useState<APPLICATION_STATUS>(APPLICATION_STATUS.DRAFT);
   const [isLoading, setIsLoading] = useState(true);
   const [portalConfig, setPortalConfig] = useState<PortalConfig | null>(null);
 
-  // Force applications closed
-  const applicationsOpen = false;
-
-  // const [timeLeft, setTimeLeft] = useState({
-  //   days: 0,
-  //   hours: 0,
-  //   minutes: 0,
-  //   seconds: 0,
-  // });
-
   useEffect(() => {
-    const fetchApplicationStatus = async () => {
-      try {
-        const response = await fetch("/api/application/status", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
-
-        const data = await response.json();
-        if (data.data === APPLICATION_STATUS.SUBMITTED) {
-          setUserApplicationStatus(APPLICATION_STATUS.SUBMITTED);
-        } else if (data.data === APPLICATION_STATUS.ACCEPTED) {
-          setUserApplicationStatus(APPLICATION_STATUS.ACCEPTED);
-        } else if (data.data === APPLICATION_STATUS.CONFIRMED_RSVP) {
-          setUserApplicationStatus(APPLICATION_STATUS.CONFIRMED_RSVP);
-        } else if (data.data === APPLICATION_STATUS.REJECTED) {
-          setUserApplicationStatus(APPLICATION_STATUS.REJECTED);
-        }
-      } catch (error) {
-        console.error("Error fetching application status:", error);
-      }
-    };
-
     const loadPortalConfig = async () => {
+      setIsLoading(true);
       try {
         const config = await fetchPortalConfig();
         setPortalConfig(config);
       } catch (error) {
         console.error("Error loading portal config:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    const initializeData = async () => {
-      setIsLoading(true);
-      await Promise.all([fetchApplicationStatus(), loadPortalConfig()]);
-      setIsLoading(false);
-    };
-
-    initializeData();
-  }, [user]);
-
-  /**
-   * Counts down time to registration closing or hacking end time
-   */
-  useEffect(() => {
-    if (!portalConfig) return;
-
-    const updateTimer = () => {
-      const now = new Date().getTime();
-      // const usedTime = portalConfig.hackathonEndDate.getTime();
-      // const distance = usedTime - now;
-
-      // const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      // const hours = Math.floor(distance / (1000 * 60 * 60));
-      // const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      // const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-      // if (distance <= 0) {
-      //   setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-      //   clearInterval(timerInterval);
-      // } else {
-      //   setTimeLeft({ days, hours, minutes, seconds });
-      // }
-    };
-
-    updateTimer();
-
-    const timerInterval = setInterval(updateTimer, 1000);
-
-    return () => clearInterval(timerInterval);
-  }, [portalConfig]);
+    loadPortalConfig();
+  }, []);
 
   return (
     <Page
@@ -123,85 +55,46 @@ function Home() {
           ) : (
             <>
               <div className="flex flex-col gap-4">
-                {userApplicationStatus === APPLICATION_STATUS.CONFIRMED_RSVP && (
-                  <>
-                    <div className="flex flex-col gap-4">
-                      <h1 className="text-3xl lg:text-5xl font-bold text-white">
-                        {greetingHelper()},{" "}
-                        {user?.first_name || user?.displayName}!
-                      </h1>
-                      <h2 className="text-3xl lg:text-3xl mb-4 font-bold text-white">
-                        See you at Garuda Hacks 6.0!
-                      </h2>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="border rounded-lg p-6 flex flex-col h-full items-center justify-center gap-4">
-                          <h3 className="text-xl uppercase font-semibold text-center">
-                            HACKING ENDED 🎉
-                          </h3>
-                          {/* <div className="flex flex-wrap justify-center gap-2 md:gap-4 text-center">
-                            <div className="flex flex-col items-center">
-                              {timeLeft.hours > 100 ? (
-                                <>
-                                  <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold">
-                                    {timeLeft.days.toString().padStart(2, "0")}
-                                  </div>
-                                  <p className="">days</p>
-                                </>
-                              ) : (
-                                <>
-                                  <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold">
-                                    {timeLeft.hours.toString().padStart(2, "0")}
-                                  </div>
-                                  <p className="">hours</p>
-                                </>
-                              )}
-                            </div>
-                            <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold">
-                              :
-                            </div>
-                            <div>
-                              <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold ">
-                                {timeLeft.minutes.toString().padStart(2, "0")}
-                              </div>
-                              <p className="">minutes</p>
-                            </div>
-                            <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold ">
-                              :
-                            </div>
-                            <div>
-                              <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold ">
-                                {timeLeft.seconds.toString().padStart(2, "0")}
-                              </div>
-                              <p className="">seconds</p>
-                            </div>
-                          </div> */}
-                        </div>
+                {applicationStatus === UserApplicationStatus.CONFIRMED_RSVP && (
+                  <div className="flex flex-col gap-4">
+                    <h1 className="text-3xl lg:text-5xl font-bold text-white">
+                      {greetingHelper()},{" "}
+                      {user?.first_name || user?.displayName}!
+                    </h1>
+                    <h2 className="text-3xl lg:text-3xl mb-4 font-bold text-white">
+                      See you at Garuda Hacks 6.0!
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="border rounded-lg p-6 flex flex-col h-full items-center justify-center gap-4">
+                        <h3 className="text-xl uppercase font-semibold text-center">
+                          HACKING ENDED 🎉
+                        </h3>
+                      </div>
 
-                        <div className="border rounded-lg p-6 flex flex-col h-full items-center justify-center gap-4">
-                          <h3 className="text-xl uppercase font-semibold text-center">
-                            Discord Server
-                          </h3>
-                          <a
-                            href="https://discord.gg/vQw3UeYzFb"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors"
-                          >
-                            Join Discord server
-                            <ArrowUpRight className="w-4 h-4" />
-                          </a>
-                        </div>
+                      <div className="border rounded-lg p-6 flex flex-col h-full items-center justify-center gap-4">
+                        <h3 className="text-xl uppercase font-semibold text-center">
+                          Discord Server
+                        </h3>
+                        <a
+                          href="https://discord.gg/vQw3UeYzFb"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors"
+                        >
+                          Join Discord server
+                          <ArrowUpRight className="w-4 h-4" />
+                        </a>
                       </div>
                     </div>
-                  </>
+                  </div>
                 )}
               </div>
 
-              {userApplicationStatus === APPLICATION_STATUS.SUBMITTED ? (
+              {applicationStatus === UserApplicationStatus.SUBMITTED && (
                 <HomeStatusNotRsvpd />
-              ) : null}
+              )}
 
-              {userApplicationStatus === APPLICATION_STATUS.ACCEPTED ? (
+              {applicationStatus === UserApplicationStatus.ACCEPTED && (
                 <div className="flex flex-col gap-4">
                   <h2 className="text-2xl font-bold text-primary">
                     Congratulations! You've been accepted 🎉
@@ -219,9 +112,9 @@ function Home() {
                     </Button>
                   </GlassyRectangleBackground>
                 </div>
-              ) : null}
+              )}
 
-              {userApplicationStatus === APPLICATION_STATUS.DRAFT ? (
+              {applicationStatus === UserApplicationStatus.DRAFT && (
                 <div className="flex flex-col gap-4">
                   <h2 className="text-2xl font-bold text-primary">
                     Applications are{" "}
@@ -234,9 +127,9 @@ function Home() {
                         <b>
                           {portalConfig
                             ? format(
-                              portalConfig.applicationCloseDate,
-                              "MMMM d, yyyy"
-                            )
+                                portalConfig.applicationCloseDate,
+                                "MMMM d, yyyy"
+                              )
                             : ""}
                         </b>{" "}
                         for a spot at Garuda Hacks 6.0.
@@ -254,23 +147,20 @@ function Home() {
                       <span className="font-bold">Venue:</span> Universitas
                       Multimedia Nusantara (UMN).
                     </p>
-                    {(() => {
-                      return (
-                        <Button
-                          className={`w-fit ${!applicationsOpen ? "opacity-90 cursor-not-allowed" : ""
-                            }`}
-                          disabled={!applicationsOpen}
-                          onClick={() => navigate("/application")}
-                        >
-                          Apply Now
-                        </Button>
-                      );
-                    })()}
+                    <Button
+                      className={`w-fit ${
+                        !applicationsOpen ? "opacity-90 cursor-not-allowed" : ""
+                      }`}
+                      disabled={!applicationsOpen}
+                      onClick={() => navigate("/application")}
+                    >
+                      Apply Now
+                    </Button>
                   </div>
                 </div>
-              ) : null}
+              )}
 
-              {userApplicationStatus === APPLICATION_STATUS.REJECTED ? (
+              {applicationStatus === UserApplicationStatus.REJECTED && (
                 <div className="flex flex-col gap-4">
                   <h2 className="text-2xl font-bold text-red-500">
                     Application Status: Rejected
@@ -293,7 +183,7 @@ function Home() {
                     </div>
                   </GlassyRectangleBackground>
                 </div>
-              ) : null}
+              )}
             </>
           )}
         </>
