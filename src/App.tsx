@@ -17,6 +17,8 @@ import MentoringPage from "./pages/Mentoring";
 import BookMentorshipPage from "./pages/BookMentorship";
 import AllSchedulePage from "./pages/AllSchedules";
 import MentorshipDetailPage from "./pages/MentorshipDetail";
+import { SidebarProvider } from "./components/ui/sidebar";
+import { AppSidebar } from "./components/AppSidebar";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading, applicationStatus, role } = useAuth();
@@ -59,85 +61,90 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Navigate to="/home" />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/application" element={<Navigate to="/home" />} />
-          <Route
-            path="/home"
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/schedule"
-            element={
-              <ProtectedRoute>
-                <Schedule />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/mentorship"
-            element={
-              <ProtectedRoute>
-                <Mentorship />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/mentors/:mentorId"
-            element={
-              <ProtectedRoute>
-                <BookMentorshipPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/mentoring"
-            element={
-              <ProtectedRoute>
-                <MentoringPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/mentoring/:id"
-            element={
-              <ProtectedRoute>
-                <MentorshipDetailPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/schedules"
-            element={
-              <ProtectedRoute>
-                <AllSchedulePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/faq"
-            element={
-              <ProtectedRoute>
-                <Faq />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/rsvp"
-            element={
-              <ProtectedRoute>
-                <Rsvp />
-              </ProtectedRoute>
-            }
-          />
+        <SidebarProvider>
+          <AppSidebar />
+          <div className="flex-1 min-w-0">
+          <Routes>
+            <Route path="/" element={<Navigate to="/home" />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/application" element={<Navigate to="/home" />} />
+            <Route
+              path="/home"
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/schedule"
+              element={
+                <ProtectedRoute>
+                  <Schedule />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/mentorship"
+              element={
+                <ProtectedRoute>
+                  <Mentorship />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/mentors/:mentorId"
+              element={
+                <ProtectedRoute>
+                  <BookMentorshipPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/mentoring"
+              element={
+                <ProtectedRoute>
+                  <MentoringPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/mentoring/:id"
+              element={
+                <ProtectedRoute>
+                  <MentorshipDetailPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/schedules"
+              element={
+                <ProtectedRoute>
+                  <AllSchedulePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/faq"
+              element={
+                <ProtectedRoute>
+                  <Faq />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/rsvp"
+              element={
+                <ProtectedRoute>
+                  <Rsvp />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route path="*" element={<Navigate to="/auth" />} />
-        </Routes>
+            <Route path="*" element={<Navigate to="/auth" />} />
+          </Routes>
+          </div>
+        </SidebarProvider>
       </BrowserRouter>
     </AuthProvider>
   );
