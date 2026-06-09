@@ -161,16 +161,16 @@ export default function AuthLoginComponent() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={`text-white`}>Email Address</FormLabel>
+                  <FormLabel className={``}>Email Address</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Enter your email"
                       type={`email`}
-                      className={`text-white`}
+                      className={``}
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage className={`text-white`} />
+                  <FormMessage className={``} />
                 </FormItem>
               )}
             />
@@ -185,7 +185,7 @@ export default function AuthLoginComponent() {
                       <Input
                         placeholder="Enter your password"
                         type={showPassword ? "text" : "password"}
-                        className={`text-white pr-10`}
+                        className={`pr-10`}
                         {...field}
                       />
                       <button

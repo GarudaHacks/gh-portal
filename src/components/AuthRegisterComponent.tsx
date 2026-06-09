@@ -146,16 +146,16 @@ export default function AuthRegisterComponent() {
                 name="displayName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className={`text-white`}>Name</FormLabel>
+                    <FormLabel className={``}>Name</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Enter your name"
                         type={`text`}
-                        className={`text-white`}
+                        className={``}
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className={`text-white`} />
+                    <FormMessage className={``} />
                   </FormItem>
                 )}
               />
@@ -164,18 +164,18 @@ export default function AuthRegisterComponent() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className={`text-white`}>
+                    <FormLabel className={``}>
                       Email Address
                     </FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Enter your email"
                         type={`email`}
-                        className={`text-white`}
+                        className={``}
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className={`text-white`} />
+                    <FormMessage className={``} />
                   </FormItem>
                 )}
               />
@@ -189,11 +189,11 @@ export default function AuthRegisterComponent() {
                       <Input
                         placeholder="Enter your password"
                         type={`password`}
-                        className={`text-white`}
+                        className={``}
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className={`text-white`} />
+                    <FormMessage className={``} />
                   </FormItem>
                 )}
               />
