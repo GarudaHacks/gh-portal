@@ -8,14 +8,14 @@
   font-weight: 400;
 
   color-scheme: light;
-  background-color: #001745;
+  background-color: #f9f5ff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --background: #221139;
+  --background: #f9f5ff;
   --background-secondary: #020617;
   --foreground: #8036cb;
   --card: #0f172a;
@@ -23,15 +23,15 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
   --primary: #67339c;
-  --primary-foreground: oklch(100% 0.00011 271.152);
+  --primary-foreground: #fafafa;
   --secondary: #8036cb;
   --secondary-foreground: oklch(100% 0.00011 271.152);
-  --muted: oklch(0.97 0 0);
+  --muted: #c4a9ff;
   --muted-foreground: oklch(80.78% 0.00009 271.152);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: #8e47d6;
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
+  --accent: #5079ff;
+  --accent-foreground: #fafafa;
+  --destructive: ##fe636a;  
+  --destructive-foreground: #fafafa;
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
@@ -123,8 +123,9 @@
   }
 }
 
+/* gradient animation for auth */
 .auth {
-  background: linear-gradient(-45deg, #001745, #1e011c, #001745, #26011d);
+  background: linear-gradient(-45deg, #874ffe, #e383dd, #fe636a, #c4a9ff);
   background-size: 400% 400%;
 	animation: gradient 30s ease infinite;
 }

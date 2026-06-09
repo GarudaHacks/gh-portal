@@ -125,16 +125,16 @@ export default function AuthRegisterComponent() {
                 name="displayName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className={`text-white`}>Name</FormLabel>
+                    <FormLabel className={``}>Name</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Enter your name"
                         type={`text`}
-                        className={`text-white`}
+                        className={``}
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className={`text-white`} />
+                    <FormMessage className={``} />
                   </FormItem>
                 )}
               />
@@ -143,18 +143,18 @@ export default function AuthRegisterComponent() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className={`text-white`}>
+                    <FormLabel className={``}>
                       Email Address
                     </FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Enter your email"
                         type={`email`}
-                        className={`text-white`}
+                        className={``}
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className={`text-white`} />
+                    <FormMessage className={``} />
                   </FormItem>
                 )}
               />
@@ -168,11 +168,11 @@ export default function AuthRegisterComponent() {
                       <Input
                         placeholder="Enter your password"
                         type={`password`}
-                        className={`text-white`}
+                        className={``}
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className={`text-white`} />
+                    <FormMessage className={``} />
                   </FormItem>
                 )}
               />
@@ -183,7 +183,7 @@ export default function AuthRegisterComponent() {
 
               <Button
                 type="submit"
-                className={`w-full font-semibold text-white`}
+                className={`w-full font-semibold`}
               >
                 Sign up
                 {isActionLoading && <LoaderCircle className={"animate-spin"} />}
@@ -194,7 +194,7 @@ export default function AuthRegisterComponent() {
                 type={`button`}
                 variant={"ghost"}
                 onClick={handleGoogleRegister}
-                className="w-full flex items-center justify-center text-black bg-white hover:text-black"
+                className="w-full flex items-center justify-center bg-white"
               >
                 <img src={googleIcon} width={20} height={20} />
                 Sign up with Google

@@ -69,16 +69,16 @@ const AuthForgotPasswordComponent = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Email Address</FormLabel>
+                  <FormLabel className="">Email Address</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Enter your email"
                       type="email"
-                      className="text-white"
+                      className=""
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage className="text-white" />
+                  <FormMessage className="" />
                 </FormItem>
               )}
             />

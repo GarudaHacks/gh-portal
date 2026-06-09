@@ -139,16 +139,16 @@ export default function AuthLoginComponent() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={`text-white`}>Email Address</FormLabel>
+                  <FormLabel className={``}>Email Address</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Enter your email"
                       type={`email`}
-                      className={`text-white`}
+                      className={``}
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage className={`text-white`} />
+                  <FormMessage className={``} />
                 </FormItem>
               )}
             />
@@ -163,7 +163,7 @@ export default function AuthLoginComponent() {
                       <Input
                         placeholder="Enter your password"
                         type={showPassword ? "text" : "password"}
-                        className={`text-white pr-10`}
+                        className={`pr-10`}
                         {...field}
                       />
                       <button
@@ -188,7 +188,7 @@ export default function AuthLoginComponent() {
               <p className="text-red-100 text-sm text-center mt-4">{error}</p>
             )}
 
-            <Button type="submit" className={`w-full font-semibold text-white`}>
+            <Button type="submit" className={`w-full font-semibold`}>
               Log in
               {isActionLoading && <LoaderCircle className={"animate-spin"} />}
             </Button>
@@ -198,7 +198,7 @@ export default function AuthLoginComponent() {
               type={`button`}
               variant={"ghost"}
               onClick={handleGoogleLogin}
-              className="w-full flex items-center justify-center text-black bg-white hover:text-black"
+              className="w-full flex items-center justify-center bg-white"
             >
               <img src={googleIcon} width={20} height={20} />
               Log in with Google

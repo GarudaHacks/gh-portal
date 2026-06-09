@@ -65,8 +65,8 @@ function App() {
           <AppSidebar />
           <div className="flex-1 min-w-0">
           <Routes>
-            <Route path="/" element={<Navigate to="/home" />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/" element={<Navigate to="/home" />} />
             <Route path="/application" element={<Navigate to="/home" />} />
             <Route
               path="/home"
