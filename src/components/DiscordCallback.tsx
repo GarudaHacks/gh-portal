@@ -44,7 +44,7 @@ const DiscordCallback = () => {
 
         if (!response.ok) {
           toast.error(`Error: ${data.error}`)
-          return;
+          navigate("/");          
         }
 
         await refresh();
