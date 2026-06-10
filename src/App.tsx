@@ -19,6 +19,7 @@ import AllSchedulePage from "./pages/AllSchedules";
 import MentorshipDetailPage from "./pages/MentorshipDetail";
 import { SidebarProvider } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/AppSidebar";
+import DiscordCallback from "./components/DiscordCallback";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading, applicationStatus, role } = useAuth();
@@ -63,10 +64,11 @@ function App() {
       <BrowserRouter>
         <SidebarProvider>
           <AppSidebar />
-          <div className="flex-1 min-w-0">
+          {/* <div className="flex-1 min-w-0"> */}
           <Routes>
-            <Route path="/" element={<Navigate to="/home" />} />
+            <Route path="/auth/discord/callback" element={<DiscordCallback />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/" element={<Navigate to="/home" />} />
             <Route path="/application" element={<Navigate to="/home" />} />
             <Route
               path="/home"
@@ -141,9 +143,8 @@ function App() {
               }
             />
 
-            <Route path="*" element={<Navigate to="/auth" />} />
-          </Routes>
-          </div>
+          <Route path="*" element={<Navigate to="/auth" />} />
+        </Routes>
         </SidebarProvider>
       </BrowserRouter>
     </AuthProvider>

@@ -20,6 +20,7 @@ import { auth, db } from "@/utils/firebase.ts";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { getAuthErrorMessage } from "@/components/Auth.tsx";
 import googleIcon from "/assets/google-icon.svg";
+import discordIcon from "/images/icons/discord-icon.svg";
 import toast from "react-hot-toast";
 
 const formSchema = z.object({
@@ -121,6 +122,27 @@ export default function AuthLoginComponent() {
     }
   };
 
+  const handleDiscordLogin = async () => {
+    try {
+      const state = btoa(JSON.stringify({
+        intent: "signin",
+        csrf: crypto.randomUUID()
+      }))
+      sessionStorage.setItem("oauth_discord_state", state); // to check against returned by discord
+      const params = new URLSearchParams({
+        client_id: import.meta.env.VITE_DISCORD_CONFIG_CLIENT_ID,
+        redirect_uri: import.meta.env.VITE_DISCORD_CONFIG_REDIRECT_URI,
+        response_type: "code",
+        scope: import.meta.env.VITE_DISCORD_CONFIG_SCOPE,
+        state: state
+      });
+      window.location.href = `https://discord.com/oauth2/authorize?${params}`
+    } catch (error: any) {
+      console.error(error)
+    }
+  };
+
+
   return (
     <div>
       <h2 className="text-2xl font-semibold">Login into your account</h2>
@@ -188,21 +210,34 @@ export default function AuthLoginComponent() {
               <p className="text-red-100 text-sm text-center mt-4">{error}</p>
             )}
 
-            <Button type="submit" className={`w-full font-semibold text-white`}>
-              Log in
-              {isActionLoading && <LoaderCircle className={"animate-spin"} />}
-            </Button>
+            <div className="flex flex-col gap-2.5">
+              <Button type="submit" className={`w-full font-semibold`}>
+                Log in
+                {isActionLoading && <LoaderCircle className={"animate-spin"} />}
+              </Button>
 
-            {/* Google Sign-in */}
-            <Button
-              type={`button`}
-              variant={"ghost"}
-              onClick={handleGoogleLogin}
-              className="w-full flex items-center justify-center text-black bg-white hover:text-black"
-            >
-              <img src={googleIcon} width={20} height={20} />
-              Log in with Google
-            </Button>
+              {/* Google Sign-in */}
+              <Button
+                type={`button`}
+                variant={"ghost"}
+                onClick={handleGoogleLogin}
+                className="w-full flex items-center justify-center bg-white"
+              >
+                <img src={googleIcon} width={20} height={20} />
+                Log in with Google
+              </Button>
+
+              {/* Discord Sign-in */}
+              <Button
+                type={`button`}
+                variant={"ghost"}
+                onClick={handleDiscordLogin}
+                className="w-full flex items-center justify-center bg-white"
+              >
+                <img src={discordIcon} width={20} height={20} />
+                Sign in with Discord
+              </Button>
+            </div>
           </form>
         </Form>
       </div>

@@ -28,6 +28,7 @@ export interface AuthContextType {
   isActionLoading: boolean;
   applicationStatus: UserApplicationStatus;
   role: UserRole;
+  refresh: () => Promise<void>;
   loginWithEmailPassword: (credentials: LoginCredentials) => Promise<{
     error: {
       message: string;
@@ -80,6 +81,7 @@ const AuthContext = createContext<AuthContextType>({
   isActionLoading: false,
   applicationStatus: UserApplicationStatus.NOT_APPLICABLE,
   role: UserRole.HACKER,
+  refresh: async () => {},
   loginWithEmailPassword: async () => ({ error: null, data: null }),
   signUpWithEmailPassword: async () => ({ error: null, data: null }),
   loginWithGoogle: async () => ({ error: null, data: null }),
@@ -120,47 +122,39 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  useEffect(() => {
-    let mounted = true;
-    const checkSession = async () => {
-      try {
-        const response = await fetch("/api/auth/session-check", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
+  const checkSession = async () => {
+    try {
+      const response = await fetch("/api/auth/session-check", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
 
-        const data = await response.json();
+      const data = await response.json();
 
-        if (response.ok && data.data.user?.emailVerified) {
-          setUser(data.data.user);
-          const status = await fetchApplicationStatus();
-          if (mounted) {
-            setApplicationStatus(status);
-          }
-        } else {
-          setUser(null);
-          if (mounted) {
-            setApplicationStatus(UserApplicationStatus.NOT_APPLICABLE);
-          }
-        }
-
-        fetchMyRole().then((res) => {
-          setRole(res)
-        })
-      } catch (e) {
-        console.error("Error checking session:", e);
-        if (mounted) {
-          setUser(null);
-        }
-      } finally {
-        if (mounted) {
-          setLoading(false);
-        }
+      if (response.ok && data.data.user?.emailVerified) {
+        setUser(data.data.user);
+        const status = await fetchApplicationStatus();
+        setApplicationStatus(status);
+      } else {
+        setUser(null);
+        setApplicationStatus(UserApplicationStatus.NOT_APPLICABLE);
       }
-    };
+
+      fetchMyRole().then((res) => setRole(res));
+    } catch (e) {
+      console.error("Error checking session:", e);
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const refresh = async () => {
+    await checkSession();
+  };
+
+  useEffect(() => {
     checkSession();
   }, []);
 
@@ -361,6 +355,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         isActionLoading,
         applicationStatus,
         role,
+        refresh,
         loginWithEmailPassword,
         loginWithGoogle,
         signUpWithEmailPassword,
