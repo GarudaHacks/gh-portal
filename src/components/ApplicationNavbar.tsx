@@ -1,10 +1,10 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import { APPLICATION_STATES } from "@/pages/Application";
-import { ArrowLeft, LogOut } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import ghLogo from "/images/logo/gh_logo-color.png"
 import { eventName } from "@/config";
+import { SidebarTrigger } from "./ui/sidebar";
 
 function ApplicationNavbar({
   applicationState,
@@ -13,22 +13,23 @@ function ApplicationNavbar({
   applicationState: APPLICATION_STATES;
   onPrevClick: () => void;
 }) {
-  const navigate = useNavigate();
-
   return (
     <>
       {/* mobile */}
       <div className="grid lg:hidden grid-cols-3 place-items-center shadow-xs p-4 gap-4 h-20">
-        {applicationState === APPLICATION_STATES.INTRO ? (
-          <Link to="/" className="place-self-start h-full flex items-center">
-            <img
-              src={ghLogo}
-              width={500}
-              height={500}
-              className="w-10 h-10 pointer-events-none select-none"
-            />
-          </Link>
-        ) : null}
+        <div className="place-self-start h-full flex items-center gap-2">
+          <SidebarTrigger />
+          {applicationState === APPLICATION_STATES.INTRO ? (
+            <Link to="/" className="flex items-center">
+              <img
+                src={ghLogo}
+                width={500}
+                height={500}
+                className="w-10 h-10 pointer-events-none select-none"
+              />
+            </Link>
+          ) : null}
+        </div>
 
         {applicationState !== APPLICATION_STATES.INTRO ? (
           <Button
@@ -49,7 +50,8 @@ function ApplicationNavbar({
 
       {/* desktop */}
       <div className="hidden lg:flex flex-row items-center justify-between shadow-xs p-4 gap-4">
-        <div className="flex flex-row">
+        <div className="flex flex-row items-center gap-2">
+          <SidebarTrigger />
           <Link to="/">
             <img
               src={ghLogo}

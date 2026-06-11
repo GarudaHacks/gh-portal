@@ -109,7 +109,7 @@ export function AppSidebar() {
             <p>{user?.displayName || "Guest"}</p>
             <p className="text-xs opacity-60">{user?.email}</p>
           </div>
-          <Button onClick={handleLogout} className="rounded-full" size="sm" variant="outline">
+          <Button onClick={handleLogout} className="rounded-full" size="sm">
             Log out <LogOut />
           </Button>
         </div>
