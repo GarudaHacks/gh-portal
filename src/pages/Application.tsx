@@ -472,7 +472,7 @@ function Application() {
   }
 
   return (
-    <div className="">
+    <div className="flex-1 min-w-0 flex flex-col overflow-y-auto">
       <div>
         <ApplicationNavbar
           applicationState={applicationState}
@@ -480,7 +480,7 @@ function Application() {
         />
       </div>
 
-      <div className=" container mx-auto flex items-center justify-center w-full max-w-4xl">
+      <div className="container mx-auto flex items-center justify-center w-full max-w-4xl flex-1">
         {applicationState === APPLICATION_STATES.INTRO ? (
           <ApplicationIntro onNextClick={toNextState} />
         ) : null}

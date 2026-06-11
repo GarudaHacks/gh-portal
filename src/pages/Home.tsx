@@ -50,7 +50,7 @@ function Home() {
           {role === UserRole.MENTOR ? (
             <InstructionCardForMentorComponent user={user} />
           ) : (
-            <>
+            <div className="flex-1 min-w-0 flex flex-col overflow-y-auto">
               {applicationStatus === UserApplicationStatus.CONFIRMED_RSVP && (
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-col gap-4">
@@ -139,7 +139,7 @@ function Home() {
                   </GlassyRectangleBackground>
                 </div>
               )}
-            </>
+            </div>
           )}
         </>
       )}
