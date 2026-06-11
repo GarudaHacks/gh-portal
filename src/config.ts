@@ -1,0 +1,1 @@
+export const eventName = "Garuda Hacks 7.0"

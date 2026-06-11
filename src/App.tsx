@@ -20,6 +20,7 @@ import MentorshipDetailPage from "./pages/MentorshipDetail";
 import { SidebarProvider } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/AppSidebar";
 import DiscordCallback from "./components/DiscordCallback";
+import Application from "./pages/Application";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading, applicationStatus, role } = useAuth();
@@ -69,7 +70,8 @@ function App() {
             <Route path="/auth/discord/callback" element={<DiscordCallback />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/" element={<Navigate to="/home" />} />
-            <Route path="/application" element={<Navigate to="/home" />} />
+            {/* <Route path="/application" element={<Navigate to="/home" />} /> */}
+            <Route path="/application" element={<Application />} />
             <Route
               path="/home"
               element={
