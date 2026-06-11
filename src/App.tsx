@@ -17,7 +17,7 @@ import MentoringPage from "./pages/Mentoring";
 import BookMentorshipPage from "./pages/BookMentorship";
 import AllSchedulePage from "./pages/AllSchedules";
 import MentorshipDetailPage from "./pages/MentorshipDetail";
-import { SidebarProvider } from "./components/ui/sidebar";
+import { SidebarProvider, SidebarInset } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/AppSidebar";
 import DiscordCallback from "./components/DiscordCallback";
 import Application from "./pages/Application";
@@ -65,8 +65,8 @@ function App() {
       <BrowserRouter>
         <SidebarProvider>
           <AppSidebar />
-          {/* <div className="flex-1 min-w-0"> */}
-          <Routes>
+          <SidebarInset>
+            <Routes>
             <Route path="/auth/discord/callback" element={<DiscordCallback />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/" element={<Navigate to="/home" />} />
@@ -145,8 +145,9 @@ function App() {
               }
             />
 
-          <Route path="*" element={<Navigate to="/auth" />} />
-        </Routes>
+            <Route path="*" element={<Navigate to="/auth" />} />
+            </Routes>
+          </SidebarInset>
         </SidebarProvider>
       </BrowserRouter>
     </AuthProvider>
