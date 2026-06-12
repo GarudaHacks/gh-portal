@@ -311,7 +311,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     type: QUESTION_TYPE.DROPDOWN,
     required: false,
     options: ["Year 1", "Year 2", "Year 3", "Year 4", "Year 5+"],
-    order: 10,
+    order: 11,
   },
   {
     id: "email",
@@ -322,7 +322,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     validation: {
       maxLength: 50,
     },
-    order: 11,
+    order: 12,
   },
   {
     id: "phone",
@@ -333,8 +333,11 @@ export const allQuestionsData: ApplicationQuestion[] = [
     validation: {
       maxLength: 50,
     },
-    order: 11,
+    order: 13,
   },
+
+
+  // TEAM
   {
     id: "teamFormation",
     text: "Will you be applying with a team?",
@@ -375,6 +378,9 @@ export const allQuestionsData: ApplicationQuestion[] = [
     options: ["Health", "Safety & Resilience", "Agriculture & Food Systems"],
     order: 4,
   },
+
+
+  // SPEED DATING
   {
     id: "primaryRole",
     text: "What is your primary role in a team?",
@@ -415,6 +421,9 @@ export const allQuestionsData: ApplicationQuestion[] = [
     },
     order: 4,
   },
+
+
+  // APPLICATION
   {
     id: "resume",
     text: "Please attach your resume/CV",
@@ -505,6 +514,9 @@ export const allQuestionsData: ApplicationQuestion[] = [
     },
     order: 7,
   },
+
+
+  // LOGISITICAL DETAIL
   {
     id: "overnightPlan",
     text: "Do you plan to stay overnight at our venue (Universitas Multimedia Nusantara)?",
@@ -523,6 +535,9 @@ export const allQuestionsData: ApplicationQuestion[] = [
     options: [`Yes, I would like to request a leave letter to attend ${eventName}`, "No, I do not need a leave letter"],
     order: 2,
   },
+
+  
+  // EMERGENCY
   {
     id: "phoneEmergency",
     text: "Please enter the phone number of your emergency contact",
@@ -539,7 +554,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     text: "Please enter any other methods of contact to reach your emergency contact, if any",
     state: APPLICATION_STATES.EMERGENCY_AND_CONSENT,
     type: QUESTION_TYPE.STRING,
-    required: false,
+    required: true,
     validation: {
       maxLength: 100,
     },
@@ -550,7 +565,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     text: "What is your emergency contact's relationship to you?",
     state: APPLICATION_STATES.EMERGENCY_AND_CONSENT,
     type: QUESTION_TYPE.STRING,
-    required: false,
+    required: true,
     validation: {
       maxLength: 50,
     },
@@ -559,7 +574,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
   {
     id: "signedConsent",
     text: "Please read and sign the attached Consent Form. If you are below 18, please ask your parent/guardian to sign the form. (https://docs.google.com/document/d/1arI-L7QLBFsDG3PFvflMPYjoRk1e9UXkw3QbHIFDB_k/edit?tab=t.0)",
-    state: APPLICATION_STATES.APPLICATION,
+    state: APPLICATION_STATES.EMERGENCY_AND_CONSENT,
     type: QUESTION_TYPE.FILE,
     required: true,
     validation: {
@@ -577,6 +592,9 @@ export const allQuestionsData: ApplicationQuestion[] = [
     options: ["0 (Garuda Hacks 7.0 is my first!)", "1-2", "3-5", "6+"],
     order: 1,
   },
+
+
+  // ADDITIONAL INFO
   {
     id: "hackathonCount",
     text: "Have you joined a Garuda Hacks hackathon before? If so, which iterations have you joined?",
@@ -592,7 +610,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
       "Garuda Hacks 5.0",
       "Garuda Hacks 6.0",
     ],
-    order: 2,
+    order: 1,
   },
   {
     id: "joinSource",
@@ -613,30 +631,6 @@ export const allQuestionsData: ApplicationQuestion[] = [
     order: 2,
   },
   {
-    id: "joinReason",
-    text: "What is your main reason for joining Garuda Hacks 7.0? What attracted you to join? This question will not be graded, this is only to help us improve future events :)",
-    state: APPLICATION_STATES.APPLICATION,
-    type: QUESTION_TYPE.TEXTAREA,
-    placeholder: "Answer in 150 words or less",
-    required: true,
-    validation: {
-      minLength: 100,
-      maxLength: 400,
-    },
-    order: 3,
-  },
-  {
-    id: "referralCode",
-    text: "Were you referred to join Garuda Hacks 7.0? If you were, please carefully enter your referral code below",
-    state: APPLICATION_STATES.EMERGENCY_AND_CONSENT,
-    type: QUESTION_TYPE.STRING,
-    required: false,
-    validation: {
-      maxLength: 50,
-    },
-    order: 3,
-  },
-  {
     id: "referralSource",
     text: "Where did you hear about Garuda Hacks?",
     state: APPLICATION_STATES.ADDITIONAL_QUESTION,
@@ -651,207 +645,30 @@ export const allQuestionsData: ApplicationQuestion[] = [
       "Friend",
       "Other",
     ],
-    order: 1,
-  },
-  {
-    id: "referralOther",
-    text: "Please specify where you heard about Garuda Hacks",
-    state: APPLICATION_STATES.ADDITIONAL_QUESTION,
-    type: QUESTION_TYPE.STRING,
-    required: false,
-    validation: {
-      maxLength: 100,
-    },
-    order: 2,
-  },
-  {
-    id: "referral_code",
-    text: "Referral Code",
-    state: APPLICATION_STATES.ADDITIONAL_QUESTION,
-    type: QUESTION_TYPE.STRING,
-    required: false,
-    validation: {
-      maxLength: 100,
-    },
     order: 3,
   },
   {
-    id: "hackathonCount",
-    text: "How many hackathons have you been to before?",
+    id: "joinReason",
+    text: "What is your main reason for joining Garuda Hacks 7.0? What attracted you to join? This question will not be graded, this is only to help us improve future events :)",
     state: APPLICATION_STATES.ADDITIONAL_QUESTION,
-    type: QUESTION_TYPE.NUMBER,
-    placeholder: "0",
+    type: QUESTION_TYPE.TEXTAREA,
+    placeholder: "Answer in 150 words or less",
     required: true,
     validation: {
-      minValue: 0,
-      maxValue: 99,
+      minLength: 100,
+      maxLength: 400,
     },
     order: 4,
   },
   {
-    id: "garudaHacksAttendance",
-    text: "How many times have you attended Garuda Hacks? If so, please list out the year",
-    state: APPLICATION_STATES.ADDITIONAL_QUESTION,
+    id: "referralCode",
+    text: "Were you referred to join Garuda Hacks 7.0? If you were, please carefully enter your referral code below",
+    state: APPLICATION_STATES.EMERGENCY_AND_CONSENT,
     type: QUESTION_TYPE.STRING,
-    placeholder: "",
+    required: false,
+    validation: {
+      maxLength: 50,
+    },
     order: 5,
-  },
-  {
-    id: "desiredRoles",
-    text: "What roles would you like to take in a hackathon?",
-    state: APPLICATION_STATES.ADDITIONAL_QUESTION,
-    type: QUESTION_TYPE.DROPDOWN,
-    required: true,
-    options: [
-      "Developer",
-      "Designer",
-      "Product Manager",
-      "Data Scientist",
-      "Entrepreneur",
-      "Other",
-    ],
-    validation: {
-      minSelections: 1,
-      maxSelections: 3,
-    },
-    order: 6,
-  },
-  {
-    id: "resume",
-    text: "Please upload your résumé / school transcript",
-    state: APPLICATION_STATES.ADDITIONAL_QUESTION,
-    type: QUESTION_TYPE.FILE,
-    required: true,
-    validation: {
-      allowedTypes: "application/pdf",
-      maxSize: 5,
-    },
-    order: 7,
-  },
-  {
-    id: "accommodations",
-    text: "Please let us know of any event accommodations we can make for you",
-    state: APPLICATION_STATES.ADDITIONAL_QUESTION,
-    type: QUESTION_TYPE.TEXTAREA,
-    placeholder: "Dietary restrictions, accessibility needs, etc. (optional)",
-    required: false,
-    validation: {
-      maxLength: 500,
-    },
-    order: 8,
-  },
-  {
-    id: "dietary_restrictions",
-    text: "Please enter any dietary restrictions (if any).",
-    state: APPLICATION_STATES.ADDITIONAL_QUESTION,
-    type: QUESTION_TYPE.TEXTAREA,
-    required: false,
-    validation: {
-      maxLength: 500,
-    },
-    order: 9,
-  },
-  {
-    id: "lookingForTeammates",
-    text: "Are you looking for teammates?",
-    state: APPLICATION_STATES.ADDITIONAL_QUESTION,
-    type: QUESTION_TYPE.DROPDOWN,
-    required: true,
-    options: ["Yes", "No"],
-    order: 10,
-  },
-  {
-    id: "list_teammates",
-    text: "Please list out the names of your teammates separated by commas (if any)",
-    state: APPLICATION_STATES.ADDITIONAL_QUESTION,
-    type: QUESTION_TYPE.TEXTAREA,
-    placeholder: "Please list out the names of your teammates (if any)",
-    required: false,
-    validation: {
-      maxLength: 500,
-    },
-    order: 11,
-  },
-  {
-    id: "blood_type",
-    text: "Blood Type",
-    state: APPLICATION_STATES.ADDITIONAL_QUESTION,
-    type: QUESTION_TYPE.DROPDOWN,
-    required: true,
-    options: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-", "Unknown"],
-    order: 12,
-  },
-  {
-    id: "medical_info",
-    text: "Please list out all allergies, medications that you are currently taking, or pre-existing conditions that we need to be aware of",
-    state: APPLICATION_STATES.ADDITIONAL_QUESTION,
-    type: QUESTION_TYPE.TEXTAREA,
-    placeholder:
-      "This will be relayed to medical professionals only in the event of a medical emergency",
-    required: false,
-    validation: {
-      maxLength: 500,
-    },
-    order: 13,
-  },
-  {
-    id: "emergency_contact_name",
-    text: "Emergency Contact Name",
-    state: APPLICATION_STATES.ADDITIONAL_QUESTION,
-    type: QUESTION_TYPE.STRING,
-    required: true,
-    validation: {
-      maxLength: 100,
-    },
-    order: 14,
-  },
-  {
-    id: "emergency_contact_phone",
-    text: "Emergency Contact Phone Number",
-    state: APPLICATION_STATES.ADDITIONAL_QUESTION,
-    type: QUESTION_TYPE.STRING,
-    required: true,
-    validation: {
-      maxLength: 20,
-    },
-    order: 15,
-  },
-  {
-    id: "emergency_contact_relationship",
-    text: "Relationship to you",
-    state: APPLICATION_STATES.ADDITIONAL_QUESTION,
-    type: QUESTION_TYPE.DROPDOWN,
-    required: true,
-    options: ["Father", "Mother", "Sibling", "Guardian", "Friend", "Other"],
-    order: 16,
-  },
-  {
-    id: "liability_waiver",
-    text: "By selecting this option, I acknowledge that Garuda Hacks does not assume any responsibility or liability for any physical injury, illness, accident, or death that may occur during or as a result of participation in any Garuda Hacks event or related activities. By participating, all attendees acknowledge that they do so voluntarily and at their own risk, and release Garuda Hacks and its affiliates, sponsors, and organizers from any and all claims arising from such participation.",
-    state: APPLICATION_STATES.ADDITIONAL_QUESTION,
-    type: QUESTION_TYPE.DROPDOWN,
-    required: true,
-    options: ["I acknowledge and agree"],
-    order: 17,
-  },
-  {
-    id: "medical_consent",
-    text: "By selecting this option, I acknowledge that the Garuda Hacks committee reserves the right to authorize and arrange for any medical treatment or intervention deemed necessary in the event of an emergency. By participating in the event, attendees consent to such actions and release Garuda Hacks and its affiliates from any liability arising from the provision of medical care.",
-    state: APPLICATION_STATES.ADDITIONAL_QUESTION,
-    type: QUESTION_TYPE.DROPDOWN,
-    required: true,
-    options: ["I acknowledge and agree"],
-    order: 18,
-  },
-  {
-    id: "code_of_conduct",
-    text: "By signing my full name below, I acknowledge that I have read our Garuda Hacks code of conduct and promise to abide by its stipulations.",
-    state: APPLICATION_STATES.ADDITIONAL_QUESTION,
-    type: QUESTION_TYPE.STRING,
-    required: true,
-    validation: {
-      maxLength: 100,
-    },
-    order: 19,
   },
 ];

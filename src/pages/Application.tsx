@@ -13,10 +13,14 @@ import toast from "react-hot-toast";
 import { getStateKey } from "@/utils/applicationUtils";
 import { parse } from "date-fns";
 import { useAuth } from "@/context/AuthContext";
+import ApplicationApplication from "./application/ApplicationApplication";
+import ApplicationTeam from "./application/ApplicationTeam";
 
 export enum APPLICATION_STATES {
   INTRO = "Intro",
   PROFILE = "Your Profile",
+  APPLICATION = "Application",
+  TEAM = "TEAM",
   INQUIRY = "Application Questions",
   ADDITIONAL_QUESTION = "Additional Questions",
   SUBMITTED = "Submitted",
@@ -345,6 +349,22 @@ function Application() {
         {applicationState === APPLICATION_STATES.INTRO ? (
           <ApplicationIntro onNextClick={toNextState} />
         ) : null}
+        {applicationState === APPLICATION_STATES.APPLICATION && <ApplicationApplication
+          localApplicationState={localApplicationState}
+          applicationState={applicationState}
+          onNextClick={toNextState}
+          onPrevClick={toPreviousState}
+          onFormChange={updateFormData}
+          isSubmitting={isSubmitting}
+        />}
+        {applicationState === APPLICATION_STATES.TEAM && <ApplicationTeam
+          localApplicationState={localApplicationState}
+          applicationState={applicationState}
+          onNextClick={toNextState}
+          onPrevClick={toPreviousState}
+          onFormChange={updateFormData}
+          isSubmitting={isSubmitting}
+        />}
         {applicationState === APPLICATION_STATES.PROFILE ? (
           <ApplicationProfile
             localApplicationState={localApplicationState}
