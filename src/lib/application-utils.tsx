@@ -246,7 +246,7 @@ export function renderQuestion(
       <div className="flex flex-col gap-1">
         <Label className="text-md font-semibold">
           {applicationQuestion.text}
-          <span className="text-xs text-red-600">
+          <span className="text-xs text-red-500">
             {applicationQuestion.required ? "*" : ""}
           </span>
         </Label>
@@ -265,7 +265,7 @@ export function renderQuestion(
       <div className="flex flex-col gap-1">
         <Label className="text-md font-semibold">
           {applicationQuestion.text}
-          <span className="text-xs text-red-600">
+          <span className="text-xs text-red-500">
             {applicationQuestion.required ? "*" : ""}
           </span>
         </Label>
@@ -291,7 +291,7 @@ export function renderQuestion(
       <div className="flex flex-col gap-1">
         <Label className="text-md font-semibold ">
           {applicationQuestion.text}
-          <span className="text-xs text-red-600">
+          <span className="text-xs text-red-500">
             {applicationQuestion.required ? "*" : ""}
           </span>
         </Label>
@@ -354,7 +354,7 @@ export function renderQuestion(
       <div className="flex flex-col gap-1">
         <Label className="text-md font-semibold ">
           {applicationQuestion.text}
-          <span className="text-xs text-red-600">
+          <span className="text-xs text-red-500">
             {applicationQuestion.required ? "*" : ""}
           </span>
         </Label>
@@ -377,7 +377,7 @@ export function renderQuestion(
       <div className="flex flex-col gap-1">
         <Label className="text-md font-semibold ">
           {applicationQuestion.text}
-          <span className="text-xs text-red-600">
+          <span className="text-xs text-red-500">
             {applicationQuestion.required ? "*" : ""}
           </span>
         </Label>
@@ -404,7 +404,7 @@ export function renderQuestion(
       <div className="flex flex-col gap-1 w-full">
         <Label className="text-md font-semibold ">
           {applicationQuestion.text}
-          <span className="text-xs text-red-600">
+          <span className="text-xs text-red-500">
             {applicationQuestion.required ? "*" : ""}
           </span>
         </Label>
@@ -430,7 +430,7 @@ export function renderQuestion(
       <div className="flex flex-col gap-1">
         <Label className="text-md font-semibold">
           {q.text}
-          <span className="text-xs text-red-600">{q.required ? "*" : ""}</span>
+          <span className="text-xs text-red-500">{q.required ? "*" : ""}</span>
         </Label>
         <div className="flex flex-col gap-2 mt-1">
           {q.options.map((option) => (

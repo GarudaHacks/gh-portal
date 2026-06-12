@@ -23,7 +23,7 @@ export default function ApplicationSubmitted() {
 
   return (
     <div className="p-4 flex flex-col items-center gap-4 lg:gap-6 w-full">
-      <GlassyRectangleBackground className="w-full p-4 rounded-2xl flex flex-col gap-4 text-white shadow-md">
+      <GlassyRectangleBackground className="w-full p-4 rounded-2xl flex flex-col gap-4 shadow-md">
         <h1 className="text-2xl font-bold">Hooray! Thanks for applying.</h1>
 
         <p>Your application has been submitted.</p>

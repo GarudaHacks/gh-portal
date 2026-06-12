@@ -199,7 +199,7 @@ export default function AuthRegisterComponent() {
               />
 
               {error && (
-                <p className="text-red-100 text-sm text-center mt-4">{error}</p>
+                <p className="text-red-500 text-sm text-center mt-4">{error}</p>
               )}
 
               <div className="flex flex-col gap-2.5">
