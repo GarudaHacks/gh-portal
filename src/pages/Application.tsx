@@ -34,6 +34,16 @@ export enum APPLICATION_STATES {
 
 const APPLICATION_STATES_ARRAY = Object.values(APPLICATION_STATES);
 
+const STEP_STATES = [
+  APPLICATION_STATES.PROFILE,
+  APPLICATION_STATES.TEAM,
+  APPLICATION_STATES.SPEED_DATING,
+  APPLICATION_STATES.APPLICATION,
+  APPLICATION_STATES.LOGISTICAL_DETAIL,
+  APPLICATION_STATES.EMERGENCY_AND_CONSENT,
+  APPLICATION_STATES.ADDITIONAL_QUESTION,
+];
+
 export interface LocalApplicationState {
   latestState: APPLICATION_STATES;
   data: {
@@ -352,6 +362,10 @@ function Application() {
     );
   }
 
+  const currentStepIndex = STEP_STATES.indexOf(applicationState);
+  const isStepState = currentStepIndex !== -1;
+  const totalSteps = STEP_STATES.length;
+
   return (
     <div className="flex-1 min-w-0 flex flex-col overflow-y-auto">
       <div>
@@ -359,9 +373,29 @@ function Application() {
           applicationState={applicationState}
           onPrevClick={toPreviousState}
         />
+        {isStepState && (
+          <div className="px-6 py-3 border-b bg-background">
+            <div className="container mx-auto max-w-4xl">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm text-muted-foreground font-medium">
+                  Step {currentStepIndex + 1} of {totalSteps}
+                </span>
+                <span className="text-sm text-muted-foreground">
+                  {applicationState}
+                </span>
+              </div>
+              <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-primary rounded-full transition-all duration-300"
+                  style={{ width: `${((currentStepIndex + 1) / totalSteps) * 100}%` }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
-      <div className="container mx-auto flex items-center justify-center w-full max-w-4xl flex-1">
+      <div className="container mx-auto flex items-start justify-center w-full max-w-4xl flex-1 pt-8">
         {applicationState === APPLICATION_STATES.INTRO &&
           <ApplicationIntro onNextClick={toNextState} />}
         {applicationState === APPLICATION_STATES.PROFILE &&
