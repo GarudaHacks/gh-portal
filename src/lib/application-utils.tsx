@@ -16,8 +16,10 @@ import {
   NumberValidation,
   DatetimeValidation,
   DropdownValidation,
+  MultiValidation,
   FileApplicationQuestion,
   DropdownApplicationQuestion,
+  MultiApplicationQuestion,
 } from "@/types/application";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
@@ -159,6 +161,20 @@ export function validateResponse(
         ) {
           return `Please select no more than ${rules.maxSelections} option(s).`;
         }
+      }
+      break;
+    }
+    case QUESTION_TYPE.MULTI: {
+      const rules = question.validation as MultiValidation | undefined;
+      const selected = Array.isArray(response) ? response : response ? [response] : [];
+      if (effectiveRequired && selected.length === 0) {
+        return "Please select at least one option.";
+      }
+      if (rules?.minSelections && selected.length < rules.minSelections) {
+        return `Please select at least ${rules.minSelections} option(s).`;
+      }
+      if (rules?.maxSelections && selected.length > rules.maxSelections) {
+        return `Please select no more than ${rules.maxSelections} option(s).`;
       }
       break;
     }
@@ -396,6 +412,39 @@ export function renderQuestion(
           value={value}
           onChange={(date) => onChange?.(applicationQuestion, date)}
         />
+        {renderError()}
+      </div>
+    );
+  } else if (applicationQuestion.type === QUESTION_TYPE.MULTI) {
+    const q = applicationQuestion as MultiApplicationQuestion;
+    const selected: string[] = Array.isArray(value) ? value : value ? [value] : [];
+
+    const toggle = (option: string) => {
+      const next = selected.includes(option)
+        ? selected.filter((s) => s !== option)
+        : [...selected, option];
+      onChange?.(applicationQuestion, next);
+    };
+
+    return (
+      <div className="flex flex-col gap-1">
+        <Label className="text-md font-semibold">
+          {q.text}
+          <span className="text-xs text-red-600">{q.required ? "*" : ""}</span>
+        </Label>
+        <div className="flex flex-col gap-2 mt-1">
+          {q.options.map((option) => (
+            <label key={option} className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                className="h-4 w-4 accent-primary cursor-pointer"
+                checked={selected.includes(option)}
+                onChange={() => toggle(option)}
+              />
+              <span className="text-sm">{option}</span>
+            </label>
+          ))}
+        </div>
         {renderError()}
       </div>
     );

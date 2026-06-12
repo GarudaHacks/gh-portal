@@ -35,6 +35,12 @@ export interface DropdownValidation {
   maxSelections?: number;
 }
 
+export interface MultiValidation {
+  required?: boolean;
+  minSelections?: number;
+  maxSelections?: number;
+}
+
 export interface FileValidation {
   required?: boolean;
   allowedTypes: string; // Comma separated MIME types e.g. "image/jpeg,application/pdf"
@@ -48,6 +54,7 @@ export type ValidationTypeMap = {
   [QUESTION_TYPE.DATE]: DatetimeValidation;
   [QUESTION_TYPE.DROPDOWN]: DropdownValidation;
   [QUESTION_TYPE.FILE]: FileValidation;
+  [QUESTION_TYPE.MULTI]: MultiValidation;
 };
 
 // Base interface for all question types
@@ -93,13 +100,20 @@ export interface FileApplicationQuestion extends BaseApplicationQuestion {
   validation: FileValidation;
 }
 
+export interface MultiApplicationQuestion extends BaseApplicationQuestion {
+  type: QUESTION_TYPE.MULTI;
+  options: string[];
+  validation?: MultiValidation;
+}
+
 export type ApplicationQuestion =
   | StringApplicationQuestion
   | TextareaApplicationQuestion
   | NumberApplicationQuestion
   | DateApplicationQuestion
   | DropdownApplicationQuestion
-  | FileApplicationQuestion;
+  | FileApplicationQuestion
+  | MultiApplicationQuestion;
 
 export enum APPLICATION_STATUS {
   NOT_APPLICABLE = "not applicable",
