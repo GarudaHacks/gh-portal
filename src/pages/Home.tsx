@@ -56,7 +56,7 @@ function Home() {
                   <div className="flex flex-col gap-4">
                     <h1 className="text-3xl lg:text-5xl font-bold text-white">
                       {greetingHelper()},{" "}
-                      {user?.firstName || user?.displayName}!
+                      {user?.displayName || "there!"}!
                     </h1>
                     <h2 className="text-3xl lg:text-3xl mb-4 font-bold text-white">
                       See you at Garuda Hacks 6.0!
