@@ -203,6 +203,7 @@ function Application() {
 
     setLocalApplicationState((prev) => ({ ...prev, data: {} }));
     setApplicationState(APPLICATION_STATES.SUBMITTED);
+    localStorage.removeItem("localApplicationState");
 
     try {
       const response = await fetch("/api/application/status", {
