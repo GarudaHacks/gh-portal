@@ -5,6 +5,7 @@ export enum QUESTION_TYPE {
   DATE = "datetime", // Matches backend QUESTION_TYPE.DATE
   DROPDOWN = "dropdown",
   FILE = "file",
+  MULTI = "multi"
 }
 
 // Validation rule interfaces
@@ -116,6 +117,7 @@ export enum APPLICATION_STATES {
   SPEED_DATING = "SPEED_DATING",
   APPLICATION = "APPLICATION",
   LOGISTICAL_DETAIL = "LOGISTICAL_DETAIL",
+  EMERGENCY_AND_CONSENT = "EMERGENCY_AND_CONSENT",
   INQUIRY = "INQUIRY",
   ADDITIONAL_QUESTION = "ADDITIONAL_QUESTION",
 }
