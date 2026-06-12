@@ -84,7 +84,7 @@ function FileUploadInput({
   };
 
   return (
-    <div className="flex items-center gap-2 border border-border rounded-lg px-3 py-2 bg-background">
+    <div className="flex items-center gap-2 border border-border rounded-md px-3 py-1.5 bg-white shadow-sm">
       <input
         ref={inputRef}
         type="file"
@@ -472,7 +472,7 @@ export function renderQuestion(
           defaultValue={value}
           onValueChange={(value) => onChange?.(applicationQuestion, value)}
         >
-          <SelectTrigger className="border border-gray-500 p-2 w-full ">
+          <SelectTrigger className="w-full">
             <SelectValue placeholder="Select one..." />
           </SelectTrigger>
           <SelectContent>
