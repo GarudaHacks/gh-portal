@@ -1,10 +1,11 @@
 import { ApplicationQuestion } from "@/types/application";
 import { Button } from "../../components/ui/button";
-import { renderQuestion } from "@/lib/application-utils";
+import { renderQuestion, validateResponse } from "@/lib/application-utils";
 import { APPLICATION_STATES, LocalApplicationState } from "@/pages/Application";
 import { useMemo } from "react";
 import { allQuestionsData } from "@/data/questions";
 import { ChevronLeft, Loader2 } from "lucide-react";
+import toast from "react-hot-toast";
 
 export default function ApplicationProfile({
   localApplicationState,
@@ -18,7 +19,7 @@ export default function ApplicationProfile({
   applicationState: APPLICATION_STATES;
   onNextClick: () => void;
   onPrevClick: () => void;
-  onFormChange: (questionId: string, type: string, response: any) => void;
+  onFormChange: (questionId: string, type: string, response: any, error?: string) => void;
   isSubmitting: boolean;
 }) {
   const questions = useMemo(() => {
@@ -27,8 +28,27 @@ export default function ApplicationProfile({
       .sort((a, b) => a.order - b.order);
   }, []);
 
+  const handleNextClick = () => {
+    let allValid = true;
+    for (const q of questions) {
+      const value = localApplicationState.data[q.id]?.response;
+      const errorMessage = validateResponse(q, value);
+      if (errorMessage) {
+        allValid = false;
+      }
+      onFormChange(q.id, q.type, value, errorMessage === null ? undefined : errorMessage);
+    }
+
+    if (allValid) {
+      onNextClick();
+    } else {
+      toast.error("Please correct the errors highlighted below.");
+    }
+  };
+
   const handleInputChange = (question: ApplicationQuestion, value: any) => {
-    onFormChange(question.id, question.type, value);
+    const error = validateResponse(question, value);
+    onFormChange(question.id, question.type, value, error === null ? undefined : error);
   };
 
   return (
@@ -54,7 +74,7 @@ export default function ApplicationProfile({
 
       <Button
         className="w-full lg:w-fit place-self-end font-semibold"
-        onClick={onNextClick}
+        onClick={handleNextClick}
         size="lg"
       >
         Continue

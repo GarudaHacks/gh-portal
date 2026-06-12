@@ -49,7 +49,7 @@ const buildFormResponse = (data: LocalApplicationState["data"]) => {
     const question = data[questionId];
     const { response } = question;
     if (question.type === "file") {
-      formResponse[questionId] = response.name;
+      formResponse[questionId] = response?.name;
     } else if (question.type === "datetime") {
       try {
         let parsedDate: Date | null = null;
