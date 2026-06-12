@@ -460,6 +460,12 @@ export function renderQuestion(
       </div>
     );
   } else if (applicationQuestion.type === "dropdown") {
+    const hasOther = applicationQuestion.options?.includes("Other") ?? false;
+    const isOtherSelected =
+      hasOther && (value === "Other" || (typeof value === "string" && value.startsWith("Other-")));
+    const dropdownDisplayValue = isOtherSelected ? "Other" : (value || "");
+    const dropdownOtherText = isOtherSelected && value !== "Other" ? (value as string).slice(6) : "";
+
     return (
       <div className="flex flex-col gap-1">
         <p className="text-sm font-normal leading-relaxed whitespace-pre-line">
@@ -469,8 +475,8 @@ export function renderQuestion(
           </span>
         </p>
         <Select
-          defaultValue={value}
-          onValueChange={(value) => onChange?.(applicationQuestion, value)}
+          value={dropdownDisplayValue}
+          onValueChange={(v) => onChange?.(applicationQuestion, v)}
         >
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Select one..." />
@@ -483,6 +489,18 @@ export function renderQuestion(
             ))}
           </SelectContent>
         </Select>
+        {isOtherSelected && (
+          <Input
+            placeholder="Please specify..."
+            value={dropdownOtherText}
+            onChange={(e) =>
+              onChange?.(
+                applicationQuestion,
+                e.target.value ? `Other-${e.target.value}` : "Other"
+              )
+            }
+          />
+        )}
         {renderError()}
       </div>
     );
@@ -506,11 +524,28 @@ export function renderQuestion(
     const q = applicationQuestion as MultiApplicationQuestion;
     const selected: string[] = Array.isArray(value) ? value : value ? [value] : [];
 
+    const hasOther = q.options.includes("Other");
+    const isOtherChecked = hasOther && selected.some((s) => s === "Other" || s.startsWith("Other-"));
+    const otherText = selected.find((s) => s.startsWith("Other-"))?.slice(6) ?? "";
+
     const toggle = (option: string) => {
-      const next = selected.includes(option)
-        ? selected.filter((s) => s !== option)
-        : [...selected, option];
-      onChange?.(applicationQuestion, next);
+      if (option === "Other") {
+        if (isOtherChecked) {
+          onChange?.(applicationQuestion, selected.filter((s) => s !== "Other" && !s.startsWith("Other-")));
+        } else {
+          onChange?.(applicationQuestion, [...selected, "Other"]);
+        }
+      } else {
+        const next = selected.includes(option)
+          ? selected.filter((s) => s !== option)
+          : [...selected, option];
+        onChange?.(applicationQuestion, next);
+      }
+    };
+
+    const handleOtherText = (text: string) => {
+      const withoutOther = selected.filter((s) => s !== "Other" && !s.startsWith("Other-"));
+      onChange?.(applicationQuestion, [...withoutOther, text ? `Other-${text}` : "Other"]);
     };
 
     return (
@@ -525,12 +560,20 @@ export function renderQuestion(
               <input
                 type="checkbox"
                 className="h-4 w-4 accent-primary cursor-pointer"
-                checked={selected.includes(option)}
+                checked={option === "Other" ? isOtherChecked : selected.includes(option)}
                 onChange={() => toggle(option)}
               />
               <span className="text-sm">{option}</span>
             </label>
           ))}
+          {isOtherChecked && (
+            <Input
+              className="mt-1"
+              placeholder="Please specify..."
+              value={otherText}
+              onChange={(e) => handleOtherText(e.target.value)}
+            />
+          )}
         </div>
         {renderError()}
       </div>
