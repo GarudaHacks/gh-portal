@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Button } from "./ui/button";
+import { Button } from "../../components/ui/button";
 import { fetchPortalConfig, PortalConfig } from "@/utils/portalConfig";
 import { eventName } from "@/config";
 import garudieLaptop from "/assets/garudie-laptop.png"

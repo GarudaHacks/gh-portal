@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import ApplicationIntro from "../components/ApplicationIntro";
-import ApplicationNavbar from "../components/ApplicationNavbar";
-import ApplicationProfile from "@/components/ApplicationProfile";
-import ApplicationInquiry from "@/components/ApplicationInquiry";
-import ApplicationAdditionalQuestion from "@/components/ApplicationAdditionalQuestion";
-import ApplicationSubmitted from "@/components/ApplicationSubmitted";
+import ApplicationIntro from "./application/ApplicationIntro";
+import ApplicationNavbar from "./application/ApplicationNavbar";
+import ApplicationProfile from "@/pages/application/ApplicationProfile";
+import ApplicationInquiry from "@/pages/application/ApplicationInquiry";
+import ApplicationAdditionalQuestion from "@/pages/application/ApplicationAdditionalQuestion";
+import ApplicationSubmitted from "@/pages/application/ApplicationSubmitted";
 import { APPLICATION_STATUS } from "@/types/application";
 import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";

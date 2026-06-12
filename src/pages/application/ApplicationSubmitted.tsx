@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import GlassyRectangleBackground from "./RedGradientBackground";
-import { Button } from "./ui/button";
+import GlassyRectangleBackground from "../../components/RedGradientBackground";
+import { Button } from "../../components/ui/button";
 import { fetchPortalConfig, PortalConfig } from "@/utils/portalConfig";
 import { format } from "date-fns";
 

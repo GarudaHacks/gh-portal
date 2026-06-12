@@ -1,5 +1,5 @@
 import { ApplicationQuestion } from "@/types/application";
-import { Button } from "./ui/button";
+import { Button } from "../../components/ui/button";
 import { renderQuestion } from "@/lib/application-utils";
 import { APPLICATION_STATES, LocalApplicationState } from "@/pages/Application";
 import { useMemo } from "react";

@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import { Button } from "./ui/button";
+import { Button } from "../../components/ui/button";
 import { APPLICATION_STATES } from "@/pages/Application";
 import { ArrowLeft } from "lucide-react";
 import ghLogo from "/images/logo/gh_logo-color.png"
 import { eventName } from "@/config";
-import { SidebarTrigger } from "./ui/sidebar";
+import { SidebarTrigger } from "../../components/ui/sidebar";
 
 function ApplicationNavbar({
   applicationState,
