@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ApplicationIntro from "../components/ApplicationIntro";
 import ApplicationNavbar from "../components/ApplicationNavbar";
 import ApplicationProfile from "@/components/ApplicationProfile";
@@ -11,7 +11,7 @@ import { Loader2 } from "lucide-react";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { getStateKey } from "@/utils/applicationUtils";
-import { format, parse } from "date-fns";
+import { parse } from "date-fns";
 import { useAuth } from "@/context/AuthContext";
 
 export enum APPLICATION_STATES {
@@ -37,13 +37,61 @@ export interface LocalApplicationState {
   lastUpdated: Date;
 }
 
+type ValidationError = { field_id: string; message: string };
+
+const buildFormResponse = (data: LocalApplicationState["data"]) => {
+  const formResponse: { [key: string]: any } = {};
+  for (const questionId in data) {
+    const question = data[questionId];
+    const { response } = question;
+    if (question.type === "file") {
+      formResponse[questionId] = response.name;
+    } else if (question.type === "datetime") {
+      try {
+        let parsedDate: Date | null = null;
+        if (response instanceof Date) {
+          parsedDate = response;
+        } else if (typeof response === "string") {
+          parsedDate = parse(response, "MM/dd/yyyy", new Date());
+          if (parsedDate.toString() === "Invalid Date") {
+            const isoDate = new Date(response);
+            parsedDate = isoDate.toString() !== "Invalid Date" ? isoDate : null;
+          }
+        }
+        if (parsedDate && parsedDate.toString() !== "Invalid Date") {
+          formResponse[questionId] = parsedDate.toISOString();
+        }
+      } catch (e) {
+        console.error(`Error parsing date for question ${questionId}:`, e);
+      }
+    } else {
+      formResponse[questionId] = response;
+    }
+  }
+  return formResponse;
+};
+
+const applyValidationErrors = (
+  currentData: LocalApplicationState["data"],
+  errors: ValidationError[]
+): LocalApplicationState["data"] => {
+  const updatedData = { ...currentData };
+  for (const { field_id, message } of errors) {
+    updatedData[field_id] = {
+      id: field_id,
+      type: currentData[field_id]?.type,
+      response: currentData[field_id]?.response,
+      error: message,
+    };
+  }
+  return updatedData;
+};
+
 function Application() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [times, setTimes] = useState(0);
-
   const [applicationState, setApplicationState] = useState(
     APPLICATION_STATES.INTRO
   );
@@ -53,97 +101,34 @@ function Application() {
       data: {},
       lastUpdated: new Date(),
     });
+  const isMounted = useRef(false);
 
-  // save local application state to local storage
-  const saveLocalApplicationState = () => {
-    if (!localApplicationState) return;
-    localStorage.setItem(
-      "localApplicationState",
-      JSON.stringify({
-        latestState: localApplicationState.latestState,
-        data: localApplicationState.data,
-        lastUpdated: new Date().toISOString(),
-      })
-    );
-  };
-
-  // update form data
   const updateFormData = (
     questionId: string,
     type: string,
     response: any,
     error?: string
   ) => {
-    if (!localApplicationState) return;
-    setLocalApplicationState({
-      ...localApplicationState,
+    setLocalApplicationState((prev) => ({
+      ...prev,
       data: {
-        ...localApplicationState.data,
-        [questionId]: {
-          id: questionId,
-          type,
-          response,
-          error: error || "",
-        },
+        ...prev.data,
+        [questionId]: { id: questionId, type, response, error: error || "" },
       },
-    });
+    }));
   };
 
-  // handle submit
-  const handleSubmit = async () => {
-    // patch additional question data to DB
-    let formResponse: { [key: string]: any } = {};
-
-    for (const questionId in localApplicationState.data) {
-      const question = localApplicationState.data[questionId];
-      const response = question.response;
-
-      if (question.type === "file") {
-        formResponse[questionId] = response.name;
-        continue;
-      } else if (question.type === "datetime") {
-        try {
-          let parsedDate: Date | null = null;
-          if (response instanceof Date) {
-            parsedDate = response;
-          } else if (typeof response === "string") {
-            // Try parsing as MM/dd/yyyy, fallback to ISO
-            parsedDate = parse(response, "MM/dd/yyyy", new Date());
-            if (parsedDate.toString() === "Invalid Date") {
-              const isoDate = new Date(response);
-              parsedDate =
-                isoDate.toString() !== "Invalid Date" ? isoDate : null;
-            }
-          }
-          if (parsedDate && parsedDate.toString() !== "Invalid Date") {
-            formResponse[questionId] = parsedDate.toISOString();
-          }
-        } catch (e) {
-          console.error(
-            `Error parsing date for question ${questionId}: ${response}`,
-            e
-          );
-          // Decide how to handle: send original, null, or skip
-        }
-      } else {
-        formResponse[questionId] = response;
-      }
-    }
-
-    const payload: {
-      userId: string;
-      state: string;
-      [key: string]: any;
-    } = {
-      ...formResponse,
-      userId: user?.uid || "",
-      state: "ADDITIONAL_QUESTION",
+  const patchApplication = async (
+    state: string,
+    data: LocalApplicationState["data"]
+  ): Promise<{ ok: boolean; errorData?: any }> => {
+    const payload = {
+      ...buildFormResponse(data),
+      userId: user?.uid,
+      state,
     };
-
-    setIsSubmitting(true);
-    let response;
     try {
-      response = await fetch("/api/application", {
+      const response = await fetch("/api/application", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -152,78 +137,63 @@ function Application() {
         credentials: "include",
         body: JSON.stringify(payload),
       });
-    } catch (err) {
+      if (!response.ok) {
+        let errorData: any = {};
+        try {
+          errorData = await response.json();
+        } catch {
+          errorData = { message: "Unknown error occurred." };
+        }
+        return { ok: false, errorData };
+      }
+      return { ok: true };
+    } catch {
+      return {
+        ok: false,
+        errorData: { message: "Network error. Please try again." },
+      };
+    }
+  };
+
+  const handleValidationErrors = (errorData: any): boolean => {
+    if (!errorData?.details || !Array.isArray(errorData.details)) return false;
+    setLocalApplicationState((prev) => ({
+      ...prev,
+      data: applyValidationErrors(prev.data, errorData.details),
+    }));
+    const errorMessages = errorData.details
+      .map((e: ValidationError) => e.message)
+      .filter(Boolean)
+      .join("\n");
+    toast.error(
+      errorMessages
+        ? `There are errors in your application:\n${errorMessages}`
+        : "There are errors in your application."
+    );
+    return true;
+  };
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    const { ok, errorData } = await patchApplication(
+      "ADDITIONAL_QUESTION",
+      localApplicationState.data
+    );
+
+    if (!ok) {
+      if (!handleValidationErrors(errorData)) {
+        toast.error(
+          errorData?.message ||
+          "Failed to save application.\nPlease log out and log back in to refresh your session."
+        );
+      }
       setIsSubmitting(false);
-      toast.error("Network error. Please try again.");
       return;
     }
 
-    if (!response.ok) {
-      let errorData: any = {};
-      try {
-        errorData = await response.json();
-      } catch (e) {
-        errorData = { message: "Unknown error occurred." };
-      }
-
-      if (errorData.details && Array.isArray(errorData.details)) {
-        const updatedData = { ...localApplicationState.data };
-
-        errorData.details.forEach(
-          (error: { field_id: string; message: string }) => {
-            const { field_id, message } = error;
-
-            if (updatedData[field_id]) {
-              updatedData[field_id] = {
-                ...updatedData[field_id],
-                error: message,
-              };
-            } else {
-              updatedData[field_id] = {
-                id: field_id,
-                type: localApplicationState.data[field_id]?.type,
-                response: localApplicationState.data[field_id]?.response,
-                error: message,
-              };
-            }
-          }
-        );
-
-        setLocalApplicationState({
-          ...localApplicationState,
-          data: updatedData,
-        });
-
-        const errorMessages = errorData.details
-          .map((error: { field_id: string; message: string }) => error.message)
-          .filter(Boolean)
-          .join("\n");
-        toast.error(
-          errorMessages
-            ? `There are errors in your application:\n${errorMessages}`
-            : "There are errors in your application."
-        );
-        setIsSubmitting(false);
-        return;
-      } else {
-        setIsSubmitting(false);
-        toast.error(
-          errorData.message ||
-            "Failed to save application.\nPlease log out and log back in to refresh your session."
-        );
-        return;
-      }
-    }
-
-    // Only clear the local state after successful submission
-    if (localApplicationState) {
-      setLocalApplicationState({ ...localApplicationState, data: {} });
-    }
-
+    setLocalApplicationState((prev) => ({ ...prev, data: {} }));
     setApplicationState(APPLICATION_STATES.SUBMITTED);
 
-    // temporarily update user state into "submitted" using firebase
-    // assuming the user is saved to db already
     try {
       const response = await fetch("/api/application/status", {
         method: "POST",
@@ -237,12 +207,11 @@ function Application() {
       if (!response.ok) {
         toast.error(
           data.message ||
-            "Failed to save application.\nPlease log out and log back in to refresh your session."
+          "Failed to save application.\nPlease log out and log back in to refresh your session."
         );
         console.error("Error saving application data:", data);
         return;
       }
-
       toast.success("Application submitted!");
     } catch (error) {
       console.error("Error saving application data:", error);
@@ -257,189 +226,73 @@ function Application() {
   };
 
   const toNextState = async () => {
-    try {
-      if (
-        applicationState !== APPLICATION_STATES.INTRO &&
-        applicationState !== APPLICATION_STATES.SUBMITTED
-      ) {
-        setIsSubmitting(true);
+    const currentIndex = APPLICATION_STATES_ARRAY.indexOf(applicationState);
+    if (currentIndex >= APPLICATION_STATES_ARRAY.length - 1) return;
 
-        const state = getStateKey(applicationState);
+    if (
+      applicationState !== APPLICATION_STATES.INTRO &&
+      applicationState !== APPLICATION_STATES.SUBMITTED
+    ) {
+      setIsSubmitting(true);
+      const { ok, errorData } = await patchApplication(
+        getStateKey(applicationState),
+        localApplicationState.data
+      );
 
-        let formResponse: { [key: string]: any } = {};
-
-        for (const questionId in localApplicationState.data) {
-          const question = localApplicationState.data[questionId];
-          const response = question.response;
-
-          if (question.type === "file") {
-            formResponse[questionId] = response.name;
-            continue;
-          } else if (question.type === "datetime") {
-            try {
-              // if response is a date, and is coming from betterdatepicker,
-              const stringifyedResponse =
-                response instanceof Date
-                  ? format(response, "MM/dd/yyyy")
-                  : response;
-              const parsedDate = parse(
-                stringifyedResponse,
-                "MM/dd/yyyy",
-                new Date()
-              );
-              if (parsedDate.toString() !== "Invalid Date") {
-                formResponse[questionId] = parsedDate.toISOString();
-              }
-            } catch (e) {
-              console.error(
-                `Error parsing date for question ${questionId}: ${response}`,
-                e
-              );
-              // Decide how to handle: send original, null, or skip
-            }
-          } else {
-            formResponse[questionId] = response;
-          }
+      if (!ok) {
+        if (!handleValidationErrors(errorData)) {
+          toast.error(
+            errorData?.message ||
+            "Failed to save application.\nPlease log out and log back in to refresh your session."
+          );
         }
-        const payload: {
-          userId: string | undefined;
-          state: string;
-          [key: string]: any;
-        } = {
-          ...formResponse,
-          userId: user?.uid,
-          state: state,
-        };
-
-        const response = await fetch("/api/application", {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            "x-xsrf-token": Cookies.get("XSRF-TOKEN") || "",
-          },
-          credentials: "include",
-          body: JSON.stringify(payload),
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-
-          if (errorData.details && Array.isArray(errorData.details)) {
-            const updatedData = { ...localApplicationState.data };
-
-            errorData.details.forEach(
-              (error: { field_id: string; message: string }) => {
-                const { field_id, message } = error;
-
-                if (updatedData[field_id]) {
-                  updatedData[field_id] = {
-                    ...updatedData[field_id],
-                    error: message,
-                  };
-                } else {
-                  updatedData[field_id] = {
-                    id: field_id,
-                    type: localApplicationState.data[field_id]?.type,
-                    response: localApplicationState.data[field_id]?.response,
-                    error: message,
-                  };
-                }
-              }
-            );
-
-            setLocalApplicationState({
-              ...localApplicationState,
-              data: updatedData,
-            });
-
-            toast.error("There are errors in your application");
-            setIsSubmitting(false);
-            return;
-          } else {
-            setIsSubmitting(false);
-            toast.error(
-              errorData.message ||
-                "Failed to save application.\nPlease log out and log back in to refresh your session."
-            );
-            return;
-          }
-        }
+        setIsSubmitting(false);
+        return;
       }
-
-      const currentIndex = APPLICATION_STATES_ARRAY.indexOf(applicationState);
-      if (currentIndex < APPLICATION_STATES_ARRAY.length - 1) {
-        const nextState = APPLICATION_STATES_ARRAY[currentIndex + 1];
-        setApplicationState(APPLICATION_STATES_ARRAY[currentIndex + 1]);
-
-        // Update localApplicationState.latestState to match
-        setLocalApplicationState((prev) => ({
-          ...prev,
-          latestState: nextState,
-        }));
-      }
-    } catch (error) {
-      console.error("Error saving application data:", error);
-    } finally {
       setIsSubmitting(false);
     }
+
+    const nextState = APPLICATION_STATES_ARRAY[currentIndex + 1];
+    setApplicationState(nextState);
+    setLocalApplicationState((prev) => ({ ...prev, latestState: nextState }));
   };
 
   const toPreviousState = () => {
     const currentIndex = APPLICATION_STATES_ARRAY.indexOf(applicationState);
-    if (currentIndex > 0) {
-      const prevState = APPLICATION_STATES_ARRAY[currentIndex - 1];
-      setApplicationState(APPLICATION_STATES_ARRAY[currentIndex - 1]);
-
-      setLocalApplicationState((prev) => ({
-        ...prev,
-        latestState: prevState,
-      }));
-    }
+    if (currentIndex <= 0) return;
+    const prevState = APPLICATION_STATES_ARRAY[currentIndex - 1];
+    setApplicationState(prevState);
+    setLocalApplicationState((prev) => ({ ...prev, latestState: prevState }));
   };
 
   useEffect(() => {
-    // check from db whether user.status is "submitted"
-    // if yes, redirect to home page
     const fetchApplicationStatus = async () => {
       const response = await fetch("/api/application/status", {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
       });
-
       const data = await response.json();
       if (data.data === APPLICATION_STATUS.SUBMITTED) {
         navigate("/home");
-        return;
       }
     };
 
     fetchApplicationStatus();
 
-    const localApplicationStateJson = localStorage.getItem(
-      "localApplicationState"
-    );
-    if (localApplicationStateJson) {
+    const saved = localStorage.getItem("localApplicationState");
+    if (saved) {
       try {
-        const json = JSON.parse(localApplicationStateJson);
-
-        // Convert the lastUpdated string back to a Date object
-        if (json.lastUpdated) {
-          json.lastUpdated = new Date(json.lastUpdated);
-        }
-
+        const json = JSON.parse(saved);
+        if (json.lastUpdated) json.lastUpdated = new Date(json.lastUpdated);
         if (
           json.latestState &&
           APPLICATION_STATES_ARRAY.includes(json.latestState)
         ) {
           setApplicationState(json.latestState);
         }
-
         setLocalApplicationState(json);
-      } catch (error) {
-        console.error("Error parsing localApplicationState:", error);
+      } catch {
         setLocalApplicationState({
           latestState: APPLICATION_STATES.INTRO,
           data: {},
@@ -457,11 +310,19 @@ function Application() {
   }, []);
 
   useEffect(() => {
-    if (times > 0) {
-      saveLocalApplicationState();
+    if (!isMounted.current) {
+      isMounted.current = true;
+      return;
     }
-    setTimes((times) => times + 1);
-  }, [localApplicationState, applicationState]);
+    localStorage.setItem(
+      "localApplicationState",
+      JSON.stringify({
+        latestState: localApplicationState.latestState,
+        data: localApplicationState.data,
+        lastUpdated: new Date().toISOString(),
+      })
+    );
+  }, [localApplicationState]);
 
   if (isLoading) {
     return (
@@ -486,7 +347,7 @@ function Application() {
         ) : null}
         {applicationState === APPLICATION_STATES.PROFILE ? (
           <ApplicationProfile
-            localApplicationState={localApplicationState!}
+            localApplicationState={localApplicationState}
             applicationState={applicationState}
             onNextClick={toNextState}
             onPrevClick={toPreviousState}
@@ -496,7 +357,7 @@ function Application() {
         ) : null}
         {applicationState === APPLICATION_STATES.INQUIRY ? (
           <ApplicationInquiry
-            localApplicationState={localApplicationState!}
+            localApplicationState={localApplicationState}
             applicationState={applicationState}
             onPrevClick={toPreviousState}
             onNextClick={toNextState}
@@ -506,7 +367,7 @@ function Application() {
         ) : null}
         {applicationState === APPLICATION_STATES.ADDITIONAL_QUESTION ? (
           <ApplicationAdditionalQuestion
-            localApplicationState={localApplicationState!}
+            localApplicationState={localApplicationState}
             applicationState={applicationState}
             onPrevClick={toPreviousState}
             onFormChange={updateFormData}
