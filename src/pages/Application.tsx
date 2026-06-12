@@ -34,7 +34,10 @@ export enum APPLICATION_STATES {
 
 const APPLICATION_STATES_ARRAY = Object.values(APPLICATION_STATES);
 
-const STEP_STATES = [
+const SPEED_DATING_OPTION =
+  "No, I do not have a complete team, but I would like to look for a team through Speed Dating";
+
+const BASE_STEP_STATES = [
   APPLICATION_STATES.PROFILE,
   APPLICATION_STATES.TEAM,
   APPLICATION_STATES.SPEED_DATING,
@@ -246,6 +249,13 @@ function Application() {
     }
   };
 
+  const isSpeedDatingSelected =
+    localApplicationState.data["teamFormation"]?.response === SPEED_DATING_OPTION;
+
+  const stepStates = isSpeedDatingSelected
+    ? BASE_STEP_STATES
+    : BASE_STEP_STATES.filter((s) => s !== APPLICATION_STATES.SPEED_DATING);
+
   const toNextState = async () => {
     const currentIndex = APPLICATION_STATES_ARRAY.indexOf(applicationState);
     if (currentIndex >= APPLICATION_STATES_ARRAY.length - 1) return;
@@ -273,7 +283,14 @@ function Application() {
       setIsSubmitting(false);
     }
 
-    const nextState = APPLICATION_STATES_ARRAY[currentIndex + 1];
+    let nextIndex = currentIndex + 1;
+    if (
+      APPLICATION_STATES_ARRAY[nextIndex] === APPLICATION_STATES.SPEED_DATING &&
+      !isSpeedDatingSelected
+    ) {
+      nextIndex++;
+    }
+    const nextState = APPLICATION_STATES_ARRAY[nextIndex];
     setApplicationState(nextState);
     setLocalApplicationState((prev) => ({ ...prev, latestState: nextState }));
   };
@@ -281,7 +298,14 @@ function Application() {
   const toPreviousState = () => {
     const currentIndex = APPLICATION_STATES_ARRAY.indexOf(applicationState);
     if (currentIndex <= 0) return;
-    const prevState = APPLICATION_STATES_ARRAY[currentIndex - 1];
+    let prevIndex = currentIndex - 1;
+    if (
+      APPLICATION_STATES_ARRAY[prevIndex] === APPLICATION_STATES.SPEED_DATING &&
+      !isSpeedDatingSelected
+    ) {
+      prevIndex--;
+    }
+    const prevState = APPLICATION_STATES_ARRAY[prevIndex];
     setApplicationState(prevState);
     setLocalApplicationState((prev) => ({ ...prev, latestState: prevState }));
   };
@@ -362,9 +386,9 @@ function Application() {
     );
   }
 
-  const currentStepIndex = STEP_STATES.indexOf(applicationState);
+  const currentStepIndex = stepStates.indexOf(applicationState);
   const isStepState = currentStepIndex !== -1;
-  const totalSteps = STEP_STATES.length;
+  const totalSteps = stepStates.length;
 
   return (
     <div className="flex-1 min-w-0 flex flex-col overflow-y-auto">
