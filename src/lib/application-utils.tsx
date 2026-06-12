@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useRef, useState } from "react";
+import { Upload, Loader2, FileCheck, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -25,6 +27,105 @@ import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { format, isValid, parseISO } from "date-fns";
 import DateOfBirthPicker from "@/components/own-ui/DateOfBirthPicker";
+
+function FileUploadInput({
+  applicationQuestion,
+  value,
+  onChange,
+}: {
+  applicationQuestion: FileApplicationQuestion;
+  value: any;
+  onChange?: (question: ApplicationQuestion, value: any) => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileName: string | undefined = value?.name;
+
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      await fetch(
+        `/api/application/file-upload?questionId=${applicationQuestion.id}`,
+        {
+          method: "POST",
+          headers: { "x-xsrf-token": Cookies.get("XSRF-TOKEN") || "" },
+          body: formData,
+          credentials: "include",
+        }
+      );
+      toast.success("File uploaded successfully");
+      onChange?.(applicationQuestion, {
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        lastModified: file.lastModified,
+      });
+    } catch (error: any) {
+      toast.error("Failed to upload file");
+      onChange?.(applicationQuestion, {
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        lastModified: file.lastModified,
+        error: error?.message,
+      });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleClear = () => {
+    onChange?.(applicationQuestion, null);
+    if (inputRef.current) inputRef.current.value = "";
+  };
+
+  return (
+    <div className="flex items-center gap-2 border border-border rounded-lg px-3 py-2 bg-background">
+      <input
+        ref={inputRef}
+        type="file"
+        accept={applicationQuestion.validation.allowedTypes || "*"}
+        className="hidden"
+        onChange={handleChange}
+      />
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        disabled={isUploading}
+        onClick={() => inputRef.current?.click()}
+        className="shrink-0 gap-1.5"
+      >
+        {isUploading ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : (
+          <Upload className="w-4 h-4" />
+        )}
+        {isUploading ? "Uploading…" : "Choose file"}
+      </Button>
+
+      {fileName ? (
+        <span className="flex items-center gap-1.5 text-sm text-foreground min-w-0">
+          <FileCheck className="w-4 h-4 shrink-0 text-primary" />
+          <span className="truncate">{fileName}</span>
+          <button
+            type="button"
+            onClick={handleClear}
+            className="shrink-0 text-muted-foreground hover:text-destructive transition-colors"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </span>
+      ) : (
+        <span className="text-sm text-muted-foreground">No file chosen</span>
+      )}
+    </div>
+  );
+}
 
 function renderMarkdownText(text: string): React.ReactNode {
   const linkPattern = /\[([^\]]+)\]\(([^)]+)\)/;
@@ -321,50 +422,10 @@ export function renderQuestion(
             {applicationQuestion.required ? "*" : ""}
           </span>
         </p>
-        <Input
-          className=""
-          type="file"
-          accept={applicationQuestion.validation.allowedTypes || "*"}
-          onChange={(e) => {
-            // store metadata
-            const file = e.target.files?.[0];
-            if (file) {
-              const formData = new FormData();
-              formData.append("file", file);
-
-              fetch(
-                `/api/application/file-upload?questionId=${applicationQuestion.id}`,
-                {
-                  method: "POST",
-                  headers: {
-                    "x-xsrf-token": Cookies.get("XSRF-TOKEN") || "",
-                  },
-                  body: formData,
-                  credentials: "include",
-                }
-              )
-                .then((data) => {
-                  toast.success("File uploaded successfully");
-                  onChange?.(applicationQuestion, {
-                    name: file.name,
-                    size: file.size,
-                    type: file.type,
-                    lastModified: file.lastModified,
-                  });
-                })
-                .catch((error) => {
-                  console.error("Error uploading file:", error);
-                  toast.error("Failed to upload file");
-                  onChange?.(applicationQuestion, {
-                    name: file.name,
-                    size: file.size,
-                    type: file.type,
-                    lastModified: file.lastModified,
-                    error: error.message,
-                  });
-                });
-            }
-          }}
+        <FileUploadInput
+          applicationQuestion={applicationQuestion as FileApplicationQuestion}
+          value={value}
+          onChange={onChange}
         />
         {renderError()}
       </div>
