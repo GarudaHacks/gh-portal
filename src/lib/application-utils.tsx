@@ -1,5 +1,5 @@
+import React from "react";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -25,6 +25,32 @@ import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { format, isValid, parseISO } from "date-fns";
 import DateOfBirthPicker from "@/components/own-ui/DateOfBirthPicker";
+
+function renderMarkdownText(text: string): React.ReactNode {
+  const linkPattern = /\[([^\]]+)\]\(([^)]+)\)/;
+  return text
+    .split(/(\*\*[^*]+\*\*|\[[^\]]+\]\([^)]+\))/g)
+    .map((part, idx) => {
+      if (part.startsWith("**") && part.endsWith("**")) {
+        return <strong key={idx}>{part.slice(2, -2)}</strong>;
+      }
+      const linkMatch = part.match(linkPattern);
+      if (linkMatch) {
+        return (
+          <a
+            key={idx}
+            href={linkMatch[2]}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary underline underline-offset-2 hover:opacity-75"
+          >
+            {linkMatch[1]}
+          </a>
+        );
+      }
+      return part;
+    });
+}
 
 function countWords(text: string): number {
   if (!text || text.trim() === "") return 0;
@@ -244,12 +270,12 @@ export function renderQuestion(
 
     return (
       <div className="flex flex-col gap-1">
-        <Label className="text-md font-semibold">
-          {applicationQuestion.text}
-          <span className="text-xs text-red-500">
+        <p className="text-sm font-normal leading-relaxed whitespace-pre-line">
+          {renderMarkdownText(applicationQuestion.text)}
+          <span className="text-xs text-red-500 ml-0.5">
             {applicationQuestion.required ? "*" : ""}
           </span>
-        </Label>
+        </p>
         <Input
           className=""
           value={value}
@@ -263,12 +289,12 @@ export function renderQuestion(
   } else if (applicationQuestion.type === "number") {
     return (
       <div className="flex flex-col gap-1">
-        <Label className="text-md font-semibold">
-          {applicationQuestion.text}
-          <span className="text-xs text-red-500">
+        <p className="text-sm font-normal leading-relaxed whitespace-pre-line">
+          {renderMarkdownText(applicationQuestion.text)}
+          <span className="text-xs text-red-500 ml-0.5">
             {applicationQuestion.required ? "*" : ""}
           </span>
-        </Label>
+        </p>
         <Input
           className=""
           placeholder="0"
@@ -289,12 +315,12 @@ export function renderQuestion(
   } else if (applicationQuestion.type === "file") {
     return (
       <div className="flex flex-col gap-1">
-        <Label className="text-md font-semibold ">
-          {applicationQuestion.text}
-          <span className="text-xs text-red-500">
+        <p className="text-sm font-normal leading-relaxed whitespace-pre-line">
+          {renderMarkdownText(applicationQuestion.text)}
+          <span className="text-xs text-red-500 ml-0.5">
             {applicationQuestion.required ? "*" : ""}
           </span>
-        </Label>
+        </p>
         <Input
           className=""
           type="file"
@@ -352,12 +378,12 @@ export function renderQuestion(
 
     return (
       <div className="flex flex-col gap-1">
-        <Label className="text-md font-semibold ">
-          {applicationQuestion.text}
-          <span className="text-xs text-red-500">
+        <p className="text-sm font-normal leading-relaxed whitespace-pre-line">
+          {renderMarkdownText(applicationQuestion.text)}
+          <span className="text-xs text-red-500 ml-0.5">
             {applicationQuestion.required ? "*" : ""}
           </span>
-        </Label>
+        </p>
         <Textarea
           className="border p-2 w-full h-40 resize-none lg:resize-y "
           placeholder="Your response here..."
@@ -375,12 +401,12 @@ export function renderQuestion(
   } else if (applicationQuestion.type === "dropdown") {
     return (
       <div className="flex flex-col gap-1">
-        <Label className="text-md font-semibold ">
-          {applicationQuestion.text}
-          <span className="text-xs text-red-500">
+        <p className="text-sm font-normal leading-relaxed whitespace-pre-line">
+          {renderMarkdownText(applicationQuestion.text)}
+          <span className="text-xs text-red-500 ml-0.5">
             {applicationQuestion.required ? "*" : ""}
           </span>
-        </Label>
+        </p>
         <Select
           defaultValue={value}
           onValueChange={(value) => onChange?.(applicationQuestion, value)}
@@ -402,12 +428,12 @@ export function renderQuestion(
   } else if (applicationQuestion.type === "datetime") {
     return (
       <div className="flex flex-col gap-1 w-full">
-        <Label className="text-md font-semibold ">
-          {applicationQuestion.text}
-          <span className="text-xs text-red-500">
+        <p className="text-sm font-normal leading-relaxed whitespace-pre-line">
+          {renderMarkdownText(applicationQuestion.text)}
+          <span className="text-xs text-red-500 ml-0.5">
             {applicationQuestion.required ? "*" : ""}
           </span>
-        </Label>
+        </p>
         <DateOfBirthPicker
           value={value}
           onChange={(date) => onChange?.(applicationQuestion, date)}
@@ -428,10 +454,10 @@ export function renderQuestion(
 
     return (
       <div className="flex flex-col gap-1">
-        <Label className="text-md font-semibold">
-          {q.text}
-          <span className="text-xs text-red-500">{q.required ? "*" : ""}</span>
-        </Label>
+        <p className="text-sm font-normal leading-relaxed whitespace-pre-line">
+          {renderMarkdownText(q.text)}
+          <span className="text-xs text-red-500 ml-0.5">{q.required ? "*" : ""}</span>
+        </p>
         <div className="flex flex-col gap-2 mt-1">
           {q.options.map((option) => (
             <label key={option} className="flex items-center gap-2 cursor-pointer">
