@@ -7,7 +7,9 @@ import { allQuestionsData } from "@/data/questions";
 import { ChevronLeft, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 
-export default function ApplicationInquiry({
+const current = "SPEED_DATING"
+
+export default function ApplicationSpeedDating({
   localApplicationState,
   applicationState,
   onNextClick,
@@ -53,7 +55,7 @@ export default function ApplicationInquiry({
 
   const questions = useMemo(() => {
     return (allQuestionsData as ApplicationQuestion[])
-      .filter((q) => q.state === "INQUIRY")
+      .filter((q) => q.state === current)
       .sort((a, b) => a.order - b.order);
   }, []);
 
@@ -80,31 +82,7 @@ export default function ApplicationInquiry({
       <h1 className="hidden lg:block text-3xl font-bold text-start w-full">
         {applicationState}
       </h1>
-      <div className="w-full bg-blue-900/20 border border-blue-500/20 rounded-lg p-6 mb-4">
-        <h2 className="text-lg font-semibold mb-3">
-          Important Note
-        </h2>
-        <p className="mb-3">
-          We encourage you to spend no more than 3 hours on the application
-          materials. While we expect you to put some thought into your essays,
-          we see that overpolished essays tend to take away from the essence of
-          your ideas.
-        </p>
-        <p className="mb-3">
-          Write from the heart. Speak about your experiences. The essays are not
-          intended to assess you on your writing skills. We will overlook
-          grammatical errors if we can understand your story.
-        </p>
-        <p className="mb-3">
-          Please do not use any Generative AI. We mean that as applicant readers
-          and fellow applicants to other opportunities. We know that it destroys
-          the essence of the essay.
-        </p>
-        <p className="">
-          If you are a part of a team, everyone in the team may use the same
-          essay responses.
-        </p>
-      </div>
+
       <div className="w-full  flex flex-col gap-4">
         {questions.map((q, index) => (
           <div key={index}>

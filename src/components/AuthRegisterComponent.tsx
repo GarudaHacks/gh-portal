@@ -32,7 +32,7 @@ const formSchema = z.object({
 export default function AuthRegisterComponent() {
   const navigate = useNavigate();
 
-  const { user, loginWithGoogle, signUpWithEmailPassword, isActionLoading } = useAuth();
+  const { loginWithGoogle, signUpWithEmailPassword, isActionLoading } = useAuth();
   const [error, setError] = useState<string>("");
 
   const form = useForm<z.infer<typeof formSchema>>({

@@ -5,8 +5,8 @@ export interface User {
   email: string | null;
   displayName: string | null;
   photoURL?: string | null;
-  first_name?: string | null;
-  last_name?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
   admin?: boolean;
   created_at?: string | null;
   date_of_birth?: string | null;

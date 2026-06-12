@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import ApplicationIntro from "./application/ApplicationIntro";
 import ApplicationNavbar from "./application/ApplicationNavbar";
 import ApplicationProfile from "@/pages/application/ApplicationProfile";
-import ApplicationInquiry from "@/pages/application/ApplicationInquiry";
 import ApplicationAdditionalQuestion from "@/pages/application/ApplicationAdditionalQuestion";
 import ApplicationSubmitted from "@/pages/application/ApplicationSubmitted";
 import { APPLICATION_STATUS } from "@/types/application";
@@ -15,13 +14,20 @@ import { parse } from "date-fns";
 import { useAuth } from "@/context/AuthContext";
 import ApplicationApplication from "./application/ApplicationApplication";
 import ApplicationTeam from "./application/ApplicationTeam";
+import { allQuestionsData } from "@/data/questions";
+import { ApplicationQuestion } from "@/types/application";
+import ApplicationSpeedDating from "./application/ApplicationSpeedDating";
+import ApplicationLogistic from "./application/ApplicationLogistic";
+import ApplicationEmergency from "./application/ApplicationEmergency";
 
 export enum APPLICATION_STATES {
   INTRO = "Intro",
   PROFILE = "Your Profile",
+  TEAM = "Team",
+  SPEED_DATING = "Speed Dating",
   APPLICATION = "Application",
-  TEAM = "TEAM",
-  INQUIRY = "Application Questions",
+  LOGISTICAL_DETAIL = "Logistic Information",
+  EMERGENCY_AND_CONSENT = "Emergency Information",
   ADDITIONAL_QUESTION = "Additional Questions",
   SUBMITTED = "Submitted",
 }
@@ -284,11 +290,20 @@ function Application() {
 
     fetchApplicationStatus();
 
+    const validQuestionIds = new Set(
+      (allQuestionsData as ApplicationQuestion[]).map((q) => q.id)
+    );
+
     const saved = localStorage.getItem("localApplicationState");
     if (saved) {
       try {
         const json = JSON.parse(saved);
         if (json.lastUpdated) json.lastUpdated = new Date(json.lastUpdated);
+        if (json.data) {
+          json.data = Object.fromEntries(
+            Object.entries(json.data).filter(([key]) => validQuestionIds.has(key))
+          );
+        }
         if (
           json.latestState &&
           APPLICATION_STATES_ARRAY.includes(json.latestState)
@@ -346,17 +361,17 @@ function Application() {
       </div>
 
       <div className="container mx-auto flex items-center justify-center w-full max-w-4xl flex-1">
-        {applicationState === APPLICATION_STATES.INTRO ? (
-          <ApplicationIntro onNextClick={toNextState} />
-        ) : null}
-        {applicationState === APPLICATION_STATES.APPLICATION && <ApplicationApplication
-          localApplicationState={localApplicationState}
-          applicationState={applicationState}
-          onNextClick={toNextState}
-          onPrevClick={toPreviousState}
-          onFormChange={updateFormData}
-          isSubmitting={isSubmitting}
-        />}
+        {applicationState === APPLICATION_STATES.INTRO &&
+          <ApplicationIntro onNextClick={toNextState} />}
+        {applicationState === APPLICATION_STATES.PROFILE &&
+          <ApplicationProfile
+            localApplicationState={localApplicationState}
+            applicationState={applicationState}
+            onNextClick={toNextState}
+            onPrevClick={toPreviousState}
+            onFormChange={updateFormData}
+            isSubmitting={isSubmitting}
+          />}
         {applicationState === APPLICATION_STATES.TEAM && <ApplicationTeam
           localApplicationState={localApplicationState}
           applicationState={applicationState}
@@ -365,27 +380,39 @@ function Application() {
           onFormChange={updateFormData}
           isSubmitting={isSubmitting}
         />}
-        {applicationState === APPLICATION_STATES.PROFILE ? (
-          <ApplicationProfile
-            localApplicationState={localApplicationState}
-            applicationState={applicationState}
-            onNextClick={toNextState}
-            onPrevClick={toPreviousState}
-            onFormChange={updateFormData}
-            isSubmitting={isSubmitting}
-          />
-        ) : null}
-        {applicationState === APPLICATION_STATES.INQUIRY ? (
-          <ApplicationInquiry
-            localApplicationState={localApplicationState}
-            applicationState={applicationState}
-            onPrevClick={toPreviousState}
-            onNextClick={toNextState}
-            onFormChange={updateFormData}
-            isSubmitting={isSubmitting}
-          />
-        ) : null}
-        {applicationState === APPLICATION_STATES.ADDITIONAL_QUESTION ? (
+        {applicationState === APPLICATION_STATES.SPEED_DATING && <ApplicationSpeedDating
+          localApplicationState={localApplicationState}
+          applicationState={applicationState}
+          onNextClick={toNextState}
+          onPrevClick={toPreviousState}
+          onFormChange={updateFormData}
+          isSubmitting={isSubmitting}
+        />}
+        {applicationState === APPLICATION_STATES.APPLICATION && <ApplicationApplication
+          localApplicationState={localApplicationState}
+          applicationState={applicationState}
+          onNextClick={toNextState}
+          onPrevClick={toPreviousState}
+          onFormChange={updateFormData}
+          isSubmitting={isSubmitting}
+        />}
+        {applicationState === APPLICATION_STATES.LOGISTICAL_DETAIL && <ApplicationLogistic
+          localApplicationState={localApplicationState}
+          applicationState={applicationState}
+          onNextClick={toNextState}
+          onPrevClick={toPreviousState}
+          onFormChange={updateFormData}
+          isSubmitting={isSubmitting}
+        />}
+        {applicationState === APPLICATION_STATES.EMERGENCY_AND_CONSENT && <ApplicationEmergency
+          localApplicationState={localApplicationState}
+          applicationState={applicationState}
+          onNextClick={toNextState}
+          onPrevClick={toPreviousState}
+          onFormChange={updateFormData}
+          isSubmitting={isSubmitting}
+        />}
+        {applicationState === APPLICATION_STATES.ADDITIONAL_QUESTION &&
           <ApplicationAdditionalQuestion
             localApplicationState={localApplicationState}
             applicationState={applicationState}
@@ -393,11 +420,9 @@ function Application() {
             onFormChange={updateFormData}
             onSubmit={handleSubmit}
             isSubmitting={isSubmitting}
-          />
-        ) : null}
-        {applicationState === APPLICATION_STATES.SUBMITTED ? (
-          <ApplicationSubmitted />
-        ) : null}
+          />}
+        {applicationState === APPLICATION_STATES.SUBMITTED &&
+          <ApplicationSubmitted />}
       </div>
     </div>
   );

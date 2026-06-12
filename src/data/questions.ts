@@ -7,7 +7,7 @@ import {
 
 export const allQuestionsData: ApplicationQuestion[] = [
   {
-    id: "first_name",
+    id: "firstName",
     text: "First Name",
     state: APPLICATION_STATES.PROFILE,
     type: QUESTION_TYPE.STRING,
@@ -19,7 +19,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     order: 1,
   },
   {
-    id: "last_name",
+    id: "lastName",
     text: "Last Name",
     state: APPLICATION_STATES.PROFILE,
     type: QUESTION_TYPE.STRING,
@@ -31,7 +31,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     order: 2,
   },
   {
-    id: "gender_identity",
+    id: "genderIdentity",
     text: "Gender Identity",
     state: APPLICATION_STATES.PROFILE,
     type: QUESTION_TYPE.DROPDOWN,
@@ -40,7 +40,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     order: 3,
   },
   {
-    id: "date_of_birth",
+    id: "dateOfBirth",
     text: "Date of Birth",
     state: APPLICATION_STATES.PROFILE,
     type: QUESTION_TYPE.DATE,
@@ -320,6 +320,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     type: QUESTION_TYPE.STRING,
     required: true,
     validation: {
+      pattern: "^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$",
       maxLength: 50,
     },
     order: 12,
@@ -536,7 +537,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     order: 2,
   },
 
-  
+
   // EMERGENCY
   {
     id: "phoneEmergency",
@@ -583,6 +584,10 @@ export const allQuestionsData: ApplicationQuestion[] = [
     },
     order: 4,
   },
+
+
+
+  // ADDITIONAL INFO
   {
     id: "hackathonCount",
     text: "How many hackathons have you joined before Garuda Hacks 7.0?",
@@ -592,11 +597,8 @@ export const allQuestionsData: ApplicationQuestion[] = [
     options: ["0 (Garuda Hacks 7.0 is my first!)", "1-2", "3-5", "6+"],
     order: 1,
   },
-
-
-  // ADDITIONAL INFO
   {
-    id: "hackathonCount",
+    id: "ghCount",
     text: "Have you joined a Garuda Hacks hackathon before? If so, which iterations have you joined?",
     state: APPLICATION_STATES.ADDITIONAL_QUESTION,
     type: QUESTION_TYPE.MULTI, // TODO: implement multi type
@@ -610,7 +612,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
       "Garuda Hacks 5.0",
       "Garuda Hacks 6.0",
     ],
-    order: 1,
+    order: 2,
   },
   {
     id: "joinSource",
@@ -628,7 +630,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
       "I saw promotions on Generation Girl's Instagram",
       "Other" // TODO: implement how other is implemented here
     ],
-    order: 2,
+    order: 3,
   },
   {
     id: "referralSource",
@@ -645,7 +647,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
       "Friend",
       "Other",
     ],
-    order: 3,
+    order: 4,
   },
   {
     id: "joinReason",
@@ -658,7 +660,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
       minLength: 100,
       maxLength: 400,
     },
-    order: 4,
+    order: 5,
   },
   {
     id: "referralCode",
@@ -669,6 +671,6 @@ export const allQuestionsData: ApplicationQuestion[] = [
     validation: {
       maxLength: 50,
     },
-    order: 5,
+    order: 6,
   },
 ];

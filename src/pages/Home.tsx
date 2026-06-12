@@ -56,7 +56,7 @@ function Home() {
                   <div className="flex flex-col gap-4">
                     <h1 className="text-3xl lg:text-5xl font-bold text-white">
                       {greetingHelper()},{" "}
-                      {user?.first_name || user?.displayName}!
+                      {user?.firstName || user?.displayName}!
                     </h1>
                     <h2 className="text-3xl lg:text-3xl mb-4 font-bold text-white">
                       See you at Garuda Hacks 6.0!
@@ -111,10 +111,11 @@ function Home() {
                 </div>
               )}
 
-              {applicationStatus === UserApplicationStatus.DRAFT && (
-                <ApplyNow portalConfig={portalConfig} />
-              )}
-
+              {(applicationStatus === UserApplicationStatus.DRAFT ||
+                applicationStatus === UserApplicationStatus.NOT_APPLICABLE
+              ) && (
+                  <ApplyNow portalConfig={portalConfig} />
+                )}
               {applicationStatus === UserApplicationStatus.REJECTED && (
                 <div className="flex flex-col gap-4">
                   <h2 className="text-2xl font-bold text-red-500">
