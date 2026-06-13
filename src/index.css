@@ -30,7 +30,7 @@
   --muted-foreground: oklch(80.78% 0.00009 271.152);
   --accent: #5079ff;
   --accent-foreground: #fafafa;
-  --destructive: ##fe636a;  
+  --destructive: #fe636a;  
   --destructive-foreground: #fafafa;
   --border: oklch(0.922 0 0);
   --input: #1f1f1f;

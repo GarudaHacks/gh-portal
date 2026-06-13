@@ -1,12 +1,40 @@
+import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import Page from "@/components/Page";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import Cookies from "js-cookie";
 import { CheckCircle2, Link as LinkIcon } from "lucide-react";
 import discordIcon from "/images/icons/discord-icon.svg";
 
 function Account() {
-  const { user, role } = useAuth();
+  const { user, role, signOut } = useAuth();
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDeleteAccount = async () => {
+    setIsDeleting(true);
+    try {
+      const response = await fetch("/api/users/me", {
+        method: "DELETE",
+        headers: { "x-xsrf-token": Cookies.get("XSRF-TOKEN") || "" },
+      });
+      if (!response.ok) throw new Error("Failed to delete account");
+      await signOut();
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const handleConnectDiscord = () => {
     const state = btoa(
@@ -79,6 +107,40 @@ function Account() {
                 Connect
               </Button>
             )}
+          </div>
+        </section>
+
+        {/* Danger zone */}
+        <section className="border border-destructive/50 rounded-lg p-6 flex flex-col gap-4">
+          <h2 className="text-lg font-semibold text-destructive">Danger Zone</h2>
+          <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-0.5">
+              <span className="font-medium">Delete account</span>
+              <span className="text-xs text-muted-foreground">Permanently delete your account and all associated data.</span>
+            </div>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" size="sm">Delete account</Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete account?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will permanently delete your account and all associated data. This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    onClick={handleDeleteAccount}
+                    disabled={isDeleting}
+                  >
+                    {isDeleting ? "Deleting..." : "Yes, delete my account"}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </section>
       </div>
