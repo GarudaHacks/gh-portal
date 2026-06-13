@@ -37,6 +37,12 @@ const APPLICATION_STATES_ARRAY = Object.values(APPLICATION_STATES);
 const SPEED_DATING_OPTION =
   "No, I do not have a complete team, but I would like to look for a team through Speed Dating";
 
+const SPEED_DATING_QUESTION_IDS = new Set(
+  (allQuestionsData as ApplicationQuestion[])
+    .filter((q) => q.state === "SPEED_DATING")
+    .map((q) => q.id)
+);
+
 const BASE_STEP_STATES = [
   APPLICATION_STATES.PROFILE,
   APPLICATION_STATES.TEAM,
@@ -145,8 +151,15 @@ function Application() {
     state: string,
     data: LocalApplicationState["data"]
   ): Promise<{ ok: boolean; errorData?: any }> => {
+    const isSpeedDating =
+      data["teamFormation"]?.response === SPEED_DATING_OPTION;
+    const filteredData = isSpeedDating
+      ? data
+      : Object.fromEntries(
+          Object.entries(data).filter(([key]) => !SPEED_DATING_QUESTION_IDS.has(key))
+        );
     const payload = {
-      ...buildFormResponse(data),
+      ...buildFormResponse(filteredData),
       userId: user?.uid,
       state,
     };

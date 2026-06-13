@@ -4,8 +4,9 @@ import { renderQuestion, validateResponse } from "@/lib/application-utils";
 import { APPLICATION_STATES, LocalApplicationState } from "@/pages/Application";
 import { useMemo } from "react";
 import { allQuestionsData } from "@/data/questions";
-import { ChevronLeft, Loader2 } from "lucide-react";
+import { ChevronLeft, InfoIcon, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const current = "APPLICATION"
 
@@ -82,6 +83,18 @@ export default function ApplicationApplication({
       <h1 className="hidden lg:block text-3xl font-bold text-start w-full">
         {applicationState}
       </h1>
+
+      {localApplicationState.data["teamFormation"]?.response !== "No, I do not have a complete team, but I would like to look for a team through Speed Dating" && (
+        <div>
+          <Alert className="min-w-full border-accent bg-accent/15">
+            <InfoIcon />
+            <AlertTitle>Note on Registering as a Team</AlertTitle>
+            <AlertDescription className="min-w-full">
+              If you already have a team, every individual member of the team needs to submit this form, however teams may use the same responses to the essay questions. The final team composition will be noted during the submission of the project.
+            </AlertDescription>
+          </Alert>
+        </div>
+      )}
 
       <div className="w-full  flex flex-col gap-4">
         {questions.map((q, index) => (

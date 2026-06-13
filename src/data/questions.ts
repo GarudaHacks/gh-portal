@@ -413,7 +413,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
   },
   {
     id: "pastProjects",
-    text: "Link to your most prominent past project or tech stack summary: (Optional URL field)",
+    text: "Link to your most prominent past project or tech stack summary",
     state: APPLICATION_STATES.SPEED_DATING,
     type: QUESTION_TYPE.STRING,
     required: false,
