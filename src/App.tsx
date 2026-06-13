@@ -21,6 +21,7 @@ import { SidebarProvider, SidebarInset } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/AppSidebar";
 import DiscordCallback from "./components/DiscordCallback";
 import Application from "./pages/Application";
+import Account from "./pages/Account";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading, applicationStatus, role } = useAuth();
@@ -151,6 +152,14 @@ function App() {
               }
             /> */}
 
+            <Route
+              path="/account"
+              element={
+                <ProtectedRoute>
+                  <Account />
+                </ProtectedRoute>
+              }
+            />
             <Route path="*" element={<Navigate to="/auth" />} />
             </Routes>
           </SidebarInset>

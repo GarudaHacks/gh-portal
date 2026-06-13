@@ -8,4 +8,5 @@ export interface AuthUser {
   emailVerified: boolean;
   role: string;
   status: string;
+  discord_uid?: string;
 }
