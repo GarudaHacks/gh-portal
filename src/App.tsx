@@ -86,7 +86,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route
+            {/* <Route
               path="/schedule"
               element={
                 <ProtectedRoute>
@@ -101,16 +101,16 @@ function App() {
                   <Mentorship />
                 </ProtectedRoute>
               }
-            />
-            <Route
+            /> */}
+            {/* <Route
               path="/mentors/:mentorId"
               element={
                 <ProtectedRoute>
                   <BookMentorshipPage />
                 </ProtectedRoute>
               }
-            />
-            <Route
+            /> */}
+            {/* <Route
               path="/mentoring"
               element={
                 <ProtectedRoute>
@@ -133,23 +133,23 @@ function App() {
                   <AllSchedulePage />
                 </ProtectedRoute>
               }
-            />
-            <Route
+            /> */}
+            {/* <Route
               path="/faq"
               element={
                 <ProtectedRoute>
                   <Faq />
                 </ProtectedRoute>
               }
-            />
-            <Route
+            /> */}
+            {/* <Route
               path="/rsvp"
               element={
                 <ProtectedRoute>
                   <Rsvp />
                 </ProtectedRoute>
               }
-            />
+            /> */}
 
             <Route path="*" element={<Navigate to="/auth" />} />
             </Routes>

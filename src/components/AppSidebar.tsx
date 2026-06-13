@@ -46,14 +46,14 @@ export function AppSidebar() {
     role === UserRole.MENTOR
       ? [
           { name: "Home", path: "/home", icon: "/images/icons/cottage.svg" },
-          { name: "Mentoring", path: "/mentoring", icon: "/images/icons/group_search.svg", restricted: true },
-          { name: "Schedules", path: "/schedules", icon: "/images/icons/calendar_month.svg", restricted: true },
+          // { name: "Mentoring", path: "/mentoring", icon: "/images/icons/group_search.svg", restricted: true },
+          // { name: "Schedules", path: "/schedules", icon: "/images/icons/calendar_month.svg", restricted: true },
         ]
       : [
           { name: "Home", path: "/home", icon: "/images/icons/cottage.svg" },
-          { name: "Schedule", path: "/schedule", icon: "/images/icons/calendar_month.svg", restricted: true },
-          { name: "Mentorship", path: "/mentorship", icon: "/images/icons/group_search.svg", restricted: true },
-          { name: "FAQ", path: "/faq", icon: "/images/icons/contact_support.svg" },
+          // { name: "Schedule", path: "/schedule", icon: "/images/icons/calendar_month.svg", restricted: true },
+          // { name: "Mentorship", path: "/mentorship", icon: "/images/icons/group_search.svg", restricted: true },
+          // { name: "FAQ", path: "/faq", icon: "/images/icons/contact_support.svg" },
         ];
 
   if (location.pathname === "/auth") return null;
