@@ -19,6 +19,7 @@ import { ApplicationQuestion } from "@/types/application";
 import ApplicationSpeedDating from "./application/ApplicationSpeedDating";
 import ApplicationLogistic from "./application/ApplicationLogistic";
 import ApplicationEmergency from "./application/ApplicationEmergency";
+import ContactSupport from "@/components/ContactSupport";
 
 export enum APPLICATION_STATES {
   INTRO = "Intro",
@@ -156,8 +157,8 @@ function Application() {
     const filteredData = isSpeedDating
       ? data
       : Object.fromEntries(
-          Object.entries(data).filter(([key]) => !SPEED_DATING_QUESTION_IDS.has(key))
-        );
+        Object.entries(data).filter(([key]) => !SPEED_DATING_QUESTION_IDS.has(key))
+      );
     const payload = {
       ...buildFormResponse(filteredData),
       userId: user?.uid,
@@ -432,7 +433,7 @@ function Application() {
         )}
       </div>
 
-      <div className="container mx-auto flex items-start justify-center w-full max-w-4xl flex-1 pt-8">
+      <div className="container mx-auto flex flex-col items-start justify-center w-full max-w-4xl flex-1 pt-8">
         {applicationState === APPLICATION_STATES.INTRO &&
           <ApplicationIntro onNextClick={toNextState} />}
         {applicationState === APPLICATION_STATES.PROFILE &&
@@ -495,6 +496,11 @@ function Application() {
           />}
         {applicationState === APPLICATION_STATES.SUBMITTED &&
           <ApplicationSubmitted />}
+
+        {!(applicationState === APPLICATION_STATES.INTRO ||
+          applicationState === APPLICATION_STATES.SUBMITTED) &&
+          <ContactSupport />
+        }
       </div>
     </div>
   );
