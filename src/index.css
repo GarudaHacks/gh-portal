@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @custom-variant dark (&:is(.dark *));
@@ -26,6 +27,7 @@
   --primary-foreground: #fafafa;
   --secondary: #8036cb;
   --secondary-foreground: oklch(100% 0.00011 271.152);
+  --tertiary: #874ffe;
   --muted: #999999;
   --muted-foreground: oklch(80.78% 0.00009 271.152);
   --accent: #5079ff;
@@ -86,6 +88,7 @@
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
+  --color-tertiary: var(--tertiary);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
@@ -120,7 +123,13 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Poppins', sans-serif;
   }
+}
+
+/* tertiary border glow */
+.border-tertiary-glow {
+  box-shadow: 0 0 12px 3px rgba(135, 79, 254, 0.5);
 }
 
 /* gradient animation for auth */

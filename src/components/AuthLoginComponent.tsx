@@ -52,7 +52,7 @@ export default function AuthLoginComponent() {
       });
 
       if (error) {
-        console.log("Error when trying to login:", error);
+        console.error("Error when trying to login:", error);
         setError(error.message || "Login failed");
         return;
       }

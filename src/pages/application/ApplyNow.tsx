@@ -1,59 +1,29 @@
-import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
 import { PortalConfig } from "@/utils/portalConfig";
-import { format } from "date-fns";
-import { useNavigate } from "react-router-dom";
-
-// Force applications closed
-const applicationsOpen = true;
+import garudieRocket from "/assets/garudie-rocket.png"
+import ApplicationOpen from "./apply-now/ApplicationOpen";
 
 interface ApplyNowProps {
   portalConfig: PortalConfig | null
 }
 
-export default function ApplyNow({ portalConfig } : ApplyNowProps) {
-  const navigate = useNavigate()
+export default function ApplyNow({ portalConfig }: ApplyNowProps) {
+  const { user } = useAuth()
   return (
-    <div className="flex flex-col gap-4">
-      <h2 className="text-2xl font-bold text-primary">
-        Applications are{" "}
-        {applicationsOpen ? "open!" : "currently closed."}
-      </h2>
-      <div className="flex flex-col gap-4 border-gray-600 bg-opacity-10 bg-white/5 backdrop-blur-md border-2 p-4 rounded-2xl shadow-md">
-        <p className="font-medium">
-          <span className="mb-2">
-            Apply by{" "}
-            <b>
-              {portalConfig
-                ? format(
-                  portalConfig.applicationCloseDate,
-                  "MMMM d, yyyy"
-                )
-                : ""}
-            </b>{" "}
-            for a spot at Garuda Hacks 6.0.
-          </span>
-          <br />
-          <span className="font-bold">Date:</span>{" "}
-          {portalConfig
-            ? format(portalConfig.hackathonStartDate, "MMMM d, yyyy")
-            : ""}
-          -{" "}
-          {portalConfig
-            ? format(portalConfig.hackathonEndDate, "MMMM d, yyyy")
-            : ""}
-          <br />
-          <span className="font-bold">Venue:</span> Universitas
-          Multimedia Nusantara (UMN).
-        </p>
-        <Button
-          className={`w-fit ${!applicationsOpen ? "opacity-90 cursor-not-allowed" : ""
-            }`}
-          disabled={!applicationsOpen}
-          onClick={() => navigate("/application")}
-        >
-          Apply Now
-        </Button>
+    <div className="flex flex-col gap-10 text-pretty p-4">
+      <div className="flex justify-between items-center">
+        <div className="flex-1 flex flex-col gap-4">
+          <div className="absolute right-4 top-12 lg:relative">
+            <img src={garudieRocket} width={300} height={300} className="w-24 lg:w-54 block lg:hidden mb-6 lg:mb-0" />
+          </div>
+          <div className="flex flex-col justify-start items-start gap-2">
+            <h2 className="font-bold text-2xl lg:text-3xl">Hello {user?.displayName}! 👋</h2>
+            <p>Welcome to Garuda Hacks Portal! <br /> You can view all announcements, events, and everything you need to know here.</p>
+          </div>
+        </div>
+        <img src={garudieRocket} width={300} height={300} className="w-24 lg:w-64 hidden lg:block" />
       </div>
+      <ApplicationOpen portalConfig={portalConfig} />
     </div>
   )
 }
