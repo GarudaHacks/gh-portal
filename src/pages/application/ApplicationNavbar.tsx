@@ -16,11 +16,21 @@ function ApplicationNavbar({
   return (
     <>
       {/* mobile */}
-      <div className="grid lg:hidden grid-cols-3 place-items-center shadow-xs p-4 gap-4 h-20">
-        <div className="place-self-start h-full flex items-center gap-2">
+      <div className="lg:hidden grid grid-cols-3 items-center shadow-xs px-4 h-16">
+        {/* left */}
+        <div className="flex items-center">
           <SidebarTrigger />
+          {applicationState !== APPLICATION_STATES.INTRO && (
+            <Button variant="ghost" size="icon" onClick={onPrevClick}>
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+          )}
+        </div>
+
+        {/* center */}
+        <div className="flex items-center justify-center">
           {applicationState === APPLICATION_STATES.INTRO ? (
-            <Link to="/" className="flex items-center">
+            <Link to="/">
               <img
                 src={ghLogo}
                 width={500}
@@ -28,24 +38,15 @@ function ApplicationNavbar({
                 className="w-10 h-10 pointer-events-none select-none"
               />
             </Link>
-          ) : null}
+          ) : (
+            <span className="text-sm font-semibold text-center line-clamp-2">
+              {applicationState}
+            </span>
+          )}
         </div>
 
-        {applicationState !== APPLICATION_STATES.INTRO ? (
-          <Button
-            variant="ghost"
-            className="place-self-start h-full"
-            onClick={onPrevClick}
-          >
-            <ArrowLeft className="w-30 h-30 pointer-events-none select-none" />
-          </Button>
-        ) : null}
-
-        {applicationState !== APPLICATION_STATES.INTRO ? (
-          <span className="text-md font-semibold text-center line-clamp-2">
-            {applicationState}
-          </span>
-        ) : null}
+        {/* right spacer */}
+        <div />
       </div>
 
       {/* desktop */}

@@ -584,7 +584,17 @@ export const allQuestionsData: ApplicationQuestion[] = [
     },
     order: 4,
   },
-
+  {
+    id: "referralCode",
+    text: "Were you referred to join Garuda Hacks 7.0? If you were, please carefully enter your referral code below",
+    state: APPLICATION_STATES.EMERGENCY_AND_CONSENT,
+    type: QUESTION_TYPE.STRING,
+    required: false,
+    validation: {
+      maxLength: 50,
+    },
+    order: 5,
+  },
 
 
   // ADDITIONAL INFO
@@ -654,23 +664,11 @@ export const allQuestionsData: ApplicationQuestion[] = [
     text: "What is your main reason for joining Garuda Hacks 7.0? What attracted you to join? This question will not be graded, this is only to help us improve future events :)",
     state: APPLICATION_STATES.ADDITIONAL_QUESTION,
     type: QUESTION_TYPE.TEXTAREA,
-    placeholder: "Answer in 150 words or less",
+    placeholder: "Answer in 100 words or less",
     required: true,
     validation: {
-      minLength: 100,
-      maxLength: 400,
+      maxLength: 100,
     },
     order: 5,
-  },
-  {
-    id: "referralCode",
-    text: "Were you referred to join Garuda Hacks 7.0? If you were, please carefully enter your referral code below",
-    state: APPLICATION_STATES.EMERGENCY_AND_CONSENT,
-    type: QUESTION_TYPE.STRING,
-    required: false,
-    validation: {
-      maxLength: 50,
-    },
-    order: 6,
   },
 ];

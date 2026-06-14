@@ -496,9 +496,7 @@ function Application() {
           />}
         {applicationState === APPLICATION_STATES.SUBMITTED &&
           <ApplicationSubmitted />}
-
-        {!(applicationState === APPLICATION_STATES.INTRO ||
-          applicationState === APPLICATION_STATES.SUBMITTED) &&
+        {!(applicationState === APPLICATION_STATES.SUBMITTED) &&
           <ContactSupport />
         }
       </div>
