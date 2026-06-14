@@ -12,6 +12,7 @@ import { UserRole } from "@/types/auth";
 import { UserApplicationStatus } from "@/types/applicationStatus";
 import InstructionCardForMentorComponent from "@/components/InstructionCardForMentor";
 import ApplyProcessCard from "./application/ApplyProcessCard";
+import ApplicationSubmitted from "./application/ApplicationSubmitted";
 
 function Home() {
   const { user, role, applicationStatus } = useAuth();
@@ -87,9 +88,9 @@ function Home() {
                 </div>
               )}
 
-              {applicationStatus === UserApplicationStatus.SUBMITTED && (
+              {/* {applicationStatus === UserApplicationStatus.SUBMITTED && (
                 <HomeStatusNotRsvpd />
-              )}
+              )} */}
 
               {applicationStatus === UserApplicationStatus.ACCEPTED && (
                 <div className="flex flex-col gap-4">
@@ -116,6 +117,7 @@ function Home() {
               ) && (
                   <ApplyProcessCard portalConfig={portalConfig} />
                 )}
+              {applicationStatus === UserApplicationStatus.SUBMITTED && <ApplicationSubmitted portalConfig={portalConfig} />}
               {applicationStatus === UserApplicationStatus.REJECTED && (
                 <div className="flex flex-col gap-4">
                   <h2 className="text-2xl font-bold text-red-500">

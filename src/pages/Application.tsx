@@ -3,7 +3,6 @@ import ApplicationIntro from "./application/ApplicationIntro";
 import ApplicationNavbar from "./application/ApplicationNavbar";
 import ApplicationProfile from "@/pages/application/ApplicationProfile";
 import ApplicationAdditionalQuestion from "@/pages/application/ApplicationAdditionalQuestion";
-import ApplicationSubmitted from "@/pages/application/ApplicationSubmitted";
 import { APPLICATION_STATUS } from "@/types/application";
 import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
@@ -20,6 +19,7 @@ import ApplicationSpeedDating from "./application/ApplicationSpeedDating";
 import ApplicationLogistic from "./application/ApplicationLogistic";
 import ApplicationEmergency from "./application/ApplicationEmergency";
 import ContactSupport from "@/components/ContactSupport";
+import ApplicationSubmittedForm from "./application/ApplicationSubmittedForm";
 
 export enum APPLICATION_STATES {
   INTRO = "Intro",
@@ -495,7 +495,7 @@ function Application() {
             isSubmitting={isSubmitting}
           />}
         {applicationState === APPLICATION_STATES.SUBMITTED &&
-          <ApplicationSubmitted />}
+          <ApplicationSubmittedForm />}
         {!(applicationState === APPLICATION_STATES.SUBMITTED) &&
           <ContactSupport />
         }

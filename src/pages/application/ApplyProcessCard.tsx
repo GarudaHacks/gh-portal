@@ -10,6 +10,16 @@ interface ApplyProcessCardProps {
 
 export default function ApplyProcessCard({ portalConfig }: ApplyProcessCardProps) {
   const { user } = useAuth()
+
+  function getCurrentProcess() {
+    const currentDate = new Date()
+    if (user?.status === "submitted") return "submitted"
+    if (portalConfig?.applicationStartDate! > new Date()) return "soon"
+    if (!portalConfig?.applicationsOpen && portalConfig?.applicationStartDate! < currentDate) return "open"
+  }
+
+  const currentProcess = getCurrentProcess()
+
   return (
     <div className="flex flex-col gap-10 text-pretty p-4">
       <div className="flex justify-between items-center">
@@ -24,10 +34,9 @@ export default function ApplyProcessCard({ portalConfig }: ApplyProcessCardProps
         </div>
         <img src={garudieRocket} width={300} height={300} className="w-24 lg:w-64 hidden lg:block" />
       </div>
-      
-      {/* Open Soon -> applicationStartDate<now */}
-      {!portalConfig?.applicationsOpen && portalConfig?.applicationStartDate! < new Date() && <ApplicationOpen portalConfig={portalConfig} />}
-      {portalConfig?.applicationStartDate! > new Date() && <ApplicationOpenSoon portalConfig={portalConfig} />}
+
+      {currentProcess === "soon" && <ApplicationOpen portalConfig={portalConfig} />}
+      {currentProcess === "open" && <ApplicationOpenSoon portalConfig={portalConfig} />}
     </div>
   )
 }
