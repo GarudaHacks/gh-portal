@@ -4,11 +4,11 @@ import { PortalConfig } from "@/utils/portalConfig"
 import { Button } from "@/components/ui/button"
 import { useNavigate } from "react-router-dom"
 
-interface PortalConfigProps {
+interface ApplicationOpenProps {
   portalConfig: PortalConfig | null
 }
 
-export default function ApplicationOpen({ portalConfig }: PortalConfigProps) {
+export default function ApplicationOpen({ portalConfig }: ApplicationOpenProps) {
   const navigate = useNavigate()
   return (
     <div className="w-full p-8 border border-tertiary grid grid-cols-1 lg:grid-cols-5 gap-10 bg-white rounded-xl border-tertiary-glow">
@@ -17,7 +17,7 @@ export default function ApplicationOpen({ portalConfig }: PortalConfigProps) {
       </div>
 
       <div className="col-span-4 flex flex-col gap-6 lg:gap-4">
-        <div className="flex lg:flex-row items-center justify-center lg:justify-start gap-1 py-1 px-2 bg-tertiary/10 w-full lg:w-fit rounded-xl">
+        <div className="flex lg:flex-row items-center justify-center lg:justify-start gap-2 py-1 px-3 bg-tertiary/10 w-full lg:w-fit rounded-xl">
           <span className="text-green-500 animate-pulse text-3xl">•</span>
           <span className="font-semibold text-tertiary">Applications are open!</span>
         </div>
@@ -53,8 +53,6 @@ export default function ApplicationOpen({ portalConfig }: PortalConfigProps) {
           </Button>
         </div>
       </div>
-
-
     </div>
   )
 }

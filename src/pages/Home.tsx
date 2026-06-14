@@ -11,7 +11,7 @@ import { fetchPortalConfig, PortalConfig } from "@/utils/portalConfig";
 import { UserRole } from "@/types/auth";
 import { UserApplicationStatus } from "@/types/applicationStatus";
 import InstructionCardForMentorComponent from "@/components/InstructionCardForMentor";
-import ApplyNow from "./application/ApplyNow";
+import ApplyProcessCard from "./application/ApplyProcessCard";
 
 function Home() {
   const { user, role, applicationStatus } = useAuth();
@@ -114,7 +114,7 @@ function Home() {
               {(applicationStatus === UserApplicationStatus.DRAFT ||
                 applicationStatus === UserApplicationStatus.NOT_APPLICABLE
               ) && (
-                  <ApplyNow portalConfig={portalConfig} />
+                  <ApplyProcessCard portalConfig={portalConfig} />
                 )}
               {applicationStatus === UserApplicationStatus.REJECTED && (
                 <div className="flex flex-col gap-4">

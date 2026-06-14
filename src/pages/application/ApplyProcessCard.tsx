@@ -1,13 +1,14 @@
 import { useAuth } from "@/context/AuthContext";
 import { PortalConfig } from "@/utils/portalConfig";
 import garudieRocket from "/assets/garudie-rocket.png"
-import ApplicationOpen from "./apply-now/ApplicationOpen";
+import ApplicationOpen from "./states/ApplicationOpen";
+import ApplicationOpenSoon from "./states/ApplicationOpenSoon";
 
-interface ApplyNowProps {
+interface ApplyProcessCardProps {
   portalConfig: PortalConfig | null
 }
 
-export default function ApplyNow({ portalConfig }: ApplyNowProps) {
+export default function ApplyProcessCard({ portalConfig }: ApplyProcessCardProps) {
   const { user } = useAuth()
   return (
     <div className="flex flex-col gap-10 text-pretty p-4">
@@ -23,7 +24,10 @@ export default function ApplyNow({ portalConfig }: ApplyNowProps) {
         </div>
         <img src={garudieRocket} width={300} height={300} className="w-24 lg:w-64 hidden lg:block" />
       </div>
-      <ApplicationOpen portalConfig={portalConfig} />
+      
+      {/* Open Soon -> applicationStartDate<now */}
+      {!portalConfig?.applicationsOpen && portalConfig?.applicationStartDate! < new Date() && <ApplicationOpen portalConfig={portalConfig} />}
+      {portalConfig?.applicationStartDate! > new Date() && <ApplicationOpenSoon portalConfig={portalConfig} />}
     </div>
   )
 }
