@@ -9,6 +9,7 @@ import { AuthUser } from "@/model/User.ts";
 import Cookies from "js-cookie";
 import { UserApplicationStatus } from "../types/applicationStatus";
 import { UserRole } from "@/types/auth";
+import { apiUrl } from "@/lib/http/client";
 
 export interface LoginCredentials {
   email: string;
@@ -99,7 +100,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const checkSession = async () => {
     try {
-      const response = await fetch("/api/auth/session-check", {
+      const response = await fetch(`${apiUrl}/api/auth/session-check`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -136,7 +137,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const loginWithEmailPassword = async (credentials: LoginCredentials) => {
     setIsActionLoading(true);
     try {
-      const response = await fetch("/api/auth/login", {
+      const response = await fetch(`${apiUrl}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -182,7 +183,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signUpWithEmailPassword = async (credentials: RegisterCredentials) => {
     setIsActionLoading(true);
     try {
-      const response = await fetch("/api/auth/register", {
+      const response = await fetch(`${apiUrl}/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -219,7 +220,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const loginWithGoogle = async (idToken: string) => {
     try {
-      const response = await fetch("/api/auth/session-login", {
+      const response = await fetch(`${apiUrl}/api/auth/session-login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -255,7 +256,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signOut = async () => {
     try {
-      const response = await fetch("/api/auth/logout", {
+      const response = await fetch(`${apiUrl}/api/auth/logout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -289,7 +290,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const resetPassword = async (email: string) => {
     try {
-      const response = await fetch("/api/auth/reset-password", {
+      const response = await fetch(`${apiUrl}/api/auth/reset-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,3 +1,4 @@
+import { apiUrl } from "@/lib/http/client";
 import React, { useState } from "react";
 import Page from "../components/Page";
 import { Button } from "@/components/ui/button";
@@ -33,7 +34,7 @@ const Rsvp: React.FC = () => {
 
   const handleConfirmRSVP = async () => {
     try {
-      const response = await fetch("/api/application/rsvp", {
+      const response = await fetch(`${apiUrl}/api/application/rsvp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -77,7 +78,7 @@ const Rsvp: React.FC = () => {
       const formData = new FormData();
       formData.append("file", file);
       try {
-        const response = await fetch("/api/application/consent-form", {
+        const response = await fetch(`${apiUrl}/api/application/consent-form`, {
           method: "POST",
           headers: {
             "x-xsrf-token": Cookies.get("XSRF-TOKEN") || "",

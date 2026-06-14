@@ -1,3 +1,4 @@
+import { apiUrl } from "@/lib/http/client";
 import { useEffect, useRef, useState } from "react";
 import ApplicationIntro from "./application/ApplicationIntro";
 import ApplicationNavbar from "./application/ApplicationNavbar";
@@ -165,7 +166,7 @@ function Application() {
       state,
     };
     try {
-      const response = await fetch("/api/application", {
+      const response = await fetch(`${apiUrl}/api/application`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -233,7 +234,7 @@ function Application() {
     localStorage.removeItem("localApplicationState");
 
     try {
-      const response = await fetch("/api/application/status", {
+      const response = await fetch(`${apiUrl}/api/application/status`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -326,7 +327,7 @@ function Application() {
 
   useEffect(() => {
     const fetchApplicationStatus = async () => {
-      const response = await fetch("/api/application/status", {
+      const response = await fetch(`${apiUrl}/api/application/status`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

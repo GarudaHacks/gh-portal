@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { LoaderCircle } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
+import { apiUrl } from "@/lib/http/client";
 
 export default function AuthVerificationComponent() {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ export default function AuthVerificationComponent() {
 
     const checkVerificationStatus = async () => {
       try {
-        const response = await fetch("/api/auth/session-check", {
+        const response = await fetch(`${apiUrl}/api/auth/session-check`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -52,7 +53,7 @@ export default function AuthVerificationComponent() {
   const handleResendVerification = async () => {
     setIsVerifying(true);
     try {
-      const response = await fetch("/api/auth/verify-account", {
+      const response = await fetch(`${apiUrl}/api/auth/verify-account`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
