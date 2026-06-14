@@ -17,9 +17,11 @@ import MentoringPage from "./pages/Mentoring";
 import BookMentorshipPage from "./pages/BookMentorship";
 import AllSchedulePage from "./pages/AllSchedules";
 import MentorshipDetailPage from "./pages/MentorshipDetail";
-import { SidebarProvider } from "./components/ui/sidebar";
+import { SidebarProvider, SidebarInset } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/AppSidebar";
 import DiscordCallback from "./components/DiscordCallback";
+import Application from "./pages/Application";
+import Account from "./pages/Account";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading, applicationStatus, role } = useAuth();
@@ -64,12 +66,19 @@ function App() {
       <BrowserRouter>
         <SidebarProvider>
           <AppSidebar />
-          {/* <div className="flex-1 min-w-0"> */}
-          <Routes>
+          <SidebarInset>
+            <Routes>
             <Route path="/auth/discord/callback" element={<DiscordCallback />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/" element={<Navigate to="/home" />} />
-            <Route path="/application" element={<Navigate to="/home" />} />
+            <Route
+              path="/application"
+              element={
+                <ProtectedRoute>
+                  <Application />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/home"
               element={
@@ -78,7 +87,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route
+            {/* <Route
               path="/schedule"
               element={
                 <ProtectedRoute>
@@ -93,16 +102,16 @@ function App() {
                   <Mentorship />
                 </ProtectedRoute>
               }
-            />
-            <Route
+            /> */}
+            {/* <Route
               path="/mentors/:mentorId"
               element={
                 <ProtectedRoute>
                   <BookMentorshipPage />
                 </ProtectedRoute>
               }
-            />
-            <Route
+            /> */}
+            {/* <Route
               path="/mentoring"
               element={
                 <ProtectedRoute>
@@ -125,26 +134,35 @@ function App() {
                   <AllSchedulePage />
                 </ProtectedRoute>
               }
-            />
-            <Route
+            /> */}
+            {/* <Route
               path="/faq"
               element={
                 <ProtectedRoute>
                   <Faq />
                 </ProtectedRoute>
               }
-            />
-            <Route
+            /> */}
+            {/* <Route
               path="/rsvp"
               element={
                 <ProtectedRoute>
                   <Rsvp />
                 </ProtectedRoute>
               }
-            />
+            /> */}
 
-          <Route path="*" element={<Navigate to="/auth" />} />
-        </Routes>
+            <Route
+              path="/account"
+              element={
+                <ProtectedRoute>
+                  <Account />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<Navigate to="/auth" />} />
+            </Routes>
+          </SidebarInset>
         </SidebarProvider>
       </BrowserRouter>
     </AuthProvider>

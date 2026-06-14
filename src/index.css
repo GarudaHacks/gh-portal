@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @custom-variant dark (&:is(.dark *));
@@ -17,7 +18,7 @@
 
   --background: #f9f5ff;
   --background-secondary: #020617;
-  --foreground: #8036cb;
+  --foreground: #221139;
   --card: #0f172a;
   --card-foreground: #fff;
   --popover: oklch(1 0 0);
@@ -26,14 +27,15 @@
   --primary-foreground: #fafafa;
   --secondary: #8036cb;
   --secondary-foreground: oklch(100% 0.00011 271.152);
-  --muted: #c4a9ff;
+  --tertiary: #874ffe;
+  --muted: #999999;
   --muted-foreground: oklch(80.78% 0.00009 271.152);
   --accent: #5079ff;
   --accent-foreground: #fafafa;
-  --destructive: ##fe636a;  
+  --destructive: #fe636a;  
   --destructive-foreground: #fafafa;
   --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
+  --input: #1f1f1f;
   --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
@@ -42,18 +44,18 @@
   --chart-5: oklch(0.769 0.188 70.08);
   --radius: 0.625rem;
   --sidebar: #221139;
-  --sidebar-foreground: hsl(240 5.3% 26.1%);
-  --sidebar-primary: hsl(240 5.9% 10%);
-  --sidebar-primary-foreground: hsl(0 0% 98%);
+  --sidebar-foreground: hsl(0 0% 100%);
+  --sidebar-primary: #67339c;
+  --sidebar-primary-foreground: hsl(0 0% 100%);
   --sidebar-accent: #67339c;
-  --sidebar-accent-foreground: hsl(0, 0%, 100%);
-  --sidebar-border: hsl(220 13% 91%);
+  --sidebar-accent-foreground: hsl(0 0% 100%);
+  --sidebar-border: rgba(255, 255, 255, 0.12);
   --sidebar-ring: hsl(217.2 91.2% 59.8%);
 }
 
 @layer base {
   html {
-    @apply text-[#A83E36];
+    @apply text-[#221139];
   }
 }
 
@@ -86,6 +88,7 @@
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
+  --color-tertiary: var(--tertiary);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
@@ -119,8 +122,14 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-primary;
+    @apply bg-background text-foreground;
+    font-family: 'Poppins', sans-serif;
   }
+}
+
+/* tertiary border glow */
+.border-tertiary-glow {
+  box-shadow: 0 0 12px 3px rgba(135, 79, 254, 0.5);
 }
 
 /* gradient animation for auth */

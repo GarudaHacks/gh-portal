@@ -5,11 +5,10 @@ import {
   useEffect,
   useState,
 } from "react";
-import { User } from "@/model/User.ts";
+import { AuthUser } from "@/model/User.ts";
 import Cookies from "js-cookie";
 import { UserApplicationStatus } from "../types/applicationStatus";
 import { UserRole } from "@/types/auth";
-import { fetchMyRole } from "@/lib/http/auth";
 
 export interface LoginCredentials {
   email: string;
@@ -23,7 +22,7 @@ export interface RegisterCredentials {
 }
 
 export interface AuthContextType {
-  user: User | null;
+  user: AuthUser | null;
   loading: boolean;
   isActionLoading: boolean;
   applicationStatus: UserApplicationStatus;
@@ -35,7 +34,7 @@ export interface AuthContextType {
     } | null;
     data: {
       message: string | null;
-      user?: User | null;
+      user?: AuthUser | null;
     } | null;
   }>;
   signUpWithEmailPassword: (credentials: RegisterCredentials) => Promise<{
@@ -44,7 +43,7 @@ export interface AuthContextType {
     } | null;
     data: {
       message: string | null;
-      user?: User | null;
+      user?: AuthUser | null;
     } | null;
   }>;
   loginWithGoogle: (idToken: string) => Promise<{
@@ -53,7 +52,7 @@ export interface AuthContextType {
     } | null;
     data: {
       message: string | null;
-      user?: User | null;
+      user?: AuthUser | null;
     } | null;
   }>;
   signOut: () => Promise<{
@@ -62,7 +61,7 @@ export interface AuthContextType {
     } | null;
     data: {
       message: string | null;
-      user?: User | null;
+      user?: AuthUser | null;
     } | null;
   }>;
   resetPassword: (email: string) => Promise<{
@@ -81,7 +80,7 @@ const AuthContext = createContext<AuthContextType>({
   isActionLoading: false,
   applicationStatus: UserApplicationStatus.NOT_APPLICABLE,
   role: UserRole.HACKER,
-  refresh: async () => {},
+  refresh: async () => { },
   loginWithEmailPassword: async () => ({ error: null, data: null }),
   signUpWithEmailPassword: async () => ({ error: null, data: null }),
   loginWithGoogle: async () => ({ error: null, data: null }),
@@ -90,37 +89,13 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isActionLoading, setIsActionLoading] = useState<boolean>(false);
-  const [isVerifyingEmail, setIsVerifyingEmail] = useState<boolean>(false);
-
   const [applicationStatus, setApplicationStatus] = useState<UserApplicationStatus>(
     UserApplicationStatus.NOT_APPLICABLE
   );
   const [role, setRole] = useState<UserRole>(UserRole.HACKER);
-
-  const fetchApplicationStatus = async (): Promise<UserApplicationStatus> => {
-    try {
-      const response = await fetch("/api/application/status", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
-      const data = await response.json();
-      if (response.ok) {
-        return data.data || UserApplicationStatus.NOT_APPLICABLE;
-      } else {
-        console.error("Error fetching application status:", data.error);
-        return UserApplicationStatus.NOT_APPLICABLE;
-      }
-    } catch (e) {
-      console.error("Error fetching application status:", e);
-      return UserApplicationStatus.NOT_APPLICABLE;
-    }
-  };
 
   const checkSession = async () => {
     try {
@@ -132,16 +107,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       const data = await response.json();
 
-      if (response.ok && data.data.user?.emailVerified) {
-        setUser(data.data.user);
-        const status = await fetchApplicationStatus();
-        setApplicationStatus(status);
+      if (response.ok && data.user?.emailVerified) {
+        const user = data.user as AuthUser;
+        setUser(user);
+        setApplicationStatus(user.status as UserApplicationStatus);
+        setRole(user.role as UserRole);
       } else {
         setUser(null);
         setApplicationStatus(UserApplicationStatus.NOT_APPLICABLE);
+        setRole(UserRole.HACKER);
       }
-
-      fetchMyRole().then((res) => setRole(res));
     } catch (e) {
       console.error("Error checking session:", e);
       setUser(null);
@@ -176,28 +151,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const data = await response.json();
 
       if (!response.ok) {
-        console.log("Login error:", data);
+        console.error("Login error:", data);
         return {
           error: { message: data.error || "Login failed" },
           data: null,
         };
       }
 
-      if (data.user?.emailVerified || data.emailVerified) {
-        setUser(data.user || data);
-        const status = await fetchApplicationStatus();
-        setApplicationStatus(status);
+      if (data.user?.emailVerified) {
+        const user = data.user as AuthUser;
+        setUser(user);
+        setApplicationStatus(user.status as UserApplicationStatus);
+        setRole(user.role as UserRole);
       } else {
         setUser(null);
       }
 
-      fetchMyRole().then((res) => {
-        setRole(res)
-      })
-
       return {
         error: null,
-        data: { message: "Login successful", user: data.user || data },
+        data: { message: "Login successful", user: data.user as AuthUser },
       };
     } catch (e) {
       console.error("Login error:", e);
@@ -267,16 +239,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         };
       }
 
-      setUser(data.user || data);
-      const status = await fetchApplicationStatus();
-      setApplicationStatus(status);
-
-      fetchMyRole().then((res) => {
-        setRole(res)
-      })
+      const user = data.user as AuthUser;
+      setUser(user);
+      setApplicationStatus(user.status as UserApplicationStatus);
+      setRole(user.role as UserRole);
       return {
         error: null,
-        data: { message: "Login successful", user: data.user || data },
+        data: { message: "Login successful", user },
       };
     } catch (e) {
       console.error("Login with Google", e);
@@ -313,7 +282,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setUser(null);
       setApplicationStatus(UserApplicationStatus.NOT_APPLICABLE);
-      setLoading(false)
+      setRole(UserRole.HACKER);
+      setLoading(false);
     }
   };
 

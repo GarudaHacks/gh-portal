@@ -4,7 +4,6 @@ import Page from "../components/Page";
 import HomeStatusNotRsvpd from "@/components/HomeStatusNotRsvpd";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { format } from "date-fns";
 import { ArrowUpRight, Loader2 } from "lucide-react";
 import { greetingHelper } from "@/utils/homeUtils";
 import GlassyRectangleBackground from "@/components/RedGradientBackground";
@@ -12,9 +11,8 @@ import { fetchPortalConfig, PortalConfig } from "@/utils/portalConfig";
 import { UserRole } from "@/types/auth";
 import { UserApplicationStatus } from "@/types/applicationStatus";
 import InstructionCardForMentorComponent from "@/components/InstructionCardForMentor";
-
-// Force applications closed
-const applicationsOpen = false;
+import ApplyProcessCard from "./application/ApplyProcessCard";
+import ApplicationSubmitted from "./application/ApplicationSubmitted";
 
 function Home() {
   const { user, role, applicationStatus } = useAuth();
@@ -53,13 +51,13 @@ function Home() {
           {role === UserRole.MENTOR ? (
             <InstructionCardForMentorComponent user={user} />
           ) : (
-            <>
-              <div className="flex flex-col gap-4">
-                {applicationStatus === UserApplicationStatus.CONFIRMED_RSVP && (
+            <div className="flex-1 min-w-0 flex flex-col overflow-y-auto">
+              {applicationStatus === UserApplicationStatus.CONFIRMED_RSVP && (
+                <div className="flex flex-col gap-4">
                   <div className="flex flex-col gap-4">
                     <h1 className="text-3xl lg:text-5xl font-bold text-white">
                       {greetingHelper()},{" "}
-                      {user?.first_name || user?.displayName}!
+                      {user?.displayName || "there!"}!
                     </h1>
                     <h2 className="text-3xl lg:text-3xl mb-4 font-bold text-white">
                       See you at Garuda Hacks 6.0!
@@ -87,12 +85,12 @@ function Home() {
                       </div>
                     </div>
                   </div>
-                )}
-              </div>
-
-              {applicationStatus === UserApplicationStatus.SUBMITTED && (
-                <HomeStatusNotRsvpd />
+                </div>
               )}
+
+              {/* {applicationStatus === UserApplicationStatus.SUBMITTED && (
+                <HomeStatusNotRsvpd />
+              )} */}
 
               {applicationStatus === UserApplicationStatus.ACCEPTED && (
                 <div className="flex flex-col gap-4">
@@ -114,52 +112,12 @@ function Home() {
                 </div>
               )}
 
-              {applicationStatus === UserApplicationStatus.DRAFT && (
-                <div className="flex flex-col gap-4">
-                  <h2 className="text-2xl font-bold text-primary">
-                    Applications are{" "}
-                    {applicationsOpen ? "open!" : "currently closed."}
-                  </h2>
-                  <div className="flex flex-col gap-4 border-gray-600 bg-opacity-10 bg-white/5 backdrop-blur-md border-2 p-4 rounded-2xl shadow-md">
-                    <p className="font-medium">
-                      <span className="mb-2">
-                        Apply by{" "}
-                        <b>
-                          {portalConfig
-                            ? format(
-                                portalConfig.applicationCloseDate,
-                                "MMMM d, yyyy"
-                              )
-                            : ""}
-                        </b>{" "}
-                        for a spot at Garuda Hacks 6.0.
-                      </span>
-                      <br />
-                      <span className="font-bold">Date:</span>{" "}
-                      {portalConfig
-                        ? format(portalConfig.hackathonStartDate, "MMMM d, yyyy")
-                        : ""}
-                      -{" "}
-                      {portalConfig
-                        ? format(portalConfig.hackathonEndDate, "MMMM d, yyyy")
-                        : ""}
-                      <br />
-                      <span className="font-bold">Venue:</span> Universitas
-                      Multimedia Nusantara (UMN).
-                    </p>
-                    <Button
-                      className={`w-fit ${
-                        !applicationsOpen ? "opacity-90 cursor-not-allowed" : ""
-                      }`}
-                      disabled={!applicationsOpen}
-                      onClick={() => navigate("/application")}
-                    >
-                      Apply Now
-                    </Button>
-                  </div>
-                </div>
-              )}
-
+              {(applicationStatus === UserApplicationStatus.DRAFT ||
+                applicationStatus === UserApplicationStatus.NOT_APPLICABLE
+              ) && (
+                  <ApplyProcessCard portalConfig={portalConfig} />
+                )}
+              {applicationStatus === UserApplicationStatus.SUBMITTED && <ApplicationSubmitted portalConfig={portalConfig} />}
               {applicationStatus === UserApplicationStatus.REJECTED && (
                 <div className="flex flex-col gap-4">
                   <h2 className="text-2xl font-bold text-red-500">
@@ -184,7 +142,7 @@ function Home() {
                   </GlassyRectangleBackground>
                 </div>
               )}
-            </>
+            </div>
           )}
         </>
       )}

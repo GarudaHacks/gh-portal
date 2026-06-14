@@ -2,7 +2,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { UserApplicationStatus } from "../types/applicationStatus";
 import { UserRole } from "@/types/auth";
-import { LogOut } from "lucide-react";
+import { House, LogOut, User } from "lucide-react";
 import toast from "react-hot-toast";
 import {
   Sidebar,
@@ -14,9 +14,18 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarRail,
 } from "@/components/ui/sidebar";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
+import React from "react";
+
+interface NavItem {
+  name: string
+  path: string
+  icon: React.ReactNode
+  restricted?: boolean
+}
 
 export function AppSidebar() {
   const { user, signOut, applicationStatus, role } = useAuth();
@@ -41,25 +50,27 @@ export function AppSidebar() {
     }
   };
 
-  const navItems =
+  const navItems: NavItem[] =
     role === UserRole.MENTOR
       ? [
-          { name: "Home", path: "/home", icon: "/images/icons/cottage.svg" },
-          { name: "Mentoring", path: "/mentoring", icon: "/images/icons/group_search.svg", restricted: true },
-          { name: "Schedules", path: "/schedules", icon: "/images/icons/calendar_month.svg", restricted: true },
+          { name: "Home", path: "/home", icon: <House /> },
+          // { name: "Mentoring", path: "/mentoring", icon: "/images/icons/group_search.svg", restricted: true },
+          // { name: "Schedules", path: "/schedules", icon: "/images/icons/calendar_month.svg", restricted: true },
+          { name: "Account", path: "/account", icon: <User /> },
         ]
       : [
-          { name: "Home", path: "/home", icon: "/images/icons/cottage.svg" },
-          { name: "Schedule", path: "/schedule", icon: "/images/icons/calendar_month.svg", restricted: true },
-          { name: "Mentorship", path: "/mentorship", icon: "/images/icons/group_search.svg", restricted: true },
-          { name: "FAQ", path: "/faq", icon: "/images/icons/contact_support.svg" },
+          { name: "Home", path: "/home", icon: <House /> },
+          // { name: "Schedule", path: "/schedule", icon: "/images/icons/calendar_month.svg", restricted: true },
+          // { name: "Mentorship", path: "/mentorship", icon: "/images/icons/group_search.svg", restricted: true },
+          // { name: "FAQ", path: "/faq", icon: "/images/icons/contact_support.svg" },
+          { name: "Account", path: "/account", icon: <User /> },
         ];
 
-  if (location.pathname === "/auth") return null; // Don't render on /auth
+  if (location.pathname === "/auth") return null;
 
   return (
-    <Sidebar>
-      <SidebarHeader className="p-6">
+    <Sidebar collapsible="icon">
+      <SidebarHeader className="p-6 group-data-[collapsible=icon]:p-2 group-data-[collapsible=icon]:items-center">
         <Link to="/home">
           <img src="/images/logo/gh_logo.svg" width={40} height={60} />
         </Link>
@@ -71,22 +82,24 @@ export function AppSidebar() {
               {navItems.map(({ name, path, icon, restricted }) => {
                 const disabled = !!restricted && !canAccess;
                 return (
-                  <SidebarMenuItem key={name}>
+                  <SidebarMenuItem key={name} className="group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
                     <SidebarMenuButton
                       asChild={!disabled}
                       isActive={location.pathname === path}
                       disabled={disabled}
-                      className="text-white text-base py-4"
+                      size="lg"
+                      tooltip={name}
+                      className="text-sidebar-foreground py-4 group-data-[collapsible=icon]:justify-center"
                     >
                       {disabled ? (
-                        <span className="flex items-center gap-2 opacity-70 cursor-not-allowed">
-                          <img src={icon} width={20} height={20} />
-                          {name}
+                        <span className="flex items-center gap-2 opacity-50 cursor-not-allowed">
+                          {icon}
+                          <span className="group-data-[collapsible=icon]:hidden">{name}</span>
                         </span>
                       ) : (
-                        <Link to={path} className="flex items-center gap-2">
-                          <img src={icon} width={20} height={20} />
-                          {name}
+                        <Link to={path}>
+                          {icon}
+                          <span className="group-data-[collapsible=icon]:hidden">{name}</span>
                         </Link>
                       )}
                     </SidebarMenuButton>
@@ -97,20 +110,26 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="p-4 border-t border-white">
-        <div className="flex flex-col gap-4">
-          <Badge variant="default" className="text-white w-fit">
+      <SidebarFooter className="border-t border-sidebar-border">
+        <div className="flex flex-col gap-3 p-4 group-data-[collapsible=icon]:hidden">
+          <Badge variant="default" className="w-fit">
             {role.toUpperCase()}
           </Badge>
-          <div className="text-white font-medium">
+          <div className="text-sidebar-foreground font-medium">
             <p>{user?.displayName || "Guest"}</p>
-            <p className="text-xs text-muted-foreground">{user?.email}</p>
+            <p className="text-xs opacity-60">{user?.email}</p>
           </div>
-          <Button onClick={handleLogout} className="rounded-full" size="sm" variant="outline">
+          <Button onClick={handleLogout} className="rounded-full" size="sm">
             Log out <LogOut />
           </Button>
         </div>
+        <div className="hidden group-data-[collapsible=icon]:flex justify-center p-2">
+          <Button onClick={handleLogout} size="icon" variant="ghost" className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+            <LogOut className="size-4" />
+          </Button>
+        </div>
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   );
 }

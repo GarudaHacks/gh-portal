@@ -1,5 +1,7 @@
+import React, { useRef, useState } from "react";
+import { Upload, Loader2, FileCheck, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -16,13 +18,140 @@ import {
   NumberValidation,
   DatetimeValidation,
   DropdownValidation,
+  MultiValidation,
   FileApplicationQuestion,
   DropdownApplicationQuestion,
+  MultiApplicationQuestion,
 } from "@/types/application";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import { format, isValid, parseISO } from "date-fns";
 import DateOfBirthPicker from "@/components/own-ui/DateOfBirthPicker";
+
+function FileUploadInput({
+  applicationQuestion,
+  value,
+  onChange,
+}: {
+  applicationQuestion: FileApplicationQuestion;
+  value: any;
+  onChange?: (question: ApplicationQuestion, value: any) => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileName: string | undefined = value?.name;
+
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      await fetch(
+        `/api/application/file-upload?questionId=${applicationQuestion.id}`,
+        {
+          method: "POST",
+          headers: { "x-xsrf-token": Cookies.get("XSRF-TOKEN") || "" },
+          body: formData,
+          credentials: "include",
+        }
+      );
+      toast.success("File uploaded successfully");
+      onChange?.(applicationQuestion, {
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        lastModified: file.lastModified,
+      });
+    } catch (error: any) {
+      toast.error("Failed to upload file");
+      onChange?.(applicationQuestion, {
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        lastModified: file.lastModified,
+        error: error?.message,
+      });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleClear = () => {
+    onChange?.(applicationQuestion, null);
+    if (inputRef.current) inputRef.current.value = "";
+  };
+
+  return (
+    <div className="flex items-center gap-2 border border-border rounded-md px-3 py-1.5 bg-white shadow-sm">
+      <input
+        ref={inputRef}
+        type="file"
+        accept={applicationQuestion.validation.allowedTypes || "*"}
+        className="hidden"
+        onChange={handleChange}
+      />
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        disabled={isUploading}
+        onClick={() => inputRef.current?.click()}
+        className="shrink-0 gap-1.5"
+      >
+        {isUploading ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : (
+          <Upload className="w-4 h-4" />
+        )}
+        {isUploading ? "Uploading…" : "Choose file"}
+      </Button>
+
+      {fileName ? (
+        <span className="flex items-center gap-1.5 text-sm text-foreground min-w-0">
+          <FileCheck className="w-4 h-4 shrink-0 text-primary" />
+          <span className="truncate">{fileName}</span>
+          <button
+            type="button"
+            onClick={handleClear}
+            className="shrink-0 text-muted-foreground hover:text-destructive transition-colors"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </span>
+      ) : (
+        <span className="text-sm text-muted-foreground">No file chosen</span>
+      )}
+    </div>
+  );
+}
+
+function renderMarkdownText(text: string): React.ReactNode {
+  const linkPattern = /\[([^\]]+)\]\(([^)]+)\)/;
+  return text
+    .split(/(\*\*[^*]+\*\*|\[[^\]]+\]\([^)]+\))/g)
+    .map((part, idx) => {
+      if (part.startsWith("**") && part.endsWith("**")) {
+        return <strong key={idx}>{part.slice(2, -2)}</strong>;
+      }
+      const linkMatch = part.match(linkPattern);
+      if (linkMatch) {
+        return (
+          <a
+            key={idx}
+            href={linkMatch[2]}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary underline underline-offset-2 hover:opacity-75"
+          >
+            {linkMatch[1]}
+          </a>
+        );
+      }
+      return part;
+    });
+}
 
 function countWords(text: string): number {
   if (!text || text.trim() === "") return 0;
@@ -162,6 +291,20 @@ export function validateResponse(
       }
       break;
     }
+    case QUESTION_TYPE.MULTI: {
+      const rules = question.validation as MultiValidation | undefined;
+      const selected = Array.isArray(response) ? response : response ? [response] : [];
+      if (effectiveRequired && selected.length === 0) {
+        return "Please select at least one option.";
+      }
+      if (rules?.minSelections && selected.length < rules.minSelections) {
+        return `Please select at least ${rules.minSelections} option(s).`;
+      }
+      if (rules?.maxSelections && selected.length > rules.maxSelections) {
+        return `Please select no more than ${rules.maxSelections} option(s).`;
+      }
+      break;
+    }
     case QUESTION_TYPE.FILE: {
       const fileDetails = response as {
         name: string;
@@ -228,14 +371,14 @@ export function renderQuestion(
 
     return (
       <div className="flex flex-col gap-1">
-        <Label className="text-md font-semibold text-white">
-          {applicationQuestion.text}
-          <span className="text-xs text-red-600">
+        <p className="text-sm font-normal leading-relaxed whitespace-pre-line">
+          {renderMarkdownText(applicationQuestion.text)}
+          <span className="text-xs text-red-500 ml-0.5">
             {applicationQuestion.required ? "*" : ""}
           </span>
-        </Label>
+        </p>
         <Input
-          className="text-white"
+          className=""
           value={value}
           placeholder={`Your answer...`}
           onChange={(e) => onChange?.(applicationQuestion, e.target.value)}
@@ -247,14 +390,14 @@ export function renderQuestion(
   } else if (applicationQuestion.type === "number") {
     return (
       <div className="flex flex-col gap-1">
-        <Label className="text-md font-semibold text-white">
-          {applicationQuestion.text}
-          <span className="text-xs text-red-600">
+        <p className="text-sm font-normal leading-relaxed whitespace-pre-line">
+          {renderMarkdownText(applicationQuestion.text)}
+          <span className="text-xs text-red-500 ml-0.5">
             {applicationQuestion.required ? "*" : ""}
           </span>
-        </Label>
+        </p>
         <Input
-          className="text-white"
+          className=""
           placeholder="0"
           type="text"
           pattern="[0-9]*"
@@ -273,56 +416,16 @@ export function renderQuestion(
   } else if (applicationQuestion.type === "file") {
     return (
       <div className="flex flex-col gap-1">
-        <Label className="text-md font-semibold text-white">
-          {applicationQuestion.text}
-          <span className="text-xs text-red-600">
+        <p className="text-sm font-normal leading-relaxed whitespace-pre-line">
+          {renderMarkdownText(applicationQuestion.text)}
+          <span className="text-xs text-red-500 ml-0.5">
             {applicationQuestion.required ? "*" : ""}
           </span>
-        </Label>
-        <Input
-          className="text-white"
-          type="file"
-          accept={applicationQuestion.validation.allowedTypes || "*"}
-          onChange={(e) => {
-            // store metadata
-            const file = e.target.files?.[0];
-            if (file) {
-              const formData = new FormData();
-              formData.append("file", file);
-
-              fetch(
-                `/api/application/file-upload?questionId=${applicationQuestion.id}`,
-                {
-                  method: "POST",
-                  headers: {
-                    "x-xsrf-token": Cookies.get("XSRF-TOKEN") || "",
-                  },
-                  body: formData,
-                  credentials: "include",
-                }
-              )
-                .then((data) => {
-                  toast.success("File uploaded successfully");
-                  onChange?.(applicationQuestion, {
-                    name: file.name,
-                    size: file.size,
-                    type: file.type,
-                    lastModified: file.lastModified,
-                  });
-                })
-                .catch((error) => {
-                  console.error("Error uploading file:", error);
-                  toast.error("Failed to upload file");
-                  onChange?.(applicationQuestion, {
-                    name: file.name,
-                    size: file.size,
-                    type: file.type,
-                    lastModified: file.lastModified,
-                    error: error.message,
-                  });
-                });
-            }
-          }}
+        </p>
+        <FileUploadInput
+          applicationQuestion={applicationQuestion as FileApplicationQuestion}
+          value={value}
+          onChange={onChange}
         />
         {renderError()}
       </div>
@@ -336,14 +439,14 @@ export function renderQuestion(
 
     return (
       <div className="flex flex-col gap-1">
-        <Label className="text-md font-semibold text-white">
-          {applicationQuestion.text}
-          <span className="text-xs text-red-600">
+        <p className="text-sm font-normal leading-relaxed whitespace-pre-line">
+          {renderMarkdownText(applicationQuestion.text)}
+          <span className="text-xs text-red-500 ml-0.5">
             {applicationQuestion.required ? "*" : ""}
           </span>
-        </Label>
+        </p>
         <Textarea
-          className="border p-2 w-full h-40 resize-none lg:resize-y text-white"
+          className="border p-2 w-full h-40 resize-none lg:resize-y "
           placeholder="Your response here..."
           value={value}
           onChange={(e) => onChange?.(applicationQuestion, e.target.value)}
@@ -357,19 +460,25 @@ export function renderQuestion(
       </div>
     );
   } else if (applicationQuestion.type === "dropdown") {
+    const hasOther = applicationQuestion.options?.includes("Other") ?? false;
+    const isOtherSelected =
+      hasOther && (value === "Other" || (typeof value === "string" && value.startsWith("Other-")));
+    const dropdownDisplayValue = isOtherSelected ? "Other" : (value || "");
+    const dropdownOtherText = isOtherSelected && value !== "Other" ? (value as string).slice(6) : "";
+
     return (
       <div className="flex flex-col gap-1">
-        <Label className="text-md font-semibold text-white">
-          {applicationQuestion.text}
-          <span className="text-xs text-red-600">
+        <p className="text-sm font-normal leading-relaxed whitespace-pre-line">
+          {renderMarkdownText(applicationQuestion.text)}
+          <span className="text-xs text-red-500 ml-0.5">
             {applicationQuestion.required ? "*" : ""}
           </span>
-        </Label>
+        </p>
         <Select
-          defaultValue={value}
-          onValueChange={(value) => onChange?.(applicationQuestion, value)}
+          value={dropdownDisplayValue}
+          onValueChange={(v) => onChange?.(applicationQuestion, v)}
         >
-          <SelectTrigger className="border border-gray-500 p-2 w-full text-white">
+          <SelectTrigger className="w-full">
             <SelectValue placeholder="Select one..." />
           </SelectTrigger>
           <SelectContent>
@@ -380,22 +489,92 @@ export function renderQuestion(
             ))}
           </SelectContent>
         </Select>
+        {isOtherSelected && (
+          <Input
+            placeholder="Please specify..."
+            value={dropdownOtherText}
+            onChange={(e) =>
+              onChange?.(
+                applicationQuestion,
+                e.target.value ? `Other-${e.target.value}` : "Other"
+              )
+            }
+          />
+        )}
         {renderError()}
       </div>
     );
   } else if (applicationQuestion.type === "datetime") {
     return (
       <div className="flex flex-col gap-1 w-full">
-        <Label className="text-md font-semibold text-white">
-          {applicationQuestion.text}
-          <span className="text-xs text-red-600">
+        <p className="text-sm font-normal leading-relaxed whitespace-pre-line">
+          {renderMarkdownText(applicationQuestion.text)}
+          <span className="text-xs text-red-500 ml-0.5">
             {applicationQuestion.required ? "*" : ""}
           </span>
-        </Label>
+        </p>
         <DateOfBirthPicker
           value={value}
           onChange={(date) => onChange?.(applicationQuestion, date)}
         />
+        {renderError()}
+      </div>
+    );
+  } else if (applicationQuestion.type === QUESTION_TYPE.MULTI) {
+    const q = applicationQuestion as MultiApplicationQuestion;
+    const selected: string[] = Array.isArray(value) ? value : value ? [value] : [];
+
+    const hasOther = q.options.includes("Other");
+    const isOtherChecked = hasOther && selected.some((s) => s === "Other" || s.startsWith("Other-"));
+    const otherText = selected.find((s) => s.startsWith("Other-"))?.slice(6) ?? "";
+
+    const toggle = (option: string) => {
+      if (option === "Other") {
+        if (isOtherChecked) {
+          onChange?.(applicationQuestion, selected.filter((s) => s !== "Other" && !s.startsWith("Other-")));
+        } else {
+          onChange?.(applicationQuestion, [...selected, "Other"]);
+        }
+      } else {
+        const next = selected.includes(option)
+          ? selected.filter((s) => s !== option)
+          : [...selected, option];
+        onChange?.(applicationQuestion, next);
+      }
+    };
+
+    const handleOtherText = (text: string) => {
+      const withoutOther = selected.filter((s) => s !== "Other" && !s.startsWith("Other-"));
+      onChange?.(applicationQuestion, [...withoutOther, text ? `Other-${text}` : "Other"]);
+    };
+
+    return (
+      <div className="flex flex-col gap-1">
+        <p className="text-sm font-normal leading-relaxed whitespace-pre-line">
+          {renderMarkdownText(q.text)}
+          <span className="text-xs text-red-500 ml-0.5">{q.required ? "*" : ""}</span>
+        </p>
+        <div className="flex flex-col gap-2 mt-1">
+          {q.options.map((option) => (
+            <label key={option} className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                className="h-4 w-4 accent-primary cursor-pointer"
+                checked={option === "Other" ? isOtherChecked : selected.includes(option)}
+                onChange={() => toggle(option)}
+              />
+              <span className="text-sm">{option}</span>
+            </label>
+          ))}
+          {isOtherChecked && (
+            <Input
+              className="mt-1"
+              placeholder="Please specify..."
+              value={otherText}
+              onChange={(e) => handleOtherText(e.target.value)}
+            />
+          )}
+        </div>
         {renderError()}
       </div>
     );

@@ -25,7 +25,7 @@ export default function AuthVerificationComponent() {
 
         const data = await response.json();
 
-        if (response.ok && data.data.user?.emailVerified) {
+        if (response.ok && data.user?.emailVerified) {
           toast.success("Email verified successfully!");
           clearInterval(intervalId);
           window.location.href = "/home";
