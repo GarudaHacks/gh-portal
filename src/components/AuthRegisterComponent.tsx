@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -155,7 +155,7 @@ export default function AuthRegisterComponent() {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className={``} />
+                    <FormMessage className={`text-red-500`} />
                   </FormItem>
                 )}
               />
@@ -171,7 +171,7 @@ export default function AuthRegisterComponent() {
                       <Input
                         placeholder="Enter your email"
                         type={`email`}
-                        className={``}
+                        className={`text-red-500`}
                         {...field}
                       />
                     </FormControl>
@@ -189,7 +189,7 @@ export default function AuthRegisterComponent() {
                       <Input
                         placeholder="Enter your password"
                         type={`password`}
-                        className={``}
+                        className={`text-red-500`}
                         {...field}
                       />
                     </FormControl>

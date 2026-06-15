@@ -170,7 +170,7 @@ export default function AuthLoginComponent() {
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage className={``} />
+                  <FormMessage className={`text-red-500`} />
                 </FormItem>
               )}
             />
@@ -190,7 +190,7 @@ export default function AuthLoginComponent() {
                       />
                       <button
                         type="button"
-                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-white hover:text-gray-300"
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center  hover:text-gray-300"
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? (
@@ -201,7 +201,7 @@ export default function AuthLoginComponent() {
                       </button>
                     </div>
                   </FormControl>
-                  <FormMessage className={`text-white`} />
+                  <FormMessage className={`text-red-500`} />
                 </FormItem>
               )}
             />
