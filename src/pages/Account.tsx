@@ -1,4 +1,3 @@
-import { apiUrl } from "@/lib/http/client";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import Page from "@/components/Page";
@@ -26,7 +25,7 @@ function Account() {
   const handleDeleteAccount = async () => {
     setIsDeleting(true);
     try {
-      const response = await fetch(`${apiUrl}/api/users/me`, {
+      const response = await fetch(`/api/users/me`, {
         method: "DELETE",
         headers: { "x-xsrf-token": Cookies.get("XSRF-TOKEN") || "" },
       });

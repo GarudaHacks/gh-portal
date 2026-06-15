@@ -1,4 +1,3 @@
-import { apiUrl } from "@/lib/http/client";
 import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -35,7 +34,7 @@ const DiscordCallback = () => {
     const { intent } = JSON.parse(atob(raw));
     const exchange = async () => {
       try {
-        const response = await fetch(`${apiUrl}/api/auth/discord/callback`, {
+        const response = await fetch(`/api/auth/discord/callback`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ code, intent }),
