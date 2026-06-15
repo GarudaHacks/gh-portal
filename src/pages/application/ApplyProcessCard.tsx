@@ -15,7 +15,7 @@ export default function ApplyProcessCard({ portalConfig }: ApplyProcessCardProps
     const currentDate = new Date()
     if (user?.status === "submitted") return "submitted"
     if (portalConfig?.applicationStartDate! > new Date()) return "soon"
-    if (!portalConfig?.applicationsOpen && portalConfig?.applicationStartDate! < currentDate) return "open"
+    if (portalConfig?.applicationsOpen && portalConfig?.applicationStartDate! < currentDate) return "open"
   }
 
   const currentProcess = getCurrentProcess()
