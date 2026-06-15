@@ -15,6 +15,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
@@ -29,6 +30,7 @@ interface NavItem {
 
 export function AppSidebar() {
   const { user, signOut, applicationStatus, role } = useAuth();
+  const { setOpenMobile } = useSidebar();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -97,7 +99,7 @@ export function AppSidebar() {
                           <span className="group-data-[collapsible=icon]:hidden">{name}</span>
                         </span>
                       ) : (
-                        <Link to={path}>
+                        <Link to={path} onClick={() => setOpenMobile(false)}>
                           {icon}
                           <span className="group-data-[collapsible=icon]:hidden">{name}</span>
                         </Link>

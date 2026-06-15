@@ -1,9 +1,10 @@
-import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import garudieCelebrate from "/assets/garudie-celebrate.png";
 
 export default function ApplicationSubmittedForm() {
-  const navigate = useNavigate();
+  const handleClickHome = () => {
+    window.location.replace("/home"); // force refresh full page
+  }
 
   return (
     <div className="p-4 flex flex-col items-center justify-center gap-4 lg:gap-6 w-full">
@@ -28,7 +29,7 @@ export default function ApplicationSubmittedForm() {
       <Button
         className="w-full lg:w-fit place-self-end font-semibold"
         size="lg"
-        onClick={() => navigate("/home")}
+        onClick={handleClickHome}
       >
         Go to dashboard
         <img
