@@ -376,7 +376,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     state: APPLICATION_STATES.TEAM,
     type: QUESTION_TYPE.DROPDOWN,
     required: true,
-    options: ["Health", "Safety & Resilience", "Agriculture & Food Systems"],
+    options: ["Health", "Safety", "Agriculture & Food Systems"],
     order: 4,
   },
 
@@ -574,7 +574,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
   },
   {
     id: "signedConsent",
-    text: "Please read and sign the attached [Consent Form](https://drive.google.com/file/d/1fH5ll1-AgSyCgPXssMSRXWrFG9DYFN7D/view). If you are below 18, please ask your parent/guardian to sign the form.",
+    text: "Please read and sign the attached [Consent Form](https://drive.google.com/file/d/1fH5ll1-AgSyCgPXssMSRXWrFG9DYFN7D/view). If you are below 18, please ask your parent/guardian to sign the form. Please attach the signed form below.",
     state: APPLICATION_STATES.EMERGENCY_AND_CONSENT,
     type: QUESTION_TYPE.FILE,
     required: true,
