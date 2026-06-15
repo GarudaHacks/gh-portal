@@ -361,10 +361,10 @@ export const allQuestionsData: ApplicationQuestion[] = [
   },
   {
     id: "teamMembers",
-    text: "Please list the full names of your team members, separated by commas. (e.g. Dominic Kartadjoemena, Ben Sumali, Hafidz Rizky).",
+    text: "Please list the full names of your team members, separated by commas (e.g., Budi Pratama, Siti Rahayu). Only fill this in if you are participating as a team.",
     state: APPLICATION_STATES.TEAM,
     type: QUESTION_TYPE.STRING,
-    required: true,
+    required: false,
     validation: {
       maxLength: 50,
     },
