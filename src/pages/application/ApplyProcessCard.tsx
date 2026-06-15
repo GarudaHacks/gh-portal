@@ -35,8 +35,8 @@ export default function ApplyProcessCard({ portalConfig }: ApplyProcessCardProps
         <img src={garudieRocket} width={300} height={300} className="w-24 lg:w-64 hidden lg:block" />
       </div>
 
-      {currentProcess === "soon" && <ApplicationOpen portalConfig={portalConfig} />}
-      {currentProcess === "open" && <ApplicationOpenSoon portalConfig={portalConfig} />}
+      {currentProcess === "soon" && <ApplicationOpenSoon portalConfig={portalConfig} />}
+      {currentProcess === "open" && <ApplicationOpen portalConfig={portalConfig} />}
     </div>
   )
 }
