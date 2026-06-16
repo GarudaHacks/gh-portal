@@ -12,8 +12,9 @@ import {
   FormMessage,
 } from "@/components/ui/form.tsx";
 import { Input } from "@/components/ui/input.tsx";
+import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { useAuth } from "@/context/AuthContext.tsx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { LoaderCircle } from "lucide-react";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, db } from "@/utils/firebase.ts";
@@ -27,6 +28,9 @@ const formSchema = z.object({
   email: z.string().email().nonempty("Email is required"),
   password: z.string().nonempty("Password is required"),
   displayName: z.string().nonempty("Name is required"),
+  agreedToTerms: z.literal(true, {
+    errorMap: () => ({ message: "You must agree to the Terms and Privacy Policy." }),
+  }),
 });
 
 export default function AuthRegisterComponent() {
@@ -41,6 +45,7 @@ export default function AuthRegisterComponent() {
       email: "",
       password: "",
       displayName: "",
+      agreedToTerms: false as unknown as true,
     },
   });
 
@@ -176,7 +181,7 @@ export default function AuthRegisterComponent() {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className={``} />
+                    <FormMessage className={`text-red-500`} />
                   </FormItem>
                 )}
               />
@@ -194,7 +199,36 @@ export default function AuthRegisterComponent() {
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className={``} />
+                    <FormMessage className={`text-red-500`} />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="agreedToTerms"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex items-center gap-2">
+                      <FormControl>
+                        <Checkbox
+                          id="agreedToTerms"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          className="shrink-0"
+                        />
+                      </FormControl>
+                      <label
+                        htmlFor="agreedToTerms"
+                        className="text-sm font-normal leading-snug cursor-pointer"
+                      >
+                        I agree to the{" "}
+                        <Link to="/terms" className="underline font-medium" target="_blank">Terms of Service</Link>
+                        {" "}and{" "}
+                        <Link to="/privacy" className="underline font-medium" target="_blank">Privacy Policy</Link>
+                      </label>
+                    </div>
+                    <FormMessage className="text-red-500" />
                   </FormItem>
                 )}
               />

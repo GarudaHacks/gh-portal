@@ -68,7 +68,7 @@ export function AppSidebar() {
           { name: "Account", path: "/account", icon: <User /> },
         ];
 
-  if (location.pathname === "/auth") return null;
+  if (["/auth", "/terms", "/privacy"].includes(location.pathname)) return null;
 
   return (
     <Sidebar collapsible="icon">
