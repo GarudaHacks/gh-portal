@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 // import ghLogo from "/images/logo/gh_logo.svg";
@@ -52,7 +52,7 @@ function Auth() {
   });
 
   return (
-    <div className="flex items-center justify-center h-screen min-w-screen auth p-4">
+    <div className="flex items-center justify-center h-screen min-w-screen auth p-4 relative">
       <div className="p-8 lg:p-12 rounded-2xl sm:w-full md:max-w-lg md:justify-center shadow-lg flex flex-col border-white bg-opacity-10 bg-background backdrop-blur-md border-2">
 
         <div className="mb-6">
@@ -105,6 +105,16 @@ function Auth() {
             </>
           ) : null}
         </p>
+      </div>
+
+      <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-4 text-xs text-white">
+        <Link to="/privacy" className="hover:underline hover:text-foreground transition-colors">
+          Privacy Policy
+        </Link>
+        <span>·</span>
+        <Link to="/terms" className="hover:underline hover:text-foreground transition-colors">
+          Terms of Service
+        </Link>
       </div>
     </div>
   );
