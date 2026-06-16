@@ -180,8 +180,8 @@ function Account() {
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Delete account?</AlertDialogTitle>
-                    <AlertDialogDescription>
+                    <AlertDialogTitle className="text-destructive">Delete account?</AlertDialogTitle>
+                    <AlertDialogDescription className="text-destructive">
                       This will permanently delete your account and all associated data. This action cannot be undone.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
