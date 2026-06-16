@@ -77,6 +77,7 @@ export default function AuthRegisterComponent() {
   const handleGoogleRegister = async () => {
     try {
       const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: "select_account" }); // allow user to choose account
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
@@ -171,7 +172,7 @@ export default function AuthRegisterComponent() {
                       <Input
                         placeholder="Enter your email"
                         type={`email`}
-                        className={`text-red-500`}
+                        className={``}
                         {...field}
                       />
                     </FormControl>
@@ -189,7 +190,7 @@ export default function AuthRegisterComponent() {
                       <Input
                         placeholder="Enter your password"
                         type={`password`}
-                        className={`text-red-500`}
+                        className={``}
                         {...field}
                       />
                     </FormControl>
