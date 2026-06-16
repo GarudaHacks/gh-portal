@@ -17,6 +17,13 @@ import MentoringPage from "./pages/Mentoring";
 import BookMentorshipPage from "./pages/BookMentorship";
 import AllSchedulePage from "./pages/AllSchedules";
 import MentorshipDetailPage from "./pages/MentorshipDetail";
+import { SidebarProvider, SidebarInset } from "./components/ui/sidebar";
+import { AppSidebar } from "./components/AppSidebar";
+import DiscordCallback from "./components/DiscordCallback";
+import Application from "./pages/Application";
+import Account from "./pages/Account";
+import TermsOfService from "./pages/TermsOfService";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading, applicationStatus, role } = useAuth();
@@ -59,85 +66,108 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Navigate to="/home" />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/application" element={<Navigate to="/home" />} />
-          <Route
-            path="/home"
-            element={
-              <ProtectedRoute>
-                <Home />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/schedule"
-            element={
-              <ProtectedRoute>
-                <Schedule />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/mentorship"
-            element={
-              <ProtectedRoute>
-                <Mentorship />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/mentors/:mentorId"
-            element={
-              <ProtectedRoute>
-                <BookMentorshipPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/mentoring"
-            element={
-              <ProtectedRoute>
-                <MentoringPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/mentoring/:id"
-            element={
-              <ProtectedRoute>
-                <MentorshipDetailPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/schedules"
-            element={
-              <ProtectedRoute>
-                <AllSchedulePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/faq"
-            element={
-              <ProtectedRoute>
-                <Faq />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/rsvp"
-            element={
-              <ProtectedRoute>
-                <Rsvp />
-              </ProtectedRoute>
-            }
-          />
+        <SidebarProvider>
+          <AppSidebar />
+          <SidebarInset>
+            <Routes>
+            <Route path="/auth/discord/callback" element={<DiscordCallback />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/" element={<Navigate to="/home" />} />
+            <Route
+              path="/application"
+              element={
+                <ProtectedRoute>
+                  <Application />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/home"
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              }
+            />
+            {/* <Route
+              path="/schedule"
+              element={
+                <ProtectedRoute>
+                  <Schedule />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/mentorship"
+              element={
+                <ProtectedRoute>
+                  <Mentorship />
+                </ProtectedRoute>
+              }
+            /> */}
+            {/* <Route
+              path="/mentors/:mentorId"
+              element={
+                <ProtectedRoute>
+                  <BookMentorshipPage />
+                </ProtectedRoute>
+              }
+            /> */}
+            {/* <Route
+              path="/mentoring"
+              element={
+                <ProtectedRoute>
+                  <MentoringPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/mentoring/:id"
+              element={
+                <ProtectedRoute>
+                  <MentorshipDetailPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/schedules"
+              element={
+                <ProtectedRoute>
+                  <AllSchedulePage />
+                </ProtectedRoute>
+              }
+            /> */}
+            {/* <Route
+              path="/faq"
+              element={
+                <ProtectedRoute>
+                  <Faq />
+                </ProtectedRoute>
+              }
+            /> */}
+            {/* <Route
+              path="/rsvp"
+              element={
+                <ProtectedRoute>
+                  <Rsvp />
+                </ProtectedRoute>
+              }
+            /> */}
 
-          <Route path="*" element={<Navigate to="/auth" />} />
-        </Routes>
+            <Route
+              path="/account"
+              element={
+                <ProtectedRoute>
+                  <Account />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<Navigate to="/auth" />} />
+            </Routes>
+          </SidebarInset>
+        </SidebarProvider>
       </BrowserRouter>
     </AuthProvider>
   );

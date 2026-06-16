@@ -69,26 +69,26 @@ const AuthForgotPasswordComponent = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Email Address</FormLabel>
+                  <FormLabel className="">Email Address</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Enter your email"
                       type="email"
-                      className="text-white"
+                      className=""
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage className="text-white" />
+                  <FormMessage className="" />
                 </FormItem>
               )}
             />
 
             {error && (
-              <p className="text-red-100 text-sm text-center mt-4">{error}</p>
+              <p className="text-red-500 text-sm text-center mt-4">{error}</p>
             )}
 
             {success && (
-              <p className="text-green-100 text-sm text-center mt-4">
+              <p className="text-green-500 text-sm text-center mt-4">
                 Password reset link has been sent to your email!
               </p>
             )}

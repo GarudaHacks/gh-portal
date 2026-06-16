@@ -20,6 +20,7 @@ import { auth, db } from "@/utils/firebase.ts";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { getAuthErrorMessage } from "@/components/Auth.tsx";
 import googleIcon from "/assets/google-icon.svg";
+import discordIcon from "/images/icons/discord-icon.svg";
 import toast from "react-hot-toast";
 
 const formSchema = z.object({
@@ -51,7 +52,7 @@ export default function AuthLoginComponent() {
       });
 
       if (error) {
-        console.log("Error when trying to login:", error);
+        console.error("Error when trying to login:", error);
         setError(error.message || "Login failed");
         return;
       }
@@ -86,6 +87,7 @@ export default function AuthLoginComponent() {
   const handleGoogleLogin = async () => {
     try {
       const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: "select_account" }); // allow user to choose account
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
@@ -121,6 +123,27 @@ export default function AuthLoginComponent() {
     }
   };
 
+  const handleDiscordLogin = async () => {
+    try {
+      const state = btoa(JSON.stringify({
+        intent: "signin",
+        csrf: crypto.randomUUID()
+      }))
+      sessionStorage.setItem("oauth_discord_state", state); // to check against returned by discord
+      const params = new URLSearchParams({
+        client_id: import.meta.env.VITE_DISCORD_CONFIG_CLIENT_ID,
+        redirect_uri: import.meta.env.VITE_DISCORD_CONFIG_REDIRECT_URI,
+        response_type: "code",
+        scope: import.meta.env.VITE_DISCORD_CONFIG_SCOPE,
+        state: state
+      });
+      window.location.href = `https://discord.com/oauth2/authorize?${params}`
+    } catch (error: any) {
+      console.error(error)
+    }
+  };
+
+
   return (
     <div>
       <h2 className="text-2xl font-semibold">Login into your account</h2>
@@ -139,16 +162,16 @@ export default function AuthLoginComponent() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={`text-white`}>Email Address</FormLabel>
+                  <FormLabel className={``}>Email Address</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Enter your email"
                       type={`email`}
-                      className={`text-white`}
+                      className={``}
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage className={`text-white`} />
+                  <FormMessage className={`text-red-500`} />
                 </FormItem>
               )}
             />
@@ -163,12 +186,12 @@ export default function AuthLoginComponent() {
                       <Input
                         placeholder="Enter your password"
                         type={showPassword ? "text" : "password"}
-                        className={`text-white pr-10`}
+                        className={`pr-10`}
                         {...field}
                       />
                       <button
                         type="button"
-                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-white hover:text-gray-300"
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center  hover:text-gray-300"
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? (
@@ -179,30 +202,43 @@ export default function AuthLoginComponent() {
                       </button>
                     </div>
                   </FormControl>
-                  <FormMessage className={`text-white`} />
+                  <FormMessage className={`text-red-500`} />
                 </FormItem>
               )}
             />
 
             {error && (
-              <p className="text-red-100 text-sm text-center mt-4">{error}</p>
+              <p className="text-red-500 text-sm text-center mt-4">{error}</p>
             )}
 
-            <Button type="submit" className={`w-full font-semibold text-white`}>
-              Log in
-              {isActionLoading && <LoaderCircle className={"animate-spin"} />}
-            </Button>
+            <div className="flex flex-col gap-2.5">
+              <Button type="submit" className={`w-full font-semibold`}>
+                Log in
+                {isActionLoading && <LoaderCircle className={"animate-spin"} />}
+              </Button>
 
-            {/* Google Sign-in */}
-            <Button
-              type={`button`}
-              variant={"ghost"}
-              onClick={handleGoogleLogin}
-              className="w-full flex items-center justify-center text-black bg-white hover:text-black"
-            >
-              <img src={googleIcon} width={20} height={20} />
-              Log in with Google
-            </Button>
+              {/* Google Sign-in */}
+              <Button
+                type={`button`}
+                variant={"ghost"}
+                onClick={handleGoogleLogin}
+                className="w-full flex items-center justify-center bg-white"
+              >
+                <img src={googleIcon} width={20} height={20} />
+                Log in with Google
+              </Button>
+
+              {/* Discord Sign-in */}
+              <Button
+                type={`button`}
+                variant={"ghost"}
+                onClick={handleDiscordLogin}
+                className="w-full flex items-center justify-center bg-white"
+              >
+                <img src={discordIcon} width={20} height={20} />
+                Sign in with Discord
+              </Button>
+            </div>
           </form>
         </Form>
       </div>

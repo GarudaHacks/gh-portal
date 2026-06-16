@@ -1,6 +1,7 @@
+
 export async function fetchMyRole() {
   try {
-    const response = await fetch("/api/auth/role", {
+    const response = await fetch(`/api/auth/role`, {
       method: "GET",
       credentials: "include",
       headers: {

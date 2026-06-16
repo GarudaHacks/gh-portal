@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -12,26 +12,31 @@ import {
   FormMessage,
 } from "@/components/ui/form.tsx";
 import { Input } from "@/components/ui/input.tsx";
+import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { useAuth } from "@/context/AuthContext.tsx";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { LoaderCircle } from "lucide-react";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, db } from "@/utils/firebase.ts";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { getAuthErrorMessage } from "@/components/Auth.tsx";
 import googleIcon from "/assets/google-icon.svg";
+import discordIcon from "/images/icons/discord-icon.svg";
 import toast from "react-hot-toast";
 
 const formSchema = z.object({
   email: z.string().email().nonempty("Email is required"),
   password: z.string().nonempty("Password is required"),
   displayName: z.string().nonempty("Name is required"),
+  agreedToTerms: z.literal(true, {
+    errorMap: () => ({ message: "You must agree to the Terms and Privacy Policy." }),
+  }),
 });
 
 export default function AuthRegisterComponent() {
   const navigate = useNavigate();
 
-  const { user, loginWithGoogle, signUpWithEmailPassword, isActionLoading } = useAuth();
+  const { loginWithGoogle, signUpWithEmailPassword, isActionLoading } = useAuth();
   const [error, setError] = useState<string>("");
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -40,6 +45,7 @@ export default function AuthRegisterComponent() {
       email: "",
       password: "",
       displayName: "",
+      agreedToTerms: false as unknown as true,
     },
   });
 
@@ -76,6 +82,7 @@ export default function AuthRegisterComponent() {
   const handleGoogleRegister = async () => {
     try {
       const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: "select_account" }); // allow user to choose account
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
@@ -109,6 +116,26 @@ export default function AuthRegisterComponent() {
     }
   };
 
+  const handleDiscordRegister = async () => {
+    try {
+      const state = btoa(JSON.stringify({
+        intent: "signup",
+        csrf: crypto.randomUUID()
+      }))
+      sessionStorage.setItem("oauth_discord_state", state); // to check against returned by discord
+      const params = new URLSearchParams({
+        client_id: import.meta.env.VITE_DISCORD_CONFIG_CLIENT_ID,
+        redirect_uri: import.meta.env.VITE_DISCORD_CONFIG_REDIRECT_URI,
+        response_type: "code",
+        scope: import.meta.env.VITE_DISCORD_CONFIG_SCOPE,
+        state: state
+      });
+      window.location.href = `https://discord.com/oauth2/authorize?${params}`
+    } catch (error: any) {
+      console.error(error)
+    }
+  };
+
   return (
     <>
       <div>
@@ -125,16 +152,16 @@ export default function AuthRegisterComponent() {
                 name="displayName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className={`text-white`}>Name</FormLabel>
+                    <FormLabel className={``}>Name</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Enter your name"
                         type={`text`}
-                        className={`text-white`}
+                        className={``}
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className={`text-white`} />
+                    <FormMessage className={`text-red-500`} />
                   </FormItem>
                 )}
               />
@@ -143,18 +170,18 @@ export default function AuthRegisterComponent() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className={`text-white`}>
+                    <FormLabel className={``}>
                       Email Address
                     </FormLabel>
                     <FormControl>
                       <Input
                         placeholder="Enter your email"
                         type={`email`}
-                        className={`text-white`}
+                        className={``}
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className={`text-white`} />
+                    <FormMessage className={`text-red-500`} />
                   </FormItem>
                 )}
               />
@@ -168,37 +195,79 @@ export default function AuthRegisterComponent() {
                       <Input
                         placeholder="Enter your password"
                         type={`password`}
-                        className={`text-white`}
+                        className={``}
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage className={`text-white`} />
+                    <FormMessage className={`text-red-500`} />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="agreedToTerms"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex items-center gap-2">
+                      <FormControl>
+                        <Checkbox
+                          id="agreedToTerms"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          className="shrink-0"
+                        />
+                      </FormControl>
+                      <label
+                        htmlFor="agreedToTerms"
+                        className="text-sm font-normal leading-snug cursor-pointer"
+                      >
+                        I agree to the{" "}
+                        <Link to="/terms" className="underline font-medium" target="_blank">Terms of Service</Link>
+                        {" "}and{" "}
+                        <Link to="/privacy" className="underline font-medium" target="_blank">Privacy Policy</Link>
+                      </label>
+                    </div>
+                    <FormMessage className="text-red-500" />
                   </FormItem>
                 )}
               />
 
               {error && (
-                <p className="text-red-100 text-sm text-center mt-4">{error}</p>
+                <p className="text-red-500 text-sm text-center mt-4">{error}</p>
               )}
 
-              <Button
-                type="submit"
-                className={`w-full font-semibold text-white`}
-              >
-                Sign up
-                {isActionLoading && <LoaderCircle className={"animate-spin"} />}
-              </Button>
+              <div className="flex flex-col gap-2.5">
+                <Button
+                  type="submit"
+                  className={`w-full font-semibold`}
+                >
+                  Sign up
+                  {isActionLoading && <LoaderCircle className={"animate-spin"} />}
+                </Button>
 
-              {/* Google Sign-up */}
-              <Button
-                type={`button`}
-                variant={"ghost"}
-                onClick={handleGoogleRegister}
-                className="w-full flex items-center justify-center text-black bg-white hover:text-black"
-              >
-                <img src={googleIcon} width={20} height={20} />
-                Sign up with Google
-              </Button>
+                {/* Google Sign-up */}
+                <Button
+                  type={`button`}
+                  variant={"ghost"}
+                  onClick={handleGoogleRegister}
+                  className="w-full flex items-center justify-center bg-white"
+                >
+                  <img src={googleIcon} width={20} height={20} />
+                  Sign up with Google
+                </Button>
+
+                {/* Discord Sign-up */}
+                <Button
+                  type={`button`}
+                  variant={"ghost"}
+                  onClick={handleDiscordRegister}
+                  className="w-full flex items-center justify-center bg-white"
+                >
+                  <img src={discordIcon} width={20} height={20} />
+                  Sign up with Discord
+                </Button>
+              </div>
             </form>
           </Form>
         </div>

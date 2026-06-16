@@ -23,6 +23,7 @@ export const auth = getAuth(app);
 export const storage = getStorage(app)
 auth.useDeviceLanguage();
 
+
 if (import.meta.env.VITE_ENVIRONMENT === "development") {
   connectAuthEmulator(auth, "http://localhost:9099", {
     disableWarnings: false,

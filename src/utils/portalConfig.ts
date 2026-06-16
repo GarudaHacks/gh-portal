@@ -34,18 +34,18 @@ export async function fetchPortalConfig(): Promise<PortalConfig> {
 
   try {
     const configDoc = await getDoc(doc(db, "config", "portalConfig"));
-    
+
     if (!configDoc.exists()) {
       throw new Error("Portal config document not found");
     }
 
     const data = configDoc.data();
-    
+
     const config: PortalConfig = {
       applicationCloseDate: data.applicationCloseDate?.toDate(),
       applicationReleaseDate: data.applicationReleaseDate?.toDate(),
       applicationStartDate: data.applicationStartDate?.toDate(),
-      applicationsOpen: data.applicationsOpen || false,
+      applicationsOpen: data.applicationsOpen,
       hackathonEndDate: data.hackathonEndDate?.toDate(),
       hackathonStartDate: data.hackathonStartDate?.toDate(),
     };
@@ -54,13 +54,14 @@ export async function fetchPortalConfig(): Promise<PortalConfig> {
 
     return config;
   } catch (error) {
+    console.error("[portalConfig] fetch error, using fallback:", error);
     const fallbackConfig: PortalConfig = {
-      applicationCloseDate: new Date("2025-06-20"),
-      applicationReleaseDate: new Date("2025-06-21"),
+      applicationCloseDate: new Date("2026-7-1"),
+      applicationReleaseDate: new Date("2026-07-7"),
       applicationStartDate: new Date("2025-05-03"),
       applicationsOpen: false,
-      hackathonEndDate: new Date("2025-07-26"),
-      hackathonStartDate: new Date("2025-07-24"),
+      hackathonEndDate: new Date("2026-7-16"),
+      hackathonStartDate: new Date("2026-7-18"),
     };
 
     return fallbackConfig;

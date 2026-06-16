@@ -38,7 +38,7 @@ export function DatePicker({ value, onChange }: DatePickerProps) {
           }}
         />
         {errorMessage !== "" && (
-          <div className="absolute left-[18rem] top-1/2 -translate-y-1/2 text-red-700 text-sm">
+          <div className="absolute left-[18rem] top-1/2 -translate-y-1/2 text-red-500 text-sm">
             {errorMessage}
           </div>
         )}

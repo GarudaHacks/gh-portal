@@ -15,7 +15,7 @@ export default function AuthVerificationComponent() {
 
     const checkVerificationStatus = async () => {
       try {
-        const response = await fetch("/api/auth/session-check", {
+        const response = await fetch(`/api/auth/session-check`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -25,7 +25,7 @@ export default function AuthVerificationComponent() {
 
         const data = await response.json();
 
-        if (response.ok && data.data.user?.emailVerified) {
+        if (response.ok && data.user?.emailVerified) {
           toast.success("Email verified successfully!");
           clearInterval(intervalId);
           window.location.href = "/home";
@@ -52,7 +52,7 @@ export default function AuthVerificationComponent() {
   const handleResendVerification = async () => {
     setIsVerifying(true);
     try {
-      const response = await fetch("/api/auth/verify-account", {
+      const response = await fetch(`/api/auth/verify-account`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
