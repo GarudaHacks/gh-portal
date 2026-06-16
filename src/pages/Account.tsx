@@ -166,10 +166,6 @@ function Account() {
           </div>
         </div>
 
-        <div className="text-muted text-xs">
-          <p>Got something to ask related to your account? Email your inquiry to <a href="mailto:heryan@garudahacks.com" className="underline">heryan@garudahacks.com</a>.</p>
-        </div>
-        
         <Separator className="my-10" />
 
         {/* Danger */}
@@ -211,6 +207,10 @@ function Account() {
               </AlertDialog>
             </div>
           </div>
+        </div>
+
+        <div className="text-muted text-xs text-center mt-10">
+          <p>Got something to ask related to your account? Email your inquiry to <a href="mailto:heryan@garudahacks.com" className="underline">heryan@garudahacks.com</a>.</p>
         </div>
 
       </div>
