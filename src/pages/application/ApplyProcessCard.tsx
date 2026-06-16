@@ -21,10 +21,10 @@ export default function ApplyProcessCard({ portalConfig }: ApplyProcessCardProps
   const currentProcess = getCurrentProcess()
 
   return (
-    <div className="flex flex-col gap-10 text-pretty p-4">
+    <div className="flex flex-col gap-10 text-pretty p-4 overflow-hidden">
       <div className="flex justify-between items-center">
         <div className="flex-1 flex flex-col gap-4">
-          <div className="absolute -right-6 top-6 lg:relative">
+          <div className="absolute right-0 top-4 lg:relative">
             <img src={garudieRocket} width={300} height={300} className="w-24 lg:w-54 block lg:hidden mb-6 lg:mb-0" />
           </div>
           <div className="flex flex-col justify-start items-start gap-2 text-pretty">
