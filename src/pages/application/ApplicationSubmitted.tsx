@@ -14,7 +14,7 @@ export default function ApplicationSubmitted({ portalConfig }: ApplicationSubmit
     <div className="flex flex-col gap-10 text-pretty p-4">
       <div className="flex justify-between items-center">
         <div className="flex-1 flex flex-col gap-4">
-          <div className="absolute right-4 top-12 lg:relative">
+          <div className="absolute right-4 top-4 lg:relative">
             <img src={garudieReview} width={300} height={300} className="w-24 block lg:hidden mb-6 lg:mb-0" />
           </div>
           <div className="flex flex-col justify-start items-start gap-2">

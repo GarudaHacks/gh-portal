@@ -114,9 +114,6 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter className="border-t border-sidebar-border">
         <div className="flex flex-col gap-3 p-4 group-data-[collapsible=icon]:hidden">
-          <Badge variant="default" className="w-fit">
-            {role.toUpperCase()}
-          </Badge>
           <div className="text-sidebar-foreground font-medium">
             <p>{user?.displayName || "Guest"}</p>
             <p className="text-xs opacity-60">{user?.email}</p>

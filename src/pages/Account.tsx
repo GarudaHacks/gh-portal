@@ -15,11 +15,12 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import Cookies from "js-cookie";
-import { CheckCircle2, Link as LinkIcon, Mail, User, IdCardIcon, MailCheck } from "lucide-react";
+import { CheckCircle2, Link as LinkIcon, Mail, User, IdCardIcon, MailCheck, Trash2, TriangleAlert } from "lucide-react";
 import discordIcon from "/images/icons/discord-icon.svg";
 import account from "/assets/account.png"
 import { titleCase } from "title-case";
 import Avatar from "boring-avatars";
+import { Separator } from "@/components/ui/separator";
 
 function Account() {
   const { user, role, signOut } = useAuth();
@@ -137,7 +138,7 @@ function Account() {
         {/* Connected */}
         <div className="bg-white rounded-xl p-4 gap-4 flex flex-col justify-between border border-tertiary">
           <div className="col-span-1 lg:col-span-4 w-full p-4 flex flex-col gap-4">
-            <h3 className="font-bold text-xl text-tertiary">Connected Accounts</h3>
+            <h3 className="font-bold text-xl text-tertiary flex flex-row items-center gap-2"><LinkIcon /> Connected Accounts</h3>
             <div className="flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-between w-full">
               <div className="flex items-center gap-3">
                 <img src={discordIcon} width={24} height={24} alt="Discord" />
@@ -153,7 +154,7 @@ function Account() {
               ) : (
                 <Button
                   variant="default"
-                  size="sm"
+                  size="lg"
                   onClick={handleConnectDiscord}
                   className="flex items-center gap-2"
                 >
@@ -165,18 +166,25 @@ function Account() {
           </div>
         </div>
 
+        <Separator className="my-10" />
+
         {/* Danger */}
         <div className="bg-white rounded-xl p-4 gap-4 flex flex-col justify-between border border-destructive">
           <div className="col-span-1 lg:col-span-4 w-full p-4 flex flex-col gap-4">
-            <h3 className="font-bold text-xl text-destructive">Danger Zone</h3>
-            <div className="flex flex-col w-full lg:flex-row gap-4 items-center justify-between">
-              <div className="flex flex-col gap-0.5 w-full">
-                <span className="font-medium text-destructive">Delete account</span>
-                <span className="text-xs text-muted-foreground">Permanently delete your account and all associated data.</span>
+            <h3 className="font-bold text-xl text-destructive flex flex-row gap-2 items-center"><TriangleAlert /> Danger Zone</h3>
+            <div className="flex flex-col w-full lg:flex-row gap-4 items-center justify-between bg-destructive/10 p-4 rounded-xl">
+              <div className="flex flex-row items-center gap-2">
+                <div className="p-1 bg-destructive/20 rounded-md border border-destructive">
+                  <Trash2 className="text-destructive" />
+                </div>
+                <div className="flex flex-col gap-0.5 w-full">
+                  <span className="font-medium">Delete account</span>
+                  <span className="text-xs text-muted">Permanently delete your account and all associated data.</span>
+                </div>
               </div>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button className="w-full lg:w-fit" variant="destructive" size="sm">Delete account</Button>
+                  <Button className="w-full lg:w-fit" variant="destructive" size="lg"><Trash2 /> Delete account</Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
@@ -199,6 +207,10 @@ function Account() {
               </AlertDialog>
             </div>
           </div>
+        </div>
+
+        <div className="text-muted text-xs text-center mt-10">
+          <p>Got something to ask related to your account? Email your inquiry to <a href="mailto:heryan@garudahacks.com" className="underline">heryan@garudahacks.com</a>.</p>
         </div>
 
       </div>
