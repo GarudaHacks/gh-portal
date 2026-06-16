@@ -166,8 +166,6 @@ function Account() {
           </div>
         </div>
 
-        <Separator className="my-10" />
-
         {/* Danger */}
         <div className="bg-white rounded-xl p-4 gap-4 flex flex-col justify-between border border-destructive">
           <div className="col-span-1 lg:col-span-4 w-full p-4 flex flex-col gap-4">
@@ -209,8 +207,8 @@ function Account() {
           </div>
         </div>
 
-        <div className="text-muted text-xs text-center mt-10">
-          <p>Got something to ask related to your account? Email your inquiry to <a href="mailto:heryan@garudahacks.com" className="underline">heryan@garudahacks.com</a>.</p>
+        <div className="text-muted text-xs text-center mt-2">
+          <p>Got something to ask related to your account?<br /><br />Email your inquiry to <a href="mailto:heryan@garudahacks.com" className="underline">heryan@garudahacks.com</a>.</p>
         </div>
 
       </div>
