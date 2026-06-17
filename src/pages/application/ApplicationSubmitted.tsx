@@ -29,7 +29,7 @@ export default function ApplicationSubmitted({ portalConfig }: ApplicationSubmit
           <img src={applicationReview} alt="Hourglass" width={300} height={300} className="" />
         </div>
 
-        <div className="col-span-full lg:col-span-3 flex flex-col gap-6 lg:gap-4 w-full">
+        <div className="col-span-full lg:col-span-4 xl:col-span-3 flex flex-col gap-6 lg:gap-4 w-full">
           <div className="flex lg:flex-row items-center justify-center lg:justify-start gap-2 py-2 px-3 bg-tertiary/10 w-full lg:w-fit rounded-xl">
             <PartyPopper size={16} className="text-tertiary animate-bounce" />
             <span className="font-semibold text-tertiary">Application is submitted</span>
@@ -55,7 +55,7 @@ export default function ApplicationSubmitted({ portalConfig }: ApplicationSubmit
           </div>
         </div>
 
-        <div className="bg-tertiary/10 rounded-xl p-6 flex flex-col gap-4">
+        <div className="bg-tertiary/10 rounded-xl p-6 flex flex-col gap-4 col-span-1 lg:col-span-5 xl:col-span-1 w-full">
           <p className="font-bold text-tertiary">What happens next:</p>
           <div className="flex flex-col">
             {[

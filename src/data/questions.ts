@@ -439,7 +439,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
   },
   {
     id: "github",
-    text: "Please enter your GitHub profile URL",
+    text: "Please enter your GitHub profile URL (https://github.com/your-handle)",
     state: APPLICATION_STATES.APPLICATION,
     type: QUESTION_TYPE.STRING,
     placeholder: "https://github.com/your-handle",
@@ -452,7 +452,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
   },
   {
     id: "linkedin",
-    text: "Please enter your LinkedIn profile URL",
+    text: "Please enter your LinkedIn profile URL (https://www.linkedin.com/in/your-handle)",
     state: APPLICATION_STATES.APPLICATION,
     type: QUESTION_TYPE.STRING,
     placeholder: "https://www.linkedin.com/in/your-handle",
@@ -465,7 +465,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
   },
   {
     id: "devpost",
-    text: "Please enter your DevPost profile URL",
+    text: "Please enter your DevPost profile URL (https://devpost.com/your-handle)",
     state: APPLICATION_STATES.APPLICATION,
     type: QUESTION_TYPE.STRING,
     placeholder: "https://devpost.com/your-handle",
