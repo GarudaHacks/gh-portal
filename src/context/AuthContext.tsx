@@ -27,6 +27,7 @@ export interface AuthContextType {
   isActionLoading: boolean;
   applicationStatus: UserApplicationStatus;
   role: UserRole;
+  emailPendingVerification: boolean;
   refresh: () => Promise<void>;
   loginWithEmailPassword: (credentials: LoginCredentials) => Promise<{
     error: {
@@ -80,6 +81,7 @@ const AuthContext = createContext<AuthContextType>({
   isActionLoading: false,
   applicationStatus: UserApplicationStatus.NOT_APPLICABLE,
   role: UserRole.HACKER,
+  emailPendingVerification: false,
   refresh: async () => { },
   loginWithEmailPassword: async () => ({ error: null, data: null }),
   signUpWithEmailPassword: async () => ({ error: null, data: null }),
@@ -96,6 +98,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     UserApplicationStatus.NOT_APPLICABLE
   );
   const [role, setRole] = useState<UserRole>(UserRole.HACKER);
+  const [emailPendingVerification, setEmailPendingVerification] = useState<boolean>(false);
 
   const checkSession = async () => {
     try {
@@ -112,10 +115,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(user);
         setApplicationStatus(user.status as UserApplicationStatus);
         setRole(user.role as UserRole);
+        setEmailPendingVerification(false);
+      } else if (response.ok && data.user && !data.user.emailVerified) {
+        setUser(null);
+        setApplicationStatus(UserApplicationStatus.NOT_APPLICABLE);
+        setRole(UserRole.HACKER);
+        setEmailPendingVerification(true);
       } else {
         setUser(null);
         setApplicationStatus(UserApplicationStatus.NOT_APPLICABLE);
         setRole(UserRole.HACKER);
+        setEmailPendingVerification(false);
       }
     } catch (e) {
       console.error("Error checking session:", e);
@@ -283,6 +293,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(null);
       setApplicationStatus(UserApplicationStatus.NOT_APPLICABLE);
       setRole(UserRole.HACKER);
+      setEmailPendingVerification(false);
       setLoading(false);
     }
   };
@@ -325,6 +336,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         isActionLoading,
         applicationStatus,
         role,
+        emailPendingVerification,
         refresh,
         loginWithEmailPassword,
         loginWithGoogle,
