@@ -28,7 +28,7 @@ export const getAuthErrorMessage = (error: any) => {
 function Auth() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { user, loading } = useAuth();
+  const { user, loading, emailPendingVerification } = useAuth();
 
   useEffect(() => {
     if (!loading && user) {
@@ -42,6 +42,12 @@ function Auth() {
       setMode("VERIFY_EMAIL");
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    if (!loading && emailPendingVerification) {
+      setMode("VERIFY_EMAIL");
+    }
+  }, [loading, emailPendingVerification]);
 
   const [mode, setMode] = useState<
     "LOGIN" | "SIGNUP" | "FORGOT_PASSWORD" | "VERIFY_EMAIL"

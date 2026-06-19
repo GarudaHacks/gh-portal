@@ -44,6 +44,9 @@ const SPEED_DATING_QUESTION_IDS = new Set(
     .map((q) => q.id)
 );
 
+// Bump to invalidate stale localStorage from prior events. (gh 6.0)
+const EVENT_CYCLE = "2026";
+
 const BASE_STEP_STATES = [
   APPLICATION_STATES.PROFILE,
   APPLICATION_STATES.TEAM,
@@ -347,19 +350,28 @@ function Application() {
     if (saved) {
       try {
         const json = JSON.parse(saved);
-        if (json.lastUpdated) json.lastUpdated = new Date(json.lastUpdated);
-        if (json.data) {
-          json.data = Object.fromEntries(
-            Object.entries(json.data).filter(([key]) => validQuestionIds.has(key))
-          );
+        if (json.eventCycle !== EVENT_CYCLE) {
+          localStorage.removeItem("localApplicationState");
+          setLocalApplicationState({
+            latestState: APPLICATION_STATES.INTRO,
+            data: {},
+            lastUpdated: new Date(),
+          });
+        } else {
+          if (json.lastUpdated) json.lastUpdated = new Date(json.lastUpdated);
+          if (json.data) {
+            json.data = Object.fromEntries(
+              Object.entries(json.data).filter(([key]) => validQuestionIds.has(key))
+            );
+          }
+          if (
+            json.latestState &&
+            APPLICATION_STATES_ARRAY.includes(json.latestState)
+          ) {
+            setApplicationState(json.latestState);
+          }
+          setLocalApplicationState(json);
         }
-        if (
-          json.latestState &&
-          APPLICATION_STATES_ARRAY.includes(json.latestState)
-        ) {
-          setApplicationState(json.latestState);
-        }
-        setLocalApplicationState(json);
       } catch {
         setLocalApplicationState({
           latestState: APPLICATION_STATES.INTRO,
@@ -385,6 +397,7 @@ function Application() {
     localStorage.setItem(
       "localApplicationState",
       JSON.stringify({
+        eventCycle: EVENT_CYCLE,
         latestState: localApplicationState.latestState,
         data: localApplicationState.data,
         lastUpdated: new Date().toISOString(),

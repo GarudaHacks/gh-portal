@@ -68,7 +68,7 @@ export default function AuthLoginComponent() {
 
       const sessionData = await response.json();
 
-      if (response.ok && !sessionData.data.user?.emailVerified) {
+      if (response.ok && !sessionData.user?.emailVerified) {
         toast.error("Please verify your email first");
         // Force navigation to verification page
         window.location.href = "/auth?mode=verify-email";
