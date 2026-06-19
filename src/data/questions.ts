@@ -366,7 +366,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     type: QUESTION_TYPE.STRING,
     required: false,
     validation: {
-      maxLength: 50,
+      maxLength: 300,
     },
     order: 3,
   },
