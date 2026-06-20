@@ -4,7 +4,8 @@ import { renderQuestion, validateResponse } from "@/lib/application-utils";
 import { APPLICATION_STATES, LocalApplicationState } from "@/pages/Application";
 import { useMemo } from "react";
 import { allQuestionsData } from "@/data/questions";
-import { ChevronLeft, Loader2 } from "lucide-react";
+import { ChevronLeft, InfoIcon, Loader2 } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import toast from "react-hot-toast";
 
 const current = "TEAM"
@@ -82,6 +83,16 @@ export default function ApplicationTeam({
       <h1 className="hidden lg:block text-3xl font-bold text-start w-full">
         {applicationState}
       </h1>
+
+      <div className="w-full">
+        <Alert className="min-w-full border-accent bg-accent/15">
+          <InfoIcon />
+          <AlertTitle className="ml-2">About Team Members</AlertTitle>
+          <AlertDescription className="min-w-full ml-2">
+            The maximum number of members within a team is 4.
+          </AlertDescription>
+        </Alert>
+      </div>
 
       <div className="w-full  flex flex-col gap-4">
         {questions.map((q, index) => (
