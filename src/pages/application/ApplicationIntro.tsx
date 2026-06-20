@@ -38,6 +38,8 @@ export default function ApplicationIntro({
           Please answer all questions honestly! Although Garuda Hacks 7.0 tries to accommodate all participants, we are unable to accept all participants due to limited capacity.
           <br /><br />
           For more information, please visit our website <a href="https://garudahacks.com" className="underline">garudahacks.com</a>, our Instagram page <a href="https://www.instagram.com/garudahacks/" className="underline">@garudahacks</a>, or please contact <a href="mailto:ben@garudahacks.com" className="underline">ben@garudahacks.com</a>.
+          <br /><br />
+          Start your registration now, whether you're flying <b>solo</b> or rolling with <b>a team of up to 4!</b>
         </p>
       </div>
       <Button
