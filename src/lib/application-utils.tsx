@@ -48,7 +48,7 @@ function FileUploadInput({
     const formData = new FormData();
     formData.append("file", file);
     try {
-      await fetch(
+      const res = await fetch(
         `/api/application/file-upload?questionId=${applicationQuestion.id}`,
         {
           method: "POST",
@@ -57,6 +57,16 @@ function FileUploadInput({
           credentials: "include",
         }
       );
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        const errMsg =
+          errData?.details?.[0]?.message ||
+          errData?.error ||
+          "Failed to upload file";
+        toast.error(errMsg);
+        onChange?.(applicationQuestion, null);
+        return;
+      }
       toast.success("File uploaded successfully");
       onChange?.(applicationQuestion, {
         name: file.name,
@@ -66,13 +76,7 @@ function FileUploadInput({
       });
     } catch (error: any) {
       toast.error("Failed to upload file");
-      onChange?.(applicationQuestion, {
-        name: file.name,
-        size: file.size,
-        type: file.type,
-        lastModified: file.lastModified,
-        error: error?.message,
-      });
+      onChange?.(applicationQuestion, null);
     } finally {
       setIsUploading(false);
     }
