@@ -88,8 +88,8 @@ export default function ApplicationApplication({
         <div>
           <Alert className="min-w-full border-accent bg-accent/15">
             <InfoIcon />
-            <AlertTitle>Note on Registering as a Team</AlertTitle>
-            <AlertDescription className="min-w-full">
+            <AlertTitle className="ml-2">Note on Registering as a Team</AlertTitle>
+            <AlertDescription className="min-w-full ml-2">
               If you already have a team, every individual member of the team needs to submit this form, however teams may use the same responses to the essay questions. The final team composition will be noted during the submission of the project.
             </AlertDescription>
           </Alert>
