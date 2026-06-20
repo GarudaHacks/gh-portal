@@ -59,7 +59,7 @@ export const allQuestionsData: ApplicationQuestion[] = [
     order: 5,
   },
   {
-    id: "countryOfresidence",
+    id: "countryOfResidence",
     text: "What is your country of residence? \nNote: If you are currently studying or working abroad, please fill in the country where you are currently studying or working at.",
     state: APPLICATION_STATES.PROFILE,
     type: QUESTION_TYPE.DROPDOWN,
