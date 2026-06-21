@@ -8,11 +8,11 @@
           "value": "staging-portal.garudahacks.com"
         }
       ],
-      "destination": "https://asia-southeast2-garuda-hacks-6-0.cloudfunctions.net/api$1"
+      "destination": "https://asia-southeast2-garuda-hacks-6-0.cloudfunctions.net/api/$1"
     },
     {
       "source": "/api/(.*)",
-      "destination": "https://asia-southeast2-garuda-hacks-6-0.cloudfunctions.net/api$1"
+      "destination": "https://asia-southeast2-garuda-hacks-6-0.cloudfunctions.net/api/$1"
     },
     {
       "source": "/(.*)",
