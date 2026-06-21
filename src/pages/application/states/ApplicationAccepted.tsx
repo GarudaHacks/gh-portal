@@ -1,16 +1,41 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import confetti from "canvas-confetti";
+import Cookies from "js-cookie";
+import toast from "react-hot-toast";
 import GarudieWelcome from "@/components/GarudieWelcome";
 import garudieAccepted from "/assets/garudie-accepted.png"
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Loader2 } from "lucide-react";
 
 export default function ApplicationAccepted() {
-  const navigate = useNavigate()
   const rsvpRef = useRef<HTMLDivElement>(null)
   const [isRsvpVisible, setIsRsvpVisible] = useState(true)
+  const [submitting, setSubmitting] = useState(false)
+
+  async function handleConfirmRsvp() {
+    setSubmitting(true)
+    try {
+      const response = await fetch("/api/application/rsvp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-xsrf-token": Cookies.get("XSRF-TOKEN") || "",
+        },
+        credentials: "include",
+        body: JSON.stringify({ rsvp: true }),
+      })
+      if (!response.ok) {
+        throw new Error("Failed to confirm RSVP. Please log out and log back in to refresh your session.")
+      }
+      toast.success("RSVP Confirmed!")
+      window.location.reload()
+    } catch (error: any) {
+      toast.error(error.message || "Failed to confirm RSVP.")
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   useEffect(() => {
     const duration = 5 * 1000
@@ -75,13 +100,14 @@ export default function ApplicationAccepted() {
         <p className="text-xl font-semibold">Your spot is waiting — are you in?</p>
         <p>Hit confirm below to lock in your spot — we'll send a confirmation email to bring on the day of the event.</p>
         <div className="h-6" />
-        <Button size={"lg"} className="animate-pulse-border w-full max-w-lg mx-auto">
-          Confirm RSVP
+        <Button size={"lg"} className="animate-pulse-border w-full max-w-lg mx-auto" onClick={handleConfirmRsvp} disabled={submitting}>
+          {submitting ? <><Loader2 className="animate-spin mr-2" /> Confirming...</> : "Confirm RSVP"}
         </Button>
       </div>
       {!isRsvpVisible && (
         <button
-          onClick={scrollToRsvp}
+          onClick={submitting ? handleConfirmRsvp : scrollToRsvp}
+          disabled={submitting}
           className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg animate-bounce cursor-pointer"
         >
           Confirm RSVP
