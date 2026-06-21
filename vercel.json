@@ -2,12 +2,17 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "has": [{ "type": "host", "value": "staging-portal.garudahacks.com" }],
-      "destination": "https://us-central1-garuda-hacks-development.cloudfunctions.net/api/$1"
+      "has": [
+        {
+          "type": "host",
+          "value": "staging-portal.garudahacks.com"
+        }
+      ],
+      "destination": "https://asia-southeast2-garuda-hacks-6-0.cloudfunctions.net/api$1"
     },
     {
       "source": "/api/(.*)",
-      "destination": "https://us-central1-garuda-hacks-development.cloudfunctions.net/api/$1"
+      "destination": "https://asia-southeast2-garuda-hacks-6-0.cloudfunctions.net/api$1"
     },
     {
       "source": "/(.*)",
@@ -17,7 +22,12 @@
   "headers": [
     {
       "source": "/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        }
+      ]
     }
   ]
 }
