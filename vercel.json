@@ -3,7 +3,7 @@
     {
       "source": "/api/(.*)",
       "has": [{ "type": "host", "value": "staging-portal.garudahacks.com" }],
-      "destination": "https://us-central1-garuda-hacks-development.cloudfunctions.net/api/$1"
+      "destination": "https://asia-southeast2-garuda-hacks-development.cloudfunctions.net/api/$1"
     },
     {
       "source": "/api/(.*)",
