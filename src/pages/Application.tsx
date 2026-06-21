@@ -364,12 +364,12 @@ function Application() {
               Object.entries(json.data).filter(([key]) => validQuestionIds.has(key))
             );
           }
-          if (
-            json.latestState &&
-            APPLICATION_STATES_ARRAY.includes(json.latestState)
-          ) {
-            setApplicationState(json.latestState);
-          }
+          // if (
+          //   json.latestState &&
+          //   APPLICATION_STATES_ARRAY.includes(json.latestState)
+          // ) {
+          //   setApplicationState(json.latestState);
+          // }
           setLocalApplicationState(json);
         }
       } catch {
