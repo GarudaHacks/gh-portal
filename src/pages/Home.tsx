@@ -13,6 +13,7 @@ import { UserApplicationStatus } from "@/types/applicationStatus";
 import InstructionCardForMentorComponent from "@/components/InstructionCardForMentor";
 import ApplyProcessCard from "./application/ApplyProcessCard";
 import ApplicationSubmitted from "./application/ApplicationSubmitted";
+import ApplicationAccepted from "./application/states/ApplicationAccepted";
 
 function Home() {
   const { user, role, applicationStatus } = useAuth();
@@ -93,23 +94,7 @@ function Home() {
               )} */}
 
               {applicationStatus === UserApplicationStatus.ACCEPTED && (
-                <div className="flex flex-col gap-4">
-                  <h2 className="text-2xl font-bold text-primary">
-                    Congratulations! You've been accepted 🎉
-                  </h2>
-                  <GlassyRectangleBackground>
-                    <p>
-                      You have been accepted to Garuda Hacks 6.0! Please confirm
-                      your attendance by clicking the button below.
-                    </p>
-                    <Button
-                      className="w-fit mt-4"
-                      onClick={() => navigate("/rsvp")}
-                    >
-                      Confirm Attendance & Get Ticket
-                    </Button>
-                  </GlassyRectangleBackground>
-                </div>
+                <ApplicationAccepted />
               )}
 
               {(applicationStatus === UserApplicationStatus.DRAFT ||

@@ -2,28 +2,17 @@ import { Clock, MapPin, PartyPopper, Search, UserPen, Users } from "lucide-react
 import applicationReview from "/assets/application-review.png"
 import { PortalConfig } from "@/utils/portalConfig"
 import garudieReview from "/assets/garudie-review.png"
-import { useAuth } from "@/context/AuthContext"
+import GarudieWelcome from "@/components/GarudieWelcome"
 
 interface ApplicationSubmittedProps {
   portalConfig: PortalConfig | null
 }
 
 export default function ApplicationSubmitted({ portalConfig }: ApplicationSubmittedProps) {
-  const { user } = useAuth()
   return (
     <div className="flex flex-col gap-10 text-pretty p-4">
-      <div className="flex justify-between items-center">
-        <div className="flex-1 flex flex-col gap-4">
-          <div className="absolute right-4 top-4 lg:relative">
-            <img src={garudieReview} width={300} height={300} className="w-24 block lg:hidden mb-6 lg:mb-0" />
-          </div>
-          <div className="flex flex-col justify-start items-start gap-2">
-            <h2 className="font-bold text-2xl lg:text-3xl">Hello {user?.displayName}! 👋</h2>
-            <p>Welcome to Garuda Hacks Portal! <br /> You can view all announcements, events, and everything you need to know here.</p>
-          </div>
-        </div>
-        <img src={garudieReview} width={300} height={300} className="w-72 hidden lg:block" />
-      </div>
+      <GarudieWelcome image={garudieReview} imageRightPosition={4} imageTopPosition={4} imageSizing="w-72" />
+
       <div className="w-full p-8 border border-tertiary grid grid-cols-1 lg:grid-cols-5 place-items-center gap-10 bg-white rounded-xl border-tertiary-glow">
         <div className="hidden lg:block p-4 bg-tertiary/10 rounded-xl aspect-square">
           <img src={applicationReview} alt="Hourglass" width={300} height={300} className="" />
