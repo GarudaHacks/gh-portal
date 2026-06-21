@@ -14,6 +14,7 @@ import InstructionCardForMentorComponent from "@/components/InstructionCardForMe
 import ApplyProcessCard from "./application/ApplyProcessCard";
 import ApplicationSubmitted from "./application/ApplicationSubmitted";
 import ApplicationAccepted from "./application/states/ApplicationAccepted";
+import ApplicationConfirmedRSVP from "./application/states/ApplicationConfirmedRSVP";
 
 function Home() {
   const { user, role, applicationStatus } = useAuth();
@@ -54,39 +55,7 @@ function Home() {
           ) : (
             <div className="flex-1 min-w-0 flex flex-col overflow-y-auto">
               {applicationStatus === UserApplicationStatus.CONFIRMED_RSVP && (
-                <div className="flex flex-col gap-4">
-                  <div className="flex flex-col gap-4">
-                    <h1 className="text-3xl lg:text-5xl font-bold text-white">
-                      {greetingHelper()},{" "}
-                      {user?.displayName || "there!"}!
-                    </h1>
-                    <h2 className="text-3xl lg:text-3xl mb-4 font-bold text-white">
-                      See you at Garuda Hacks 6.0!
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="border rounded-lg p-6 flex flex-col h-full items-center justify-center gap-4">
-                        <h3 className="text-xl uppercase font-semibold text-center">
-                          HACKING ENDED 🎉
-                        </h3>
-                      </div>
-
-                      <div className="border rounded-lg p-6 flex flex-col h-full items-center justify-center gap-4">
-                        <h3 className="text-xl uppercase font-semibold text-center">
-                          Discord Server
-                        </h3>
-                        <a
-                          href="https://discord.gg/vQw3UeYzFb"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors"
-                        >
-                          Join Discord server
-                          <ArrowUpRight className="w-4 h-4" />
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <ApplicationConfirmedRSVP />
               )}
 
               {/* {applicationStatus === UserApplicationStatus.SUBMITTED && (

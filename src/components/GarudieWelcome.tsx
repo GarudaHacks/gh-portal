@@ -2,9 +2,9 @@ import { useAuth } from "@/context/AuthContext"
 
 interface GarudieWelcomeProps {
   image?: string
-  imageRightPosition: number
-  imageTopPosition: number
-  imageSizing: string
+  imageRightPosition?: number
+  imageTopPosition?: number
+  imageSizing?: string
 }
 
 export default function GarudieWelcome({ image, imageRightPosition, imageTopPosition, imageSizing }: GarudieWelcomeProps) {
