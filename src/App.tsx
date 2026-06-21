@@ -24,6 +24,7 @@ import Application from "./pages/Application";
 import Account from "./pages/Account";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import { AnnouncementBanner } from "./components/AnnouncementBanner";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading, applicationStatus, role } = useAuth();
@@ -69,6 +70,7 @@ function App() {
         <SidebarProvider>
           <AppSidebar />
           <SidebarInset>
+            <AnnouncementBanner />
             <Routes>
             <Route path="/auth/discord/callback" element={<DiscordCallback />} />
             <Route path="/auth" element={<Auth />} />
