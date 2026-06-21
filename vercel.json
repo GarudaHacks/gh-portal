@@ -7,7 +7,7 @@
     },
     {
       "source": "/api/(.*)",
-      "destination": "https://us-central1-garuda-hacks-6-0.cloudfunctions.net/api/$1"
+      "destination": "https://us-central1-garuda-hacks-development.cloudfunctions.net/api/$1"
     },
     {
       "source": "/(.*)",
