@@ -61,13 +61,15 @@ export default function ApplicationAccepted() {
     <div className="flex flex-col gap-10 text-pretty p-4">
       <GarudieWelcome imageRightPosition={0} imageTopPosition={0} imageSizing="w-64" />
       <Separator />
-      <div className="text-center flex flex-col gap-2 lg:max-w-xl mx-auto">
-        <div className="flex items-center justify-center">
-          <img src={garudieAccepted} alt="Garudie Accepted" className="" />
+      <div className="text-center flex flex-col gap-2 bg-[url('/assets/gh-6-0.png')] bg-cover bg-center rounded-xl overflow-hidden">
+        <div className="backdrop-blur-sm bg-black/30 px-4 py-10">
+          <div className="flex flex-col gap-4 items-center justify-center lg:max-w-xl mx-auto ">
+            <img src={garudieAccepted} alt="Garudie Accepted" className="" />
+            <p className="text-white font-bold">You've been chosen as one of the builders and innovators of Garuda Hacks 7.0. We can't wait to see what you'll build.</p>
+          </div>
         </div>
-        <p>You've been chosen as one of the builders and innovators of Garuda Hacks 7.0. We can't wait to see what you'll build.</p>
       </div>
-      <div ref={rsvpRef} className="text-center flex flex-col gap-2 p-4 bg-white rounded-xl">
+      <div ref={rsvpRef} className="text-center flex flex-col gap-2 p-4  bg-cover bg-center rounded-xl">
         <p className="text-xl font-semibold">Your spot is waiting — are you in?</p>
         <p>Hit confirm below to lock in your spot — we'll send a confirmation email to bring on the day of the event.</p>
         <div className="h-6" />
