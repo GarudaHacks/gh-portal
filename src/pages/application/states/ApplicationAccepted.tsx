@@ -64,7 +64,9 @@ export default function ApplicationAccepted() {
       <div className="text-center flex flex-col gap-2 bg-[url('/assets/gh-6-0.png')] bg-cover bg-center rounded-xl overflow-hidden">
         <div className="backdrop-blur-sm bg-black/30 px-4 py-10">
           <div className="flex flex-col gap-4 items-center justify-center lg:max-w-xl mx-auto ">
-            <img src={garudieAccepted} alt="Garudie Accepted" className="" />
+            <div className="animate-fly">
+              <img src={garudieAccepted} alt="Garudie Accepted" />
+            </div>
             <p className="text-white font-bold">You've been chosen as one of the builders and innovators of Garuda Hacks 7.0. We can't wait to see what you'll build.</p>
           </div>
         </div>
