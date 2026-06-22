@@ -31,6 +31,7 @@ const BoardingPass = forwardRef<HTMLDivElement, BoardingPassProps>(
       email,
       phone,
       teamFormation,
+      teamName
     },
     ref
   ) {
@@ -71,9 +72,14 @@ const BoardingPass = forwardRef<HTMLDivElement, BoardingPassProps>(
                   </p>
                 </div>
               </div>
-              <span className="text-[10px] font-mono tracking-widest text-accent/80 bg-accent/10 px-2.5 py-1 rounded-full border border-accent/20">
-                {teamFormation.toUpperCase()}
-              </span>
+              <div className="flex flex-col gap-1 justify-end items-end">
+                <span className="text-[10px] font-mono tracking-widest text-accent/80 bg-accent/10 px-2.5 py-1 rounded-full border border-accent/20 w-fit">
+                  {teamFormation.toUpperCase()}
+                </span>
+                <span className="text-[10px] font-mono tracking-widest text-white/80 w-32 line-clamp-5 text-end wrap-break-word">
+                  {teamName}
+                </span>
+              </div>
             </div>
 
             {/* Hacker name */}
