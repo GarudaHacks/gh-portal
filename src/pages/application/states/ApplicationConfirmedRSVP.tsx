@@ -60,7 +60,7 @@ export default function ApplicationConfirmedRSVP() {
       <Separator />
 
       <div className="flex flex-col gap-8">
-        {/* Boarding pass section */}
+        {/* Boarding pass section */} 
         <div className="flex flex-col gap-4">
           <h1 className="text-xl font-bold text-center">
             See You at The Event Day!
@@ -68,14 +68,14 @@ export default function ApplicationConfirmedRSVP() {
 
           <BoardingPass
             ref={boardingPassRef}
-            firstName="Acel"
-            lastName="Djaruma"
+            firstName="Hello"
+            lastName="World"
             userId="asdf"
             dateOfBirth="16 April 2005"
             nationality="Indonesian"
             gender="Female"
             occupationPlace="DPV"
-            email="ansellakartono05@gmail.com"
+            email="hey@gmail.com"
             phone="1234567890"
             soloOrTeamOrSpeedDating="Solo"
           />
@@ -98,7 +98,7 @@ export default function ApplicationConfirmedRSVP() {
         </div>
 
         {/* Pre-flight checklist */}
-        <div className="rounded-xl border border-border/60 p-5 flex flex-col gap-3">
+        <div className="rounded-xl border border-border/60 p-5 flex flex-col gap-3 bg-white">
           <h2 className="font-semibold text-base flex items-center gap-2">
             <Rocket className="w-4 h-4 text-tertiary" />
             Mandatory Pre-flight Checklist
@@ -143,7 +143,7 @@ export default function ApplicationConfirmedRSVP() {
         </div>
 
         {/* Event schedule */}
-        <div className="rounded-xl border border-border/60 p-5 flex flex-col gap-3">
+        <div className="rounded-xl border border-border/60 p-5 flex flex-col gap-3 bg-white">
           <h2 className="font-semibold text-base flex items-center gap-2">
             <CalendarCheck className="w-4 h-4 text-tertiary" />
             Event Schedule

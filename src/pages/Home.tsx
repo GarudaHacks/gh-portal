@@ -15,6 +15,7 @@ import ApplyProcessCard from "./application/ApplyProcessCard";
 import ApplicationSubmitted from "./application/ApplicationSubmitted";
 import ApplicationAccepted from "./application/states/ApplicationAccepted";
 import ApplicationConfirmedRSVP from "./application/states/ApplicationConfirmedRSVP";
+import ApplicationRejected from "./application/states/ApplicationRejected";
 
 function Home() {
   const { user, role, applicationStatus } = useAuth();
@@ -58,10 +59,6 @@ function Home() {
                 <ApplicationConfirmedRSVP />
               )}
 
-              {/* {applicationStatus === UserApplicationStatus.SUBMITTED && (
-                <HomeStatusNotRsvpd />
-              )} */}
-
               {applicationStatus === UserApplicationStatus.ACCEPTED && (
                 <ApplicationAccepted />
               )}
@@ -71,30 +68,10 @@ function Home() {
               ) && (
                   <ApplyProcessCard portalConfig={portalConfig} />
                 )}
-              {applicationStatus === UserApplicationStatus.SUBMITTED && <ApplicationSubmitted portalConfig={portalConfig} />}
+              {applicationStatus === UserApplicationStatus.SUBMITTED && 
+              <ApplicationSubmitted portalConfig={portalConfig} />}
               {applicationStatus === UserApplicationStatus.REJECTED && (
-                <div className="flex flex-col gap-4">
-                  <h2 className="text-2xl font-bold text-red-500">
-                    Application Status: Rejected
-                  </h2>
-                  <GlassyRectangleBackground>
-                    <div className="flex flex-col gap-4">
-                      <h3 className="text-xl font-semibold text-white">
-                        Thank you for applying
-                      </h3>
-                      <p className="text-gray-300">
-                        We appreciate your interest in Garuda Hacks 6.0. After
-                        careful consideration, we regret to inform you that we are
-                        unable to offer you a spot this year.
-                      </p>
-                      <p className="text-gray-300">
-                        The selection process was highly competitive, and we
-                        encourage you to apply again next year. Thank you for your
-                        passion and effort!
-                      </p>
-                    </div>
-                  </GlassyRectangleBackground>
-                </div>
+                <ApplicationRejected />
               )}
             </div>
           )}
