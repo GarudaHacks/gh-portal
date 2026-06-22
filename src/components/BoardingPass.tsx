@@ -1,17 +1,21 @@
 import { forwardRef } from "react"
 import { QRCodeSVG } from "qrcode.react"
 
-interface BoardingPassProps {
-  userId: string
+export interface BoardingPassData {
   firstName: string
   lastName: string
-  dateOfBirth: string
-  nationality: string
-  gender: string
-  occupationPlace: string
-  email: string
-  phone: string
-  soloOrTeamOrSpeedDating: string
+  teamFormation: string
+  teamName?: string
+  dateOfBirth?: string
+  nationality?: string
+  gender?: string
+  affiliation?: string
+  email?: string
+  phone?: string
+}
+
+interface BoardingPassProps extends BoardingPassData {
+  userId: string
 }
 
 const BoardingPass = forwardRef<HTMLDivElement, BoardingPassProps>(
@@ -23,14 +27,14 @@ const BoardingPass = forwardRef<HTMLDivElement, BoardingPassProps>(
       dateOfBirth,
       nationality,
       gender,
-      occupationPlace,
+      affiliation,
       email,
       phone,
-      soloOrTeamOrSpeedDating,
+      teamFormation,
     },
     ref
   ) {
-    const qrValue = `${userId}/${firstName} ${lastName}`
+    const qrValue = `${userId}/${firstName}/${lastName}`
 
     return (
       <div ref={ref} className="w-full max-w-md mx-auto">
@@ -68,7 +72,7 @@ const BoardingPass = forwardRef<HTMLDivElement, BoardingPassProps>(
                 </div>
               </div>
               <span className="text-[10px] font-mono tracking-widest text-accent/80 bg-accent/10 px-2.5 py-1 rounded-full border border-accent/20">
-                {soloOrTeamOrSpeedDating.toUpperCase()}
+                {teamFormation.toUpperCase()}
               </span>
             </div>
 
@@ -89,7 +93,7 @@ const BoardingPass = forwardRef<HTMLDivElement, BoardingPassProps>(
               <Field label="Date of Birth" value={dateOfBirth} />
               <Field label="Nationality" value={nationality} />
               <Field label="Gender" value={gender} />
-              <Field label="Affiliation" value={occupationPlace} mono={false} />
+              <Field label="Affiliation" value={affiliation} mono={false} />
               <Field label="Email" value={email} />
               <Field label="Phone" value={phone} />
             </div>
@@ -143,7 +147,7 @@ function Field({
   mono = true,
 }: {
   label: string
-  value: string
+  value?: string
   mono?: boolean
 }) {
   return (
@@ -154,7 +158,7 @@ function Field({
       <p
         className={`text-[11px] text-white/90 truncate ${mono ? "font-mono" : "font-sans"}`}
       >
-        {value}
+        {value || "—"}
       </p>
     </div>
   )

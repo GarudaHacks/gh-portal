@@ -1,7 +1,9 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { toPng } from "html-to-image"
-import BoardingPass from "@/components/BoardingPass"
+import BoardingPass, { type BoardingPassData } from "@/components/BoardingPass"
 import GarudieWelcome from "@/components/GarudieWelcome"
+import { useAuth } from "@/context/AuthContext"
+import { fetchMyBoardingPass } from "@/lib/http/user"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import {
@@ -15,8 +17,17 @@ import {
 } from "lucide-react"
 
 export default function ApplicationConfirmedRSVP() {
+  const { user } = useAuth()
   const boardingPassRef = useRef<HTMLDivElement>(null)
   const [downloading, setDownloading] = useState(false)
+  const [boardingPass, setBoardingPass] = useState<BoardingPassData | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchMyBoardingPass()
+      .then((data) => setBoardingPass(data ?? null))
+      .finally(() => setLoading(false))
+  }, [])
 
   async function handleDownload() {
     const el = boardingPassRef.current
@@ -54,6 +65,8 @@ export default function ApplicationConfirmedRSVP() {
     }
   }
 
+  
+
   return (
     <div className="flex flex-col gap-10 text-pretty p-4">
       <GarudieWelcome />
@@ -66,35 +79,38 @@ export default function ApplicationConfirmedRSVP() {
             See You at The Event Day!
           </h1>
 
-          <BoardingPass
-            ref={boardingPassRef}
-            firstName="Hello"
-            lastName="World"
-            userId="asdf"
-            dateOfBirth="16 April 2005"
-            nationality="Indonesian"
-            gender="Female"
-            occupationPlace="DPV"
-            email="hey@gmail.com"
-            phone="1234567890"
-            soloOrTeamOrSpeedDating="Solo"
-          />
-
-          <div className="flex justify-end">
-            <Button
-              variant="outline"
-              size="icon"
-              className="w-fit aspect-square"
-              onClick={handleDownload}
-              disabled={downloading}
-            >
-              {downloading ? (
-                <Loader2 className="animate-spin" />
-              ) : (
-                <Download />
-              )}
-            </Button>
-          </div>
+          {loading ? (
+            <div className="flex justify-center py-10">
+              <Loader2 className="animate-spin w-8 h-8 text-tertiary" />
+            </div>
+          ) : boardingPass ? (
+            <>
+              <BoardingPass
+                ref={boardingPassRef}
+                userId={user?.uid ?? ""}
+                {...boardingPass}
+              />
+              <div className="flex justify-end">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="w-fit aspect-square"
+                  onClick={handleDownload}
+                  disabled={downloading}
+                >
+                  {downloading ? (
+                    <Loader2 className="animate-spin" />
+                  ) : (
+                    <Download />
+                  )}
+                </Button>
+              </div>
+            </>
+          ) : (
+            <p className="text-center text-muted text-sm">
+              Unable to load your boarding pass. Please try refreshing the page.
+            </p>
+          )}
         </div>
 
         {/* Pre-flight checklist */}
