@@ -1,5 +1,7 @@
 import { forwardRef } from "react"
 import { QRCodeSVG } from "qrcode.react"
+import { Timestamp } from "firebase/firestore"
+import { formatISOToFriendly } from "@/utils/dateUtils"
 
 export interface BoardingPassData {
   firstName: string
@@ -12,6 +14,8 @@ export interface BoardingPassData {
   affiliation?: string
   email?: string
   phone?: string
+  acceptedAt?: string
+  confirmedRsvpAt?: string
 }
 
 interface BoardingPassProps extends BoardingPassData {
@@ -31,11 +35,13 @@ const BoardingPass = forwardRef<HTMLDivElement, BoardingPassProps>(
       email,
       phone,
       teamFormation,
-      teamName
+      teamName,
+      acceptedAt,
+      confirmedRsvpAt,
     },
     ref
   ) {
-    const qrValue = `${userId}/${firstName}/${lastName}`
+    const qrValue = `${userId}/${firstName}/${lastName}/${confirmedRsvpAt}`
 
     return (
       <div ref={ref} className="w-full max-w-md mx-auto">
@@ -124,6 +130,8 @@ const BoardingPass = forwardRef<HTMLDivElement, BoardingPassProps>(
               <p className="text-[10px] font-mono text-white/50 break-all leading-relaxed">
                 {userId}
               </p>
+              {acceptedAt && <p className="text-[10px] font-mono text-white/50 break-all leading-relaxed">A-{formatISOToFriendly(acceptedAt)}</p>}
+              {confirmedRsvpAt && <p className="text-[10px] font-mono text-white/50 break-all leading-relaxed">C-{formatISOToFriendly(confirmedRsvpAt)}</p>}
             </div>
 
             <div className="relative shrink-0">

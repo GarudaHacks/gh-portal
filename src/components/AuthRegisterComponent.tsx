@@ -18,7 +18,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { LoaderCircle } from "lucide-react";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, db } from "@/utils/firebase.ts";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import { getAuthErrorMessage } from "@/components/Auth.tsx";
 import googleIcon from "/assets/google-icon.svg";
 import discordIcon from "/images/icons/discord-icon.svg";
@@ -95,8 +95,8 @@ export default function AuthRegisterComponent() {
         await setDoc(userRef, {
           email: user.email,
           displayName: user.displayName,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
         });
       }
 

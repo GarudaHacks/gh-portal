@@ -13,7 +13,7 @@ export default function ApplicationRejected() {
         <p>
           We appreciate your interest in Garuda Hacks 7.0, and have carefully reviewed your application. However, we regret to inform you that <span className="font-bold">we are unable to offer you a spot this year</span>.
         </p>
-        <p>The selection process was highly competitive, and we encourage to apply again next year. Thank you for your passion and effort, and we wish you good luck in the future endeavor!</p>
+        <p>This decision does not reflect your capabilities or potential in any way. We truly appreciated the effort and passion you brought to your application, and we sincerely hope you'll consider applying again next year. Wishing you all the best in everything ahead!</p>
         <div className="flex justify-center">
           <img src={garudieSorry} alt="Garudie Sorry" className="w-64 lg:w-96" />
         </div>

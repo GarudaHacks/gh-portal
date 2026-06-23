@@ -6,7 +6,7 @@ import GarudieWelcome from "@/components/GarudieWelcome";
 import garudieAccepted from "/assets/garudie-accepted.png"
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, Loader2 } from "lucide-react";
+import { CheckCircleIcon, ChevronDown, Loader2 } from "lucide-react";
 
 export default function ApplicationAccepted() {
   const rsvpRef = useRef<HTMLDivElement>(null)
@@ -86,22 +86,22 @@ export default function ApplicationAccepted() {
     <div className="flex flex-col gap-10 text-pretty p-4">
       <GarudieWelcome imageRightPosition={0} imageTopPosition={0} imageSizing="w-64" />
       <Separator />
-      <div className="text-center flex flex-col gap-2 bg-[url('/assets/gh-6-0.png')] bg-cover bg-center rounded-xl overflow-hidden">
+      <div className="text-center flex flex-col gap-2 bg-[url('/assets/gh-6-0.png')] bg-cover bg-center rounded-xl overflow-hidden shadow-lg">
         <div className="backdrop-blur-sm bg-black/30 px-4 py-10">
           <div className="flex flex-col gap-4 items-center justify-center lg:max-w-xl mx-auto ">
             <div className="animate-fly">
               <img src={garudieAccepted} alt="Garudie Accepted" />
             </div>
-            <p className="text-white font-bold">You've been chosen as one of the builders and innovators of Garuda Hacks 7.0. We can't wait to see what you'll build.</p>
+            <p className="text-white font-bold lg:text-xl">You've been chosen as one of the builders and innovators of Garuda Hacks 7.0. We can't wait to see what you'll build.</p>
           </div>
         </div>
       </div>
       <div ref={rsvpRef} className="text-center flex flex-col gap-2 p-4  bg-cover bg-center rounded-xl">
-        <p className="text-xl font-semibold">Your spot is waiting — are you in?</p>
-        <p>Hit confirm below to lock in your spot — we'll send a confirmation email to bring on the day of the event.</p>
+        <p className="text-2xl font-semibold mb-4">Your spot is waiting — are you in?</p>
+        <p className="text-pretty max-w-2xl mx-auto">Hit confirm below to lock in your spot by 13th of July. Please note that we unfortunately won't be able to hold spots that aren't confirmed <b>by July 13th</b>.</p>
         <div className="h-6" />
         <Button size={"lg"} className="animate-pulse-border w-full max-w-lg mx-auto" onClick={handleConfirmRsvp} disabled={submitting}>
-          {submitting ? <><Loader2 className="animate-spin mr-2" /> Confirming...</> : "Confirm RSVP"}
+          {submitting ? <>Confirming...<Loader2 className="animate-spin mr-2" /></> : <>Confirm RSVP<CheckCircleIcon /></>}
         </Button>
       </div>
       {!isRsvpVisible && (
