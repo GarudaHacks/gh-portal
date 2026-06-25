@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, LoaderCircle } from "lucide-react";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, db } from "@/utils/firebase.ts";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import { getAuthErrorMessage } from "@/components/Auth.tsx";
 import googleIcon from "/assets/google-icon.svg";
 import discordIcon from "/images/icons/discord-icon.svg";
@@ -101,8 +101,8 @@ export default function AuthLoginComponent() {
           email: user.email,
           displayName: user.displayName,
           status: "not applicable",
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
         });
       }
 
