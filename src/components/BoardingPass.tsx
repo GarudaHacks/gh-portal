@@ -16,6 +16,12 @@ export interface BoardingPassData {
   phone?: string
   acceptedAt?: string
   confirmedRsvpAt?: string
+  /**
+   * HMAC signature of `${userId}/${firstName}/${lastName}/${confirmedRsvpAt}`,
+   * computed server-side and returned with the boarding-pass data. Appended to
+   * the QR so the admin scanner can verify the code was issued by us.
+   */
+  qrSignature?: string
 }
 
 interface BoardingPassProps extends BoardingPassData {
@@ -38,10 +44,12 @@ const BoardingPass = forwardRef<HTMLDivElement, BoardingPassProps>(
       teamName,
       acceptedAt,
       confirmedRsvpAt,
+      qrSignature,
     },
     ref
   ) {
-    const qrValue = `${userId}/${firstName}/${lastName}/${confirmedRsvpAt}`
+    const message = `${userId}/${firstName}/${lastName}/${confirmedRsvpAt}`
+    const qrValue = qrSignature ? `${message}/${qrSignature}` : message
 
     return (
       <div ref={ref} className="w-full max-w-md mx-auto">
