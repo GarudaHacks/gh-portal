@@ -1,6 +1,5 @@
 import { forwardRef } from "react"
 import { QRCodeSVG } from "qrcode.react"
-import { Timestamp } from "firebase/firestore"
 import { formatISOToFriendly } from "@/utils/dateUtils"
 
 export interface BoardingPassData {
@@ -130,8 +129,21 @@ const BoardingPass = forwardRef<HTMLDivElement, BoardingPassProps>(
           </div>
 
           {/* ── Bottom: QR section ── */}
-          <div className="relative flex items-center justify-between gap-4 bg-[#1a0e2e] px-5 py-4 rounded-b-2xl">
-            <div className="flex flex-col gap-1">
+          <div className="relative flex flex-col items-center gap-4 bg-[#1a0e2e] px-5 py-6 rounded-b-2xl">
+            <div className="relative shrink-0">
+              <div className="absolute -inset-4 rounded-full bg-tertiary/8 blur-xl" />
+              <div className="relative rounded-lg bg-white p-3 shadow-[0_0_20px_rgba(135,79,254,0.15)]">
+                <QRCodeSVG
+                  value={qrValue}
+                  size={160}
+                  level="M"
+                  bgColor="#ffffff"
+                  fgColor="#221139"
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col items-center gap-1 text-center">
               <p className="text-[9px] tracking-[0.15em] uppercase text-white/40">
                 Check-In Code
               </p>
@@ -140,19 +152,6 @@ const BoardingPass = forwardRef<HTMLDivElement, BoardingPassProps>(
               </p>
               {acceptedAt && <p className="text-[10px] font-mono text-white/50 break-all leading-relaxed">A-{formatISOToFriendly(acceptedAt)}</p>}
               {confirmedRsvpAt && <p className="text-[10px] font-mono text-white/50 break-all leading-relaxed">C-{formatISOToFriendly(confirmedRsvpAt)}</p>}
-            </div>
-
-            <div className="relative shrink-0">
-              <div className="absolute -inset-4 rounded-full bg-tertiary/8 blur-xl" />
-              <div className="relative rounded-lg bg-white p-2 shadow-[0_0_20px_rgba(135,79,254,0.15)]">
-                <QRCodeSVG
-                  value={qrValue}
-                  size={72}
-                  level="M"
-                  bgColor="#ffffff"
-                  fgColor="#221139"
-                />
-              </div>
             </div>
           </div>
         </div>

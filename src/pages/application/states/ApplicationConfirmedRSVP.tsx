@@ -78,6 +78,7 @@ export default function ApplicationConfirmedRSVP() {
           <h1 className="text-xl font-bold text-center">
             See You at The Event Day!
           </h1>
+          <p className="text-center text-xs">Please save the pass below and keep it around for re-registration at the event day.</p>
 
           {loading ? (
             <div className="flex justify-center py-10">
