@@ -14,6 +14,8 @@ import {
   Rocket,
   PartyPopper,
   Globe,
+  ChevronsLeftRightEllipsis,
+  Wifi,
 } from "lucide-react"
 
 export default function ApplicationConfirmedRSVP() {
@@ -65,7 +67,7 @@ export default function ApplicationConfirmedRSVP() {
     }
   }
 
-  
+
 
   return (
     <div className="flex flex-col gap-10 text-pretty p-4">
@@ -73,117 +75,120 @@ export default function ApplicationConfirmedRSVP() {
       <Separator />
 
       <div className="flex flex-col gap-8">
-        {/* Boarding pass section */} 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-1">
           <h1 className="text-xl font-bold text-center">
             See You at The Event Day!
           </h1>
-          <p className="text-center text-xs">Please save the pass below and keep it around for re-registration at the event day.</p>
+          <div className="text-center text-xs">
+            <p>Please save the pass below and keep it around for re-registration on the event day. </p>
+            <p>Pay attention to the <a href="#checklist" className="underline text-tertiary">mandatory pre-flight checklist</a> as well.</p>
+          </div>
+        </div>
 
-          {loading ? (
-            <div className="flex justify-center py-10">
-              <Loader2 className="animate-spin w-8 h-8 text-tertiary" />
-            </div>
-          ) : boardingPass ? (
-            <>
-              <BoardingPass
-                ref={boardingPassRef}
-                userId={user?.uid ?? ""}
-                {...boardingPass}
-              />
-              <div className="flex justify-end">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="w-fit aspect-square"
-                  onClick={handleDownload}
-                  disabled={downloading}
-                >
-                  {downloading ? (
-                    <Loader2 className="animate-spin" />
-                  ) : (
-                    <Download />
-                  )}
-                </Button>
+        <div className="grid gap-6 lg:grid-cols-5 lg:items-start">
+          {/* Boarding pass section — main actor */}
+          <div className="flex flex-col gap-4 lg:col-span-3">
+            {loading ? (
+              <div className="flex justify-center py-10">
+                <Loader2 className="animate-spin w-8 h-8 text-tertiary" />
               </div>
-            </>
-          ) : (
-            <p className="text-center text-muted text-sm">
-              Unable to load your boarding pass. Please try refreshing the page.
+            ) : boardingPass ? (
+              <>
+                <BoardingPass
+                  ref={boardingPassRef}
+                  userId={user?.uid ?? ""}
+                  {...boardingPass}
+                />
+                <div className="flex justify-center">
+                  <Button
+                    variant="outline"
+                    className="w-fit"
+                    onClick={handleDownload}
+                    disabled={downloading}
+                  >
+                    {downloading ? (
+                      <Loader2 className="animate-spin" />
+                    ) : (
+                      <>Save Pass <Download /></>
+                    )}
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <p className="text-center text-muted text-sm">
+                Unable to load your boarding pass. Please try refreshing the page.
+              </p>
+            )}
+          </div>
+
+          <div id="checklist" className="rounded-xl border-2 border-accent/40 p-5 flex flex-col gap-3 bg-accent/5 lg:col-span-2 lg:sticky lg:top-4">
+            <div className="flex items-center justify-between gap-2">
+              <h2 className="font-semibold text-base flex items-center gap-2">
+                <Rocket className="w-4 h-4 text-tertiary" />
+                Pre-flight Checklist
+              </h2>
+            </div>
+            <p className="text-xs text-foreground/60 -mt-1">
+              Don't skip these — mandatory before the event.
             </p>
-          )}
-        </div>
-
-        {/* Pre-flight checklist */}
-        <div className="rounded-xl border border-border/60 p-5 flex flex-col gap-3 bg-white">
-          <h2 className="font-semibold text-base flex items-center gap-2">
-            <Rocket className="w-4 h-4 text-tertiary" />
-            Mandatory Pre-flight Checklist
-          </h2>
-          <ul className="flex flex-col gap-2.5 text-sm text-foreground/80">
-            <li className="flex items-start gap-2.5">
-              <MessageCircle className="w-4 h-4 mt-0.5 text-accent shrink-0" />
-              <span>
-                Join our{" "}
-                <Button variant="link" className="h-auto p-0 text-sm text-accent">
-                  Discord server
-                </Button>
-              </span>
-            </li>
-            <li className="flex items-start gap-2.5">
-              <CalendarCheck className="w-4 h-4 mt-0.5 text-accent shrink-0" />
-              <span>
-                General Participant Briefing: <strong>Wednesday, July 8th, 2026</strong>{" "}
-                [Online, Meeting Link TBA].
-              </span>
-            </li>
-            <li className="flex items-start gap-2.5">
-              <PartyPopper className="w-4 h-4 mt-0.5 text-accent shrink-0" />
-              <span>Make sure you can attend 16–18 July 2026</span>
-            </li>
-            <li className="flex items-start gap-2.5">
-              <Globe className="w-4 h-4 mt-0.5 text-accent shrink-0" />
-              <span>
-                Follow{" "}
-                <a
-                  href="https://www.instagram.com/garudahacks/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-accent underline underline-offset-2"
-                >
-                  @garudahacks
-                </a>{" "}
-                for updates
-              </span>
-            </li>
-          </ul>
-        </div>
-
-        {/* Event schedule */}
-        <div className="rounded-xl border border-border/60 p-5 flex flex-col gap-3 bg-white">
-          <h2 className="font-semibold text-base flex items-center gap-2">
-            <CalendarCheck className="w-4 h-4 text-tertiary" />
-            Event Schedule
-          </h2>
-          <ul className="flex flex-col gap-2.5 text-sm text-foreground/80">
-            <ScheduleItem
-              date="Saturday, 11 July 2026"
-              tag="Online"
-              description="Online Speed Dating"
-            />
-            <ScheduleItem
-              date="Thursday, 16 July 2026"
-              description="Opening Ceremony, Offline Speed Dating, Networking Lunch, Hacking Begins"
-            />
-            <ScheduleItem
-              date="Friday, 17 July 2026"
-              description="Tech & Talent Fair, Free Photobooth, Hacking Continues, Hacking ends at 8 PM"
-            />
-            <ScheduleItem
-              date="Saturday, 18 July 2026"
-              description="Live Pitching & Judging Session, Awarding Ceremony"
-            />
-          </ul>
+            <ul className="flex flex-col gap-2.5 text-sm text-foreground/80">
+              <li className="flex items-start gap-2.5">
+                <CalendarCheck className="w-4 h-4 mt-0.5 text-accent shrink-0" />
+                <span>
+                  General Participant Briefing: <strong>Wednesday, July 8th, 2026</strong>{" "}
+                  (Sent via email).
+                </span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <CalendarCheck className="w-4 h-4 mt-0.5 text-accent shrink-0" />
+                <span>
+                  Download Garuda Hacks 7.0 Official App: <Button variant="link" className="h-auto p-0 text-sm text-accent">
+                    Android
+                  </Button>{" or "}
+                  <Button variant="link" className="h-auto p-0 text-sm text-accent">
+                    iOS
+                  </Button>
+                </span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <Wifi className="w-4 h-4 mt-0.5 text-accent shrink-0" />
+                <span>
+                  Register your devices MAC address{" "}
+                  <Button variant="link" className="h-auto p-0 text-sm text-accent">
+                    here
+                  </Button>
+                </span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <MessageCircle className="w-4 h-4 mt-0.5 text-accent shrink-0" />
+                <span>
+                  Join our{" "}
+                  <Button variant="link" className="h-auto p-0 text-sm text-accent">
+                    Discord server
+                  </Button>
+                  {" "}for important announcement and updates
+                </span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <PartyPopper className="w-4 h-4 mt-0.5 text-accent shrink-0" />
+                <span>Mark your calendar 16-18th of July 2026!</span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <Globe className="w-4 h-4 mt-0.5 text-accent shrink-0" />
+                <span>
+                  Follow Instagram{" "}
+                  <a
+                    href="https://www.instagram.com/garudahacks/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-accent underline underline-offset-2"
+                  >
+                    @garudahacks
+                  </a>
+                </span>
+              </li>
+            </ul>
+          </div>
         </div>
 
         {/* Help */}
