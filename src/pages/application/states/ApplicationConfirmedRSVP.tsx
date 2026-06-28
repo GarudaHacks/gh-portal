@@ -17,6 +17,7 @@ import {
   ChevronsLeftRightEllipsis,
   Wifi,
 } from "lucide-react"
+import { Link } from "react-router-dom"
 
 export default function ApplicationConfirmedRSVP() {
   const { user } = useAuth()
@@ -140,38 +141,15 @@ export default function ApplicationConfirmedRSVP() {
                 </span>
               </li>
               <li className="flex items-start gap-2.5">
-                <CalendarCheck className="w-4 h-4 mt-0.5 text-accent shrink-0" />
-                <span>
-                  Download Garuda Hacks 7.0 Official App: <Button variant="link" className="h-auto p-0 text-sm text-accent">
-                    Android
-                  </Button>{" or "}
-                  <Button variant="link" className="h-auto p-0 text-sm text-accent">
-                    iOS
-                  </Button>
-                </span>
-              </li>
-              <li className="flex items-start gap-2.5">
                 <Wifi className="w-4 h-4 mt-0.5 text-accent shrink-0" />
                 <span>
                   Register your devices MAC address{" "}
-                  <Button variant="link" className="h-auto p-0 text-sm text-accent">
-                    here
+                  <Button asChild variant="link" className="h-auto p-0 text-sm text-accent">
+                    <Link to={"https://forms.gle/W15y3cR1VydtDSh66"} target="_blank" rel="noopener noreferrer">
+                      here
+                    </Link>
                   </Button>
                 </span>
-              </li>
-              <li className="flex items-start gap-2.5">
-                <MessageCircle className="w-4 h-4 mt-0.5 text-accent shrink-0" />
-                <span>
-                  Join our{" "}
-                  <Button variant="link" className="h-auto p-0 text-sm text-accent">
-                    Discord server
-                  </Button>
-                  {" "}for important announcement and updates
-                </span>
-              </li>
-              <li className="flex items-start gap-2.5">
-                <PartyPopper className="w-4 h-4 mt-0.5 text-accent shrink-0" />
-                <span>Mark your calendar 16-18th of July 2026!</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <Globe className="w-4 h-4 mt-0.5 text-accent shrink-0" />
@@ -184,8 +162,12 @@ export default function ApplicationConfirmedRSVP() {
                     className="text-accent underline underline-offset-2"
                   >
                     @garudahacks
-                  </a>
+                  </a>{" "}for latest updates
                 </span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <PartyPopper className="w-4 h-4 mt-0.5 text-accent shrink-0" />
+                <span>Mark your calendar 16-18th of July 2026!</span>
               </li>
             </ul>
           </div>
