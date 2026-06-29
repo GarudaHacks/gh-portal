@@ -19,7 +19,6 @@ import ApplicationRejected from "./application/states/ApplicationRejected";
 
 function Home() {
   const { user, role, applicationStatus } = useAuth();
-  const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(true);
   const [portalConfig, setPortalConfig] = useState<PortalConfig | null>(null);
