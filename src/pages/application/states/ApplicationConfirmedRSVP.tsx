@@ -16,6 +16,7 @@ import {
   Globe,
   ChevronsLeftRightEllipsis,
   Wifi,
+  Info,
 } from "lucide-react"
 import { Link } from "react-router-dom"
 
@@ -143,12 +144,18 @@ export default function ApplicationConfirmedRSVP() {
               <li className="flex items-start gap-2.5">
                 <Wifi className="w-4 h-4 mt-0.5 text-accent shrink-0" />
                 <span>
-                  Register your devices MAC address{" "}
+                  Register your device's MAC address{" "}
                   <Button asChild variant="link" className="h-auto p-0 text-sm text-accent">
                     <Link to={"https://forms.gle/W15y3cR1VydtDSh66"} target="_blank" rel="noopener noreferrer">
                       here
                     </Link>
                   </Button>
+                </span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <Info className="w-4 h-4 mt-0.5 text-accent shrink-0" />
+                <span>
+                  Check your email inbox regularly for the rest of pre-flight checklist
                 </span>
               </li>
               <li className="flex items-start gap-2.5">
@@ -162,12 +169,12 @@ export default function ApplicationConfirmedRSVP() {
                     className="text-accent underline underline-offset-2"
                   >
                     @garudahacks
-                  </a>{" "}for latest updates
+                  </a>{" "}for the latest updates
                 </span>
               </li>
               <li className="flex items-start gap-2.5">
                 <PartyPopper className="w-4 h-4 mt-0.5 text-accent shrink-0" />
-                <span>Mark your calendar 16-18th of July 2026!</span>
+                <span>Mark your calendar for July 16-18th, 2026!</span>
               </li>
             </ul>
           </div>
