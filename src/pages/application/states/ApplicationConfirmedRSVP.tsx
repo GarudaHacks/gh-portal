@@ -7,6 +7,14 @@ import { fetchMyBoardingPass } from "@/lib/http/user"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import {
   Download,
   Loader2,
   MessageCircle,
@@ -17,6 +25,8 @@ import {
   ChevronsLeftRightEllipsis,
   Wifi,
   Info,
+  Image as ImageIcon,
+  Camera,
 } from "lucide-react"
 import { Link } from "react-router-dom"
 
@@ -139,6 +149,17 @@ export default function ApplicationConfirmedRSVP() {
                 <span>
                   General Participant Briefing: <strong>Wednesday, July 8th, 2026</strong>{" "}
                   (Sent via email).
+                </span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <Camera className="w-4 h-4 mt-0.5 text-accent shrink-0" />
+                <span>
+                  Let your friends know you're joining using our{" "}
+                  <Button asChild variant="link" className="h-auto p-0 text-sm text-accent">
+                    <Link to={"https://docs.google.com/document/d/1uH8KeqLuI8dNjxqUTIPlou2HX8c22pIh2NHPydlld7g/edit?usp=sharing"} target="_blank" rel="noopener noreferrer">
+                      Twibbon
+                    </Link>
+                  </Button>
                 </span>
               </li>
               <li className="flex items-start gap-2.5">
