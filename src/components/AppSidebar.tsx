@@ -2,7 +2,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { UserApplicationStatus } from "../types/applicationStatus";
 import { UserRole } from "@/types/auth";
-import { House, LogOut, User } from "lucide-react";
+import { Handshake, House, LogOut, User } from "lucide-react";
 import toast from "react-hot-toast";
 import {
   Sidebar,
@@ -17,7 +17,6 @@ import {
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import React from "react";
 
@@ -39,6 +38,8 @@ export function AppSidebar() {
     applicationStatus === UserApplicationStatus.CONFIRMED_RSVP ||
     role === UserRole.MENTOR;
 
+  const canAccessMentorship = applicationStatus === UserApplicationStatus.CONFIRMED_RSVP;
+
   const handleLogout = async () => {
     try {
       const { error } = await signOut();
@@ -55,18 +56,18 @@ export function AppSidebar() {
   const navItems: NavItem[] =
     role === UserRole.MENTOR
       ? [
-          { name: "Home", path: "/home", icon: <House /> },
-          // { name: "Mentoring", path: "/mentoring", icon: "/images/icons/group_search.svg", restricted: true },
-          // { name: "Schedules", path: "/schedules", icon: "/images/icons/calendar_month.svg", restricted: true },
-          { name: "Account", path: "/account", icon: <User /> },
-        ]
+        { name: "Home", path: "/home", icon: <House /> },
+        // { name: "Mentoring", path: "/mentoring", icon: "/images/icons/group_search.svg", restricted: true },
+        // { name: "Schedules", path: "/schedules", icon: "/images/icons/calendar_month.svg", restricted: true },
+        // { name: "Account", path: "/account", icon: <User /> }, // mentor account is involuntary made
+      ]
       : [
-          { name: "Home", path: "/home", icon: <House /> },
-          // { name: "Schedule", path: "/schedule", icon: "/images/icons/calendar_month.svg", restricted: true },
-          // { name: "Mentorship", path: "/mentorship", icon: "/images/icons/group_search.svg", restricted: true },
-          // { name: "FAQ", path: "/faq", icon: "/images/icons/contact_support.svg" },
-          { name: "Account", path: "/account", icon: <User /> },
-        ];
+        { name: "Home", path: "/home", icon: <House /> },
+        // { name: "Schedule", path: "/schedule", icon: "/images/icons/calendar_month.svg", restricted: true },
+        { name: "Mentorship", path: "/mentorship", icon: <Handshake />, restricted: true },
+        // { name: "FAQ", path: "/faq", icon: "/images/icons/contact_support.svg" },
+        { name: "Account", path: "/account", icon: <User /> },
+      ];
 
   if (["/auth", "/terms", "/privacy"].includes(location.pathname)) return null;
 
@@ -82,7 +83,9 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {navItems.map(({ name, path, icon, restricted }) => {
-                const disabled = !!restricted && !canAccess;
+                const disabled =
+                  !!restricted &&
+                  (path === "/mentorship" ? !canAccessMentorship : !canAccess);
                 return (
                   <SidebarMenuItem key={name} className="group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
                     <SidebarMenuButton

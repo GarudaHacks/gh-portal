@@ -49,7 +49,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (role !== "mentor") {
-    const isRestrictedPage = ["/schedule", "/ticket", "/mentorship"].includes(
+    const isRestrictedPage = ["/schedule", "/ticket"].includes(
       location.pathname
     );
     const canAccessRestrictedPages =
@@ -57,6 +57,17 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
       applicationStatus === UserApplicationStatus.CONFIRMED_RSVP;
 
     if (isRestrictedPage && !canAccessRestrictedPages) {
+      return <Navigate to="/home" />;
+    }
+
+    const isMentorshipPage =
+      location.pathname === "/mentorship" ||
+      location.pathname.startsWith("/mentors/");
+
+    if (
+      isMentorshipPage &&
+      applicationStatus !== UserApplicationStatus.CONFIRMED_RSVP
+    ) {
       return <Navigate to="/home" />;
     }
   }
@@ -100,7 +111,7 @@ function App() {
                   <Schedule />
                 </ProtectedRoute>
               }
-            />
+            /> */}
             <Route
               path="/mentorship"
               element={
@@ -108,15 +119,15 @@ function App() {
                   <Mentorship />
                 </ProtectedRoute>
               }
-            /> */}
-            {/* <Route
+            />
+            <Route
               path="/mentors/:mentorId"
               element={
                 <ProtectedRoute>
                   <BookMentorshipPage />
                 </ProtectedRoute>
               }
-            /> */}
+            />
             {/* <Route
               path="/mentoring"
               element={

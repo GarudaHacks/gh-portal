@@ -20,7 +20,6 @@ import discordIcon from "/images/icons/discord-icon.svg";
 import account from "/assets/account.png"
 import { titleCase } from "title-case";
 import Avatar from "boring-avatars";
-import { Separator } from "@/components/ui/separator";
 
 function Account() {
   const { user, role, signOut } = useAuth();
