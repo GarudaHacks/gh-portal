@@ -73,7 +73,7 @@ export default function MentorshipAppointmentCardComponent(
           <div className="flex justify-between items-center">
             <div className='flex flex-row items-center gap-2'>
               <Badge variant={"default"} className="bg-green-500">Booked</Badge>
-              <Badge variant={"outline"} className="text-white flex flex-row items-center gap-1">{mentorshipAppointment.location.toUpperCase()}
+              <Badge variant={"outline"} className=" flex flex-row items-center gap-1">{mentorshipAppointment.location.toUpperCase()}
                 {mentorshipAppointment.location === 'online' ? (
                   <MonitorSmartphone size={16} />
                 ) : (
@@ -102,10 +102,10 @@ export default function MentorshipAppointmentCardComponent(
             <DialogTrigger asChild>
               <Button variant={"outline"} className="w-full"><MoreHorizontalIcon /></Button>
             </DialogTrigger>
-            <DialogContent className="text-white">
+            <DialogContent className="">
               <DialogHeader>
                 <DialogTitle>Mentorship Detail</DialogTitle>
-                <DialogDescription className="text-white">
+                <DialogDescription className="">
                   You can cancel your mentorship session up to 45 minutes before the appointment.
                 </DialogDescription>
               </DialogHeader>
@@ -120,13 +120,13 @@ export default function MentorshipAppointmentCardComponent(
 
       <Collapsible>
         <CollapsibleTrigger className="flex flex-row gap-1 text-md justify-end w-full">
-          <Badge variant={"outline"} className="text-white border-0">
+          <Badge variant={"outline"} className=" border-0">
             <Lightbulb /> {titleCase(mentorshipAppointment.location)} Instruction
           </Badge>
         </CollapsibleTrigger>
         <CollapsibleContent className="py-4">
           <Alert variant={"default"}>
-            <AlertDescription className="text-white text-sm">
+            <AlertDescription className=" text-sm">
               {mentorshipAppointment.location === 'online' ? (
                 <ol className="list-decimal p-4">
                   <li>Reach out to the mentor to confirm whether the mentorship will be conducted via Zoom or another communication platform, such as Discord.</li>

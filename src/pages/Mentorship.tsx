@@ -4,7 +4,7 @@ import { FirestoreMentor, MentorshipAppointmentResponseAsHacker, MentorshipConfi
 import { fetchAllMentors, fetchMentorshipConfig, fetchMyMentorships } from "@/lib/http/mentorship";
 import MentorshipAppointmentCardComponent from "@/components/MentorshipAppointmentCard";
 import MentorCardComponent from "@/components/MentorCardComponent";
-import { Loader2 } from "lucide-react";
+import { Calendar, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { Badge } from "@/components/ui/badge";
 import InstructionMentorshipForHacker from "@/components/InstructionMentorshipForHacker";
@@ -106,8 +106,16 @@ function Mentorship() {
             <MentorshipStatusBarAsHacker />
 
             <div className="flex flex-col gap-8">
-              <div id="upcoming-mentorships" className="flex flex-col gap-4">
-                <h2 className="font-semibold text-xl">Mentorship Requests</h2>
+              <div id="upcoming-mentorships" className="flex flex-col gap-4 bg-white p-4 border-tertiary border rounded-xl">
+                <div className="flex items-center gap-2">
+                  <div className="bg-tertiary text-white p-2 rounded-xl w-fit">
+                    <Calendar />
+                  </div>
+                  <div className="flex flex-col items-start">
+                    <h2 className="font-semibold text-xl">My Mentorship Requests</h2>
+                    <p className="text-sm text-muted-foreground">Upcoming mentorship sessions</p>
+                  </div>
+                </div>
                 {myMentorships && myMentorships.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     {myMentorships.map((m) => (
