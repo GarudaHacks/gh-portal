@@ -117,7 +117,7 @@ function Mentorship() {
                   </div>
                 </div>
                 {myMentorships && myMentorships.length > 0 ? (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <div className="flex flex-col gap-4">
                     {myMentorships.map((m) => (
                       <MentorshipAppointmentCardComponent key={m.id} mentorshipAppointment={m} />
                     ))}
@@ -132,7 +132,7 @@ function Mentorship() {
               {myPastMentorships && myPastMentorships.length > 0 ? (
                 <div id="upcoming-mentorships" className="flex flex-col gap-4">
                   <h2 className="font-semibold text-xl">Past Mentoring Requests</h2>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <div className="flex flex-col gap-4">
                     {myPastMentorships.map((m) => (
                       <MentorshipAppointmentCardComponent key={m.id} mentorshipAppointment={m} />
                     ))}

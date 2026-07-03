@@ -22,12 +22,16 @@ export interface MentorshipAppointmentResponseAsHacker {
   startTime: number;
   endTime: number;
   mentorId: string;
+  mentorName?: string;
+  mentorSpecialization?: string;
+  mentorTitle?: string;
   hackerId?: string;
   hackerName?: string;
   teamName?: string;
   hackerDescription?: string; // desc given needed by hacker
   location: string; // offline or online
   offlineLocation?: string; // to be filled if the location is offline
+  meetLink?: string; // Google Meet link, set when location is online
 }
 
 export interface MentorshipAppointmentResponseAsMentor {
