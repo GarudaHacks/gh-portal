@@ -41,7 +41,7 @@ export default function MentoringPage() {
             {upcomingMentorshipAppointments && upcomingMentorshipAppointments?.length > 0 ? (
               <div className="flex flex-col lg:flex-row gap-4">
                 {upcomingMentorshipAppointments?.map((mentorshipAppointment) => (
-                  <MentorshipAppointmentCardAsMentorComponent key={mentorshipAppointment.id} mentorshipAppointment={mentorshipAppointment} />
+                  <MentorshipAppointmentCardAsMentorComponent key={mentorshipAppointment.id} mentorshipAppointment={mentorshipAppointment} showInstructions={false} />
                 ))}
               </div>
             ) : (

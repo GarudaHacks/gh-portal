@@ -74,5 +74,3 @@ export function clearPortalConfigCache(): void {
   cachedConfig = null;
   cacheTimestamp = 0;
 }
-
-export const MENTORSHIP_ZOOM_LINK = "https://ntu-sg.zoom.us/j/84287494210?pwd=7xHMzD8jBvAqUYJ1gbD6jZOhtVnUe9.1";

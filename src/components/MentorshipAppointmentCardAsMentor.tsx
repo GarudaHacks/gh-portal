@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react"
 import { MentorshipAppointmentResponseAsMentor } from "@/types/mentorship"
 import { Badge } from "./ui/badge"
-import { Calendar, CheckCheck, ChevronDown, Clock, Flag, MapPin, Video } from "lucide-react"
+import { Calendar, CheckCheck, ChevronDown, Clock, Flag, MapPin, MessageSquare, Video } from "lucide-react"
 import { titleCase } from "title-case";
 import Countdown, { zeroPad } from 'react-countdown';
 import { Button } from "./ui/button"
@@ -17,7 +17,10 @@ import MentorEditAppointmentComponent from "./MentorEditAppointmentComponent"
 
 interface MentorshipAppointmentCardComponentProps {
   mentorshipAppointment: MentorshipAppointmentResponseAsMentor
+  showInstructions: boolean
 }
+
+const COMMENT_WINDOW_SECONDS = 15 * 60;
 
 type AppointmentState = 'upcoming' | 'ongoing' | 'completed';
 
@@ -56,9 +59,9 @@ const OngoingRenderer = ({ hours, minutes, seconds, completed }: { hours: number
 };
 
 export default function MentorshipAppointmentCardAsMentorComponent(
-  { mentorshipAppointment }: MentorshipAppointmentCardComponentProps
+  { mentorshipAppointment, showInstructions }: MentorshipAppointmentCardComponentProps
 ) {
-  const [showInstructions, setShowInstructions] = useState(true)
+  const [isInstructionsExpanded, setIsInstructionsExpanded] = useState(true)
 
   const appointmentState = useMemo(() =>
     getAppointmentState(mentorshipAppointment.startTime, mentorshipAppointment.endTime),
@@ -67,6 +70,7 @@ export default function MentorshipAppointmentCardAsMentorComponent(
 
   const isOnline = mentorshipAppointment.location === 'online';
   const isBooked = !!mentorshipAppointment.hackerId;
+  const canComment = (Date.now() / 1000) >= mentorshipAppointment.startTime - COMMENT_WINDOW_SECONDS;
 
   const startDate = new Date(mentorshipAppointment.startTime * 1000);
   const endDate = new Date(mentorshipAppointment.endTime * 1000);
@@ -124,6 +128,16 @@ export default function MentorshipAppointmentCardAsMentorComponent(
           {mentorshipAppointment.hackerName && (
             <p className="text-sm text-muted-foreground">{mentorshipAppointment.hackerName}</p>
           )}
+          {isBooked && (
+            <div className="bg-tertiary/5 border border-tertiary/20 rounded-lg p-3 mt-1">
+              <p className="text-xs font-semibold text-tertiary mb-1">Hacker Inquiry</p>
+              {mentorshipAppointment.hackerDescription ? (
+                <p className="text-sm">{mentorshipAppointment.hackerDescription}</p>
+              ) : (
+                <p className="text-sm text-muted-foreground">No inquiry provided.</p>
+              )}
+            </div>
+          )}
           <div className="flex items-center gap-2 text-sm mt-2">
             <Calendar size={16} className="text-tertiary shrink-0" />
             {dateLabel}
@@ -150,75 +164,52 @@ export default function MentorshipAppointmentCardAsMentorComponent(
             </div>
 
             <div className="flex gap-2 w-full justify-end">
-              <Button variant="outline" className="gap-2" disabled={appointmentState === 'completed'} asChild>
-                <a href={mentorshipAppointment.meetLink} target="_blank" rel="noopener noreferrer">
-                  <Video />
-                  Google Meet
-                </a>
-              </Button>
+              {mentorshipAppointment.location === 'online' &&
+                <Button variant="outline" className="gap-2" asChild>
+                  <a href={mentorshipAppointment.meetLink} target="_blank" rel="noopener noreferrer">
+                    <Video />
+                    Google Meet
+                  </a>
+                </Button>
+              }
 
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="default" className="gap-2">
-                    Details
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-h-[80vh] overflow-y-scroll">
-                  <DialogHeader>
-                    <DialogTitle>Mentorship Detail</DialogTitle>
-                    <p className="text-xs text-muted-foreground">Ref ID: {mentorshipAppointment.id}</p>
-                    <DialogDescription></DialogDescription>
-                  </DialogHeader>
-
-                  <div className="flex flex-col gap-4">
-                    <div className="border border-tertiary/20 p-4 rounded-lg">
-                      <h3 className="font-semibold">Hacker and Team Detail</h3>
-                      <div className="mt-2 text-sm flex flex-col gap-1">
-                        <p>Hacker Name: {mentorshipAppointment.hackerName}</p>
-                        <p>Team Name: {mentorshipAppointment.teamName}</p>
-                      </div>
-                    </div>
-
-                    <div className="border border-tertiary/20 p-4 rounded-lg">
-                      <h3 className="font-semibold">Hacker Inquiry</h3>
-                      {mentorshipAppointment.hackerDescription ? (
-                        <p className="mt-2 text-sm">{mentorshipAppointment.hackerDescription}</p>
-                      ) : (
-                        <p className="text-muted-foreground text-sm mt-2">No inquiry provided.</p>
-                      )}
-                    </div>
-
-                    {mentorshipAppointment.offlineLocation && (
-                      <div className="border border-tertiary/20 p-4 rounded-lg">
-                        <h3 className="font-semibold">Hacker Location</h3>
-                        <p className="mt-2 text-sm">Location: {mentorshipAppointment.offlineLocation}</p>
-                      </div>
-                    )}
-                  </div>
-                  <div className="h-2"></div>
-                  <MentorEditAppointmentComponent mentorshipAppointment={mentorshipAppointment} />
-                </DialogContent>
-              </Dialog>
+              {canComment && (
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="default" className="gap-2">
+                      <MessageSquare size={16} />
+                      Comment
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-h-[80vh] overflow-y-scroll">
+                    <DialogHeader>
+                      <DialogTitle>Mentor Notes</DialogTitle>
+                    </DialogHeader>
+                    <MentorEditAppointmentComponent mentorshipAppointment={mentorshipAppointment} />
+                  </DialogContent>
+                </Dialog>
+              )}
             </div>
           </div>
         )}
       </div>
 
       {/* Instructions */}
-      <div className="flex flex-col gap-2 p-4 border-t border-tertiary/20">
+      {showInstructions && (
+        <div className="flex flex-col gap-2 p-4 border-t border-tertiary/20">
         <button
           type="button"
-          onClick={() => setShowInstructions((prev) => !prev)}
+          onClick={() => setIsInstructionsExpanded((prev) => !prev)}
           className="flex items-center justify-between gap-2 text-left"
-          aria-expanded={showInstructions}
+          aria-expanded={isInstructionsExpanded}
         >
           <p className="font-semibold text-sm">{titleCase(mentorshipAppointment.location)} Instructions</p>
           <ChevronDown
             size={16}
-            className={`text-tertiary shrink-0 transition-transform ${showInstructions ? "rotate-180" : ""}`}
+            className={`text-tertiary shrink-0 transition-transform ${isInstructionsExpanded ? "rotate-180" : ""}`}
           />
         </button>
-        {showInstructions && (
+        {isInstructionsExpanded && (
           appointmentState === 'ongoing' ? (
             <ol className="list-decimal ml-4 text-sm text-muted-foreground flex flex-col gap-2">
               {isOnline ? (
@@ -238,7 +229,7 @@ export default function MentorshipAppointmentCardAsMentorComponent(
           ) : appointmentState === 'completed' ? (
             <ol className="list-decimal ml-4 text-sm text-muted-foreground flex flex-col gap-2">
               <li>This mentorship session has ended. Thank you for your mentoring contribution!</li>
-              <li>Use the "Details" button to leave notes or mark this session as done or AFK.</li>
+              <li>Use the "Comment" button to leave notes or mark this session as done or AFK.</li>
             </ol>
           ) : (
             <ol className="list-decimal ml-4 text-sm text-muted-foreground flex flex-col gap-2">
@@ -257,7 +248,8 @@ export default function MentorshipAppointmentCardAsMentorComponent(
             </ol>
           )
         )}
-      </div>
+        </div>
+      )}
     </div>
   )
 }

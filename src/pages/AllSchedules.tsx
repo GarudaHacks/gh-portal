@@ -30,7 +30,7 @@ export default function AllSchedulePage() {
         ) : (
           <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
             {mentoringSchedules.map((slot) => (
-              <MentorshipAppointmentCardAsMentorComponent mentorshipAppointment={slot} />
+              <MentorshipAppointmentCardAsMentorComponent mentorshipAppointment={slot} showInstructions />
             ))}
           </div>
         )}
