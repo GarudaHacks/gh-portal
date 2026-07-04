@@ -1,4 +1,5 @@
 import { eventName } from "@/config";
+import { Link } from "react-router-dom";
 
 export default function InstructionCardForMentorComponent(
   { user }: { user: any }
@@ -6,60 +7,52 @@ export default function InstructionCardForMentorComponent(
   return (
     <div className="flex flex-col gap-4 text-sm">
       <div>
-        <h1 className="text-xl font-bold">Hello, {user?.displayName}!</h1>
-        <h2 className="text-lg">Welcome to {eventName}!</h2>
+        <h1 className="text-xl font-bold">Hello, {user?.displayName}</h1>
+        <h2 className="text-lg">Welcome to {eventName}</h2>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="p-4 border rounded-lg flex flex-col">
+      <p>Thank you for being a part of our mentoring team! To get you started with our mentoring system, please read this guide.</p>
+      <div className="flex flex-col gap-4">
+        <div className="p-4 border rounded-lg flex flex-col bg-white">
           <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-            📋 General Instructions
+            General
           </h4>
-
           <ul className="my-6 ml-6 list-decimal [&>li]:mt-2">
-            <li>View all your upcoming and recent schedules on this portal.</li>
-            <li>The mentorship period is open from July 24 at 2:00 PM to July 25 at 8:00 PM.</li>
-            <li>Hackers can book mentorship slots starting at 1:00 PM on July 24.</li>
-            <li>Your mentorship slots have been created based on the availability you provided in our form. To change your schedule, please contact us.</li>
-            <li>Each mentorship slot is scheduled for 15 minutes. Please be mindful of the time during each session.</li>
-            <li>Hackers must book at least 30 minutes in advance. You will receive an email notification when a hacker books a slot with you.</li>
-            <li>Hackers can cancel an appointment at least 45 minutes in advance. You will receive an email notification if a hacker cancels.</li>
-            <li>You can mark a schedule as completed once the mentorship session is finished.</li>
-            <li>You can add comments to each schedule before or after appointments.</li>
-            <li>You can mark a schedule as AFK if a hacker does not attend.</li>
+            <li>Your mentorship schedules have been created based on the availability you provided in the intake form. To change your schedule, please contact us.</li>
+            <li>You can check your upcoming schedules in the <Link to={"/mentoring"} className="underline text-tertiary">Mentoring</Link> tab.</li>
+            <li>Check all schedules in the <Link to={"/schedules"} className="underline text-tertiary">Schedules</Link> tab.</li>
+            <li>Hackers must book a slot at least 30 minutes in advance. You will receive an email notification when a hacker books a slot with you.</li>
+            <li>Hackers may cancel an appointment at least 45 minutes in advance. You will receive an email notification if a hacker cancels.</li>
             <li>Do not forget to join our Discord channel! <a href="https://discord.gg/Ag8tB3tQ" className="underline">https://discord.gg/Ag8tB3tQ</a></li>
           </ul>
         </div>
 
-        <div className="p-4 border rounded-lg flex flex-col">
+        <div className="p-4 border rounded-lg flex flex-col bg-white">
           <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-            💬 Ways of Communication
+            Ways of Communication
           </h4>
-
-          <p className="leading-7 [&:not(:first-child)]:mt-6">
-            Regardless of your location preference (online or offline), we will provide a Zoom link with a designated Breakout Room for your use. Discord can be used for asynchronous communication before or after your mentorship appointment.
-          </p>
-
-          <h4 className="scroll-m-20 text-xl font-semibold tracking-tight mt-10">
-            📍 Offline
+          <h4 className="scroll-m-20 text-lg font-semibold tracking-tight mt-10">
+            Offline
           </h4>
           <ul className="my-2 ml-6 list-decimal [&>li]:mt-2">
             <li>Hackers will provide their on-site location in the mentorship appointment details.</li>
             <li>If you prefer to meet elsewhere, please discuss this directly with the hackers.</li>
           </ul>
 
-          <h4 className="scroll-m-20 text-xl font-semibold tracking-tight mt-10">
-            🌐 Online
+          <h4 className="scroll-m-20 text-lg font-semibold tracking-tight mt-10">
+            Online
           </h4>
           <ul className="my-2 ml-6 list-decimal [&>li]:mt-2">
-            <li>Hackers should contact you on Discord first to agree on a communication method.</li>
-            <li>You may discuss with the hackers which platform you both prefer to use (e.g., Discord, Zoom).</li>
+            <li>A Google Meet link has been provided on each booking, which you can use to communicate with the hacker.</li>
           </ul>
+          <p className="leading-7 [&:not(:first-child)]:mt-6">
+            Discord can be used for asynchronous communication before or after your mentorship appointment.
+          </p>
+
         </div>
 
-        <div className="p-4 border rounded-lg flex flex-col">
+        <div className="p-4 border rounded-lg flex flex-col bg-white">
           <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-            🏫 Are you coming on-site?
+            Are you coming on-site?
           </h4>
 
           <p className="leading-7 [&:not(:first-child)]:mt-6">
@@ -67,17 +60,11 @@ export default function InstructionCardForMentorComponent(
           </p>
         </div>
 
-        <div className="p-4 border rounded-lg flex flex-col">
+        <div className="p-4 border rounded-lg flex flex-col gap-4 bg-white">
           <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
-            🙋 Need Help? Contact Us
+            Need Help?
           </h4>
-          <p className="leading-7 [&:not(:first-child)]:mt-6">
-            Raise your questions in the mentor Discord channel or contact us directly.
-          </p>
-          <ul className="my-2 ml-6 list-disc [&>li]:mt-2">
-            <li>Discord: _heryan (Ryan)</li>
-            <li>WhatsApp: +6281224158369 (Ryan)</li>
-          </ul>
+          <p>Send an email to <a href="mailto:heryan@garudahacks.com" className="underline">heryan@garudahacks.com</a></p>
         </div>
       </div>
     </div>
