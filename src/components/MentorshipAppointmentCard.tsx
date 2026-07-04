@@ -48,6 +48,7 @@ export default function MentorshipAppointmentCardComponent(
 
   const isOnline = mentorshipAppointment.location === 'online';
   const joinLink = mentorshipAppointment.meetLink || MENTORSHIP_ZOOM_LINK;
+  const isPast = now >= mentorshipAppointment.startTime * 1000;
 
   const startDate = new Date(mentorshipAppointment.startTime * 1000);
   const endDate = new Date(mentorshipAppointment.endTime * 1000);
@@ -123,27 +124,29 @@ export default function MentorshipAppointmentCardComponent(
               </Button>
             )}
 
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="destructive" className="gap-2">
-                  <X size={16} /> Cancel Session
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Cancel Mentorship Session</DialogTitle>
-                  <DialogDescription>
-                    You can cancel your mentorship session up to 45 minutes before the appointment.
-                  </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                  <Button variant="destructive" className="flex gap-2 items-center" onClick={handleCancelAppointment} disabled={loading}>
-                    Confirm Cancellation
-                    {loading && <Loader2 className="animate-spin" size={16} />}
+            {!isPast && (
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="destructive" className="gap-2">
+                    <X size={16} /> Cancel Session
                   </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Cancel Mentorship Session</DialogTitle>
+                    <DialogDescription>
+                      You can cancel your mentorship session up to 45 minutes before the appointment.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <Button variant="destructive" className="flex gap-2 items-center" onClick={handleCancelAppointment} disabled={loading}>
+                      Confirm Cancellation
+                      {loading && <Loader2 className="animate-spin" size={16} />}
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            )}
           </div>
         </div>
       </div>

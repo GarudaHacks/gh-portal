@@ -17,6 +17,7 @@ import MentoringPage from "./pages/Mentoring";
 import BookMentorshipPage from "./pages/BookMentorship";
 import AllSchedulePage from "./pages/AllSchedules";
 import MentorshipDetailPage from "./pages/MentorshipDetail";
+import MentorshipHistoryPage from "./pages/MentorshipHistory";
 import { SidebarProvider, SidebarInset } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/AppSidebar";
 import DiscordCallback from "./components/DiscordCallback";
@@ -62,6 +63,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
     const isMentorshipPage =
       location.pathname === "/mentorship" ||
+      location.pathname === "/mentorship/history" ||
       location.pathname.startsWith("/mentors/");
 
     if (
@@ -117,6 +119,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Mentorship />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/mentorship/history"
+              element={
+                <ProtectedRoute>
+                  <MentorshipHistoryPage />
                 </ProtectedRoute>
               }
             />

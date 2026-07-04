@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Page from "../components/Page";
 import { FirestoreMentor, MentorshipAppointmentResponseAsHacker, MentorshipConfig } from "@/types/mentorship";
 import { fetchAllMentors, fetchMentorshipConfig, fetchMyMentorships } from "@/lib/http/mentorship";
@@ -14,6 +15,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 
 function Mentorship() {
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [mentorshipConfig, setMentorshipConfig] = useState<MentorshipConfig>()
   const [myMentorships, setMyMentorships] = useState<MentorshipAppointmentResponseAsHacker[]>()
@@ -139,7 +141,7 @@ function Mentorship() {
                     ))}
                   </div>
                   <div className="flex justify-end">
-                    <Button variant={"secondary"}><History /> View All History</Button>
+                    <Button variant={"secondary"} onClick={() => navigate("/mentorship/history")}><History /> View All History</Button>
                   </div>
                 </div>
               ) : (
