@@ -17,6 +17,7 @@ import MentoringPage from "./pages/Mentoring";
 import BookMentorshipPage from "./pages/BookMentorship";
 import AllSchedulePage from "./pages/AllSchedules";
 import MentorshipDetailPage from "./pages/MentorshipDetail";
+import MentorshipHistoryPage from "./pages/MentorshipHistory";
 import { SidebarProvider, SidebarInset } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/AppSidebar";
 import DiscordCallback from "./components/DiscordCallback";
@@ -49,7 +50,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (role !== "mentor") {
-    const isRestrictedPage = ["/schedule", "/ticket", "/mentorship"].includes(
+    const isRestrictedPage = ["/schedule", "/ticket"].includes(
       location.pathname
     );
     const canAccessRestrictedPages =
@@ -59,8 +60,30 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     if (isRestrictedPage && !canAccessRestrictedPages) {
       return <Navigate to="/home" />;
     }
+
+    const isMentorshipPage =
+      location.pathname === "/mentorship" ||
+      location.pathname === "/mentorship/history" ||
+      location.pathname.startsWith("/mentors/");
+
+    if (
+      isMentorshipPage &&
+      applicationStatus !== UserApplicationStatus.CONFIRMED_RSVP
+    ) {
+      return <Navigate to="/home" />;
+    }
   }
   return children;
+};
+
+const ConditionalAnnouncementBanner = () => {
+  const { role } = useAuth();
+
+  if (role === "mentor") {
+    return null;
+  }
+
+  return <AnnouncementBanner />;
 };
 
 function App() {
@@ -70,7 +93,7 @@ function App() {
         <SidebarProvider>
           <AppSidebar />
           <SidebarInset>
-            <AnnouncementBanner />
+            <ConditionalAnnouncementBanner />
             <Routes>
             <Route path="/auth/discord/callback" element={<DiscordCallback />} />
             <Route path="/auth" element={<Auth />} />
@@ -100,7 +123,7 @@ function App() {
                   <Schedule />
                 </ProtectedRoute>
               }
-            />
+            /> */}
             <Route
               path="/mentorship"
               element={
@@ -108,16 +131,24 @@ function App() {
                   <Mentorship />
                 </ProtectedRoute>
               }
-            /> */}
-            {/* <Route
+            />
+            <Route
+              path="/mentorship/history"
+              element={
+                <ProtectedRoute>
+                  <MentorshipHistoryPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/mentors/:mentorId"
               element={
                 <ProtectedRoute>
                   <BookMentorshipPage />
                 </ProtectedRoute>
               }
-            /> */}
-            {/* <Route
+            />
+            <Route
               path="/mentoring"
               element={
                 <ProtectedRoute>
@@ -140,7 +171,7 @@ function App() {
                   <AllSchedulePage />
                 </ProtectedRoute>
               }
-            /> */}
+            />
             {/* <Route
               path="/faq"
               element={

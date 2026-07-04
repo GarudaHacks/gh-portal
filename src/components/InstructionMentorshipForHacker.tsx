@@ -13,13 +13,13 @@ export default function InstructionMentorshipForHacker() {
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant={"link"} className="text-white p-0">
+          <Button variant={"outline"} className="w-full">
             📕 Read Mentorship Guide
           </Button>
         </DialogTrigger>
-        <DialogContent className="text-white">
+        <DialogContent className="">
           <DialogHeader>
-            <DialogTitle className="text-white">📋 Mentorship Guide</DialogTitle>
+            <DialogTitle className="">📋 Mentorship Guide</DialogTitle>
           </DialogHeader>
 
           <div className="flex flex-col gap-4 max-h-[70vh] overflow-y-auto text-sm">

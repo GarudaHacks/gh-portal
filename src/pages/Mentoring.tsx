@@ -35,13 +35,17 @@ export default function MentoringPage() {
           </div>
         ) : (
           <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
+              <h1 className="text-xl font-bold">Upcoming Mentoring Schedules</h1>
+              <p>All of your upcoming schedules will be shown here.</p>
+            </div>
 
-            <h1 className="text-2xl">Upcoming Mentoring Schedule ({upcomingMentorshipAppointments?.length ? upcomingMentorshipAppointments.length : '0'})</h1>
+            <p className="text-sm text-muted">Showing {upcomingMentorshipAppointments?.length} results</p>
 
             {upcomingMentorshipAppointments && upcomingMentorshipAppointments?.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex flex-col lg:flex-row gap-4">
                 {upcomingMentorshipAppointments?.map((mentorshipAppointment) => (
-                  <MentorshipAppointmentCardAsMentorComponent key={mentorshipAppointment.id} mentorshipAppointment={mentorshipAppointment} />
+                  <MentorshipAppointmentCardAsMentorComponent key={mentorshipAppointment.id} mentorshipAppointment={mentorshipAppointment} showInstructions />
                 ))}
               </div>
             ) : (
@@ -50,9 +54,7 @@ export default function MentoringPage() {
               </div>
             )}
           </div>
-
         )}
-
       </div>
     </Page>
   )
