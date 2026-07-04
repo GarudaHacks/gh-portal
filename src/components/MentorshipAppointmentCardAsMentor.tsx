@@ -233,16 +233,14 @@ export default function MentorshipAppointmentCardAsMentorComponent(
             </ol>
           ) : (
             <ol className="list-decimal ml-4 text-sm text-muted-foreground flex flex-col gap-2">
-              <li>Ideally, the hacker will reach out to you on Discord first.</li>
               {isOnline ? (
                 <>
-                  <li>When they do, confirm whether the mentorship will be conducted via Zoom or another communication platform.</li>
-                  <li>You can always use the Zoom link by joining the Breakout Room designated for you.</li>
+                  <li></li>
                 </>
               ) : (
                 <>
-                  <li>Discuss with the hacker to confirm the location of your meeting in the venue.</li>
-                  <li>You may use the Zoom link instead and join the Breakout Room designated for you. The decision is up to you and the hacker.</li>
+                  <li>Prepare your way to the location provided by hacker when the session about to start.</li>
+                  <li>The member of the team may contact you through email or Discord before the session starts.</li>
                 </>
               )}
             </ol>
