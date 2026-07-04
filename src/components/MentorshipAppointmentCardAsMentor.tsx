@@ -235,7 +235,8 @@ export default function MentorshipAppointmentCardAsMentorComponent(
             <ol className="list-decimal ml-4 text-sm text-muted-foreground flex flex-col gap-2">
               {isOnline ? (
                 <>
-                  <li></li>
+                  <li>Use the Google Meet link provided when the session is starting.</li>
+                  <li>The member of the team may contact you through email or Discord before the session starts.</li>
                 </>
               ) : (
                 <>
