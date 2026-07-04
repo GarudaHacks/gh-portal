@@ -24,6 +24,8 @@ export interface MentorshipAppointmentResponseAsHacker {
   mentorId: string;
   mentorName?: string;
   mentorSpecialization?: string;
+  mentorEmail?: string;
+  mentorDiscordUsername: string;
   mentorTitle?: string;
   hackerId?: string;
   hackerName?: string;

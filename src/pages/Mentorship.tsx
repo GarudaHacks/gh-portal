@@ -4,13 +4,14 @@ import { FirestoreMentor, MentorshipAppointmentResponseAsHacker, MentorshipConfi
 import { fetchAllMentors, fetchMentorshipConfig, fetchMyMentorships } from "@/lib/http/mentorship";
 import MentorshipAppointmentCardComponent from "@/components/MentorshipAppointmentCard";
 import MentorCardComponent from "@/components/MentorCardComponent";
-import { Calendar, Loader2 } from "lucide-react";
+import { Calendar, History, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { Badge } from "@/components/ui/badge";
 import InstructionMentorshipForHacker from "@/components/InstructionMentorshipForHacker";
 import MentorshipStatusBarAsHacker from "@/components/MentorshipStatusBarAsHacker";
 import { eventName } from "@/config";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 
 function Mentorship() {
   const [loading, setLoading] = useState(false)
@@ -136,6 +137,9 @@ function Mentorship() {
                     {myPastMentorships.map((m) => (
                       <MentorshipAppointmentCardComponent key={m.id} mentorshipAppointment={m} />
                     ))}
+                  </div>
+                  <div className="flex justify-end">
+                    <Button variant={"secondary"}><History /> View All History</Button>
                   </div>
                 </div>
               ) : (
