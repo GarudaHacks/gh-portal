@@ -2,7 +2,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { UserApplicationStatus } from "../types/applicationStatus";
 import { UserRole } from "@/types/auth";
-import { Handshake, House, LogOut, User } from "lucide-react";
+import { Calendar, Handshake, House, LogOut, User } from "lucide-react";
 import toast from "react-hot-toast";
 import {
   Sidebar,
@@ -57,8 +57,8 @@ export function AppSidebar() {
     role === UserRole.MENTOR
       ? [
         { name: "Home", path: "/home", icon: <House /> },
-        // { name: "Mentoring", path: "/mentoring", icon: "/images/icons/group_search.svg", restricted: true },
-        // { name: "Schedules", path: "/schedules", icon: "/images/icons/calendar_month.svg", restricted: true },
+        { name: "Mentoring", path: "/mentoring", icon: <Handshake />, restricted: true },
+        { name: "Schedules", path: "/schedules", icon: <Calendar />, restricted: true },
         // { name: "Account", path: "/account", icon: <User /> }, // mentor account is involuntary made
       ]
       : [

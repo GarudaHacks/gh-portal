@@ -16,8 +16,6 @@ import {
 } from "@/components/ui/dialog"
 import { cancelMentorshipAppointment } from "@/lib/http/mentorship"
 import toast from "react-hot-toast"
-import { MENTORSHIP_ZOOM_LINK } from "@/utils/portalConfig"
-import { formatSpecialization } from "@/utils/stringUtils"
 
 interface MentorshipAppointmentCardComponentProps {
   mentorshipAppointment: MentorshipAppointmentResponseAsHacker
@@ -47,7 +45,7 @@ export default function MentorshipAppointmentCardComponent(
   }, []);
 
   const isOnline = mentorshipAppointment.location === 'online';
-  const joinLink = mentorshipAppointment.meetLink || MENTORSHIP_ZOOM_LINK;
+  const joinLink = mentorshipAppointment.meetLink;
   const isPast = now >= mentorshipAppointment.startTime * 1000;
 
   const startDate = new Date(mentorshipAppointment.startTime * 1000);

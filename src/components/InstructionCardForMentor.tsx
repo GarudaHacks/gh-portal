@@ -1,3 +1,5 @@
+import { eventName } from "@/config";
+
 export default function InstructionCardForMentorComponent(
   { user }: { user: any }
 ) {
@@ -5,7 +7,7 @@ export default function InstructionCardForMentorComponent(
     <div className="flex flex-col gap-4 text-sm">
       <div>
         <h1 className="text-xl font-bold">Hello, {user?.displayName}!</h1>
-        <h2 className="text-lg">Welcome to Garuda Hacks 6.0!</h2>
+        <h2 className="text-lg">Welcome to {eventName}!</h2>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

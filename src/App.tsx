@@ -148,7 +148,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            {/* <Route
+            <Route
               path="/mentoring"
               element={
                 <ProtectedRoute>
@@ -171,7 +171,7 @@ function App() {
                   <AllSchedulePage />
                 </ProtectedRoute>
               }
-            /> */}
+            />
             {/* <Route
               path="/faq"
               element={
