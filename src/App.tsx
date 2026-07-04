@@ -76,6 +76,16 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return children;
 };
 
+const ConditionalAnnouncementBanner = () => {
+  const { role } = useAuth();
+
+  if (role === "mentor") {
+    return null;
+  }
+
+  return <AnnouncementBanner />;
+};
+
 function App() {
   return (
     <AuthProvider>
@@ -83,7 +93,7 @@ function App() {
         <SidebarProvider>
           <AppSidebar />
           <SidebarInset>
-            <AnnouncementBanner />
+            <ConditionalAnnouncementBanner />
             <Routes>
             <Route path="/auth/discord/callback" element={<DiscordCallback />} />
             <Route path="/auth" element={<Auth />} />
