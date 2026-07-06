@@ -19,6 +19,7 @@ import toast from "react-hot-toast"
 
 interface MentorshipAppointmentCardComponentProps {
   mentorshipAppointment: MentorshipAppointmentResponseAsHacker
+  needInstructions?: boolean
 }
 
 const countdownRenderer = ({ hours, minutes, seconds, completed }: { hours: number, minutes: number, seconds: number, completed: boolean }) => {
@@ -33,7 +34,7 @@ const countdownRenderer = ({ hours, minutes, seconds, completed }: { hours: numb
 };
 
 export default function MentorshipAppointmentCardComponent(
-  { mentorshipAppointment }: MentorshipAppointmentCardComponentProps
+  { mentorshipAppointment, needInstructions }: MentorshipAppointmentCardComponentProps
 ) {
   const [loading, setLoading] = useState(false)
   const [now, setNow] = useState(() => Date.now())
@@ -150,32 +151,34 @@ export default function MentorshipAppointmentCardComponent(
       </div>
 
       {/* Instructions */}
-      <div className="flex flex-col gap-2 p-4 border-t border-tertiary/20">
-        <button
-          type="button"
-          onClick={() => setShowInstructions((prev) => !prev)}
-          className="flex items-center justify-between gap-2 text-left"
-          aria-expanded={showInstructions}
-        >
-          <p className="font-semibold text-sm">{titleCase(mentorshipAppointment.location)} Instructions</p>
-          <ChevronDown
-            size={16}
-            className={`text-tertiary shrink-0 transition-transform ${showInstructions ? "rotate-180" : ""}`}
-          />
-        </button>
-        {showInstructions && (
-          isOnline ? (
-            <ol className="list-decimal ml-4 text-sm text-muted-foreground flex flex-col gap-2">
-              <li>By default you can use the provided Google Meet link.</li>
-              <li>There is also an email you can use to contact the mentor prior to the booking time, or as a follow-up after the mentoring session ends.</li>
-            </ol>
-          ) : (
-            <ol className="list-decimal ml-4 text-sm text-muted-foreground flex flex-col gap-2">
-              <li>Contact your mentor through email or Discord to confirm the location before the session starts.</li>
-            </ol>
-          )
-        )}
-      </div>
+      {needInstructions &&
+        <div className="flex flex-col gap-2 p-4 border-t border-tertiary/20">
+          <button
+            type="button"
+            onClick={() => setShowInstructions((prev) => !prev)}
+            className="flex items-center justify-between gap-2 text-left"
+            aria-expanded={showInstructions}
+          >
+            <p className="font-semibold text-sm">{titleCase(mentorshipAppointment.location)} Instructions</p>
+            <ChevronDown
+              size={16}
+              className={`text-tertiary shrink-0 transition-transform ${showInstructions ? "rotate-180" : ""}`}
+            />
+          </button>
+          {showInstructions && (
+            isOnline ? (
+              <ol className="list-decimal ml-4 text-sm text-muted-foreground flex flex-col gap-2">
+                <li>By default you can use the provided Google Meet link.</li>
+                <li>There is also an email you can use to contact the mentor prior to the booking time, or as a follow-up after the mentoring session ends.</li>
+              </ol>
+            ) : (
+              <ol className="list-decimal ml-4 text-sm text-muted-foreground flex flex-col gap-2">
+                <li>Contact your mentor through email or Discord to confirm the location before the session starts.</li>
+              </ol>
+            )
+          )}
+        </div>
+      }
     </div>
   )
 }

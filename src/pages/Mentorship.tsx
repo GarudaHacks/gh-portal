@@ -8,11 +8,9 @@ import MentorCardComponent from "@/components/MentorCardComponent";
 import { Calendar, History, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { Badge } from "@/components/ui/badge";
-import InstructionMentorshipForHacker from "@/components/InstructionMentorshipForHacker";
-import MentorshipStatusBarAsHacker from "@/components/MentorshipStatusBarAsHacker";
 import { eventName } from "@/config";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import InstructionMentorshipForHacker from "@/components/InstructionMentorshipForHacker";
 
 function Mentorship() {
   const navigate = useNavigate()
@@ -99,19 +97,21 @@ function Mentorship() {
           <h2 className="font-bold text-2xl lg:text-3xl">Mentorship</h2>
           <p>Submit a request or question to a mentor for help on your project.</p>
         </div>
-        <Separator />
+        <InstructionMentorshipForHacker />
+        <div className="h-6"></div>
+        <div className="flex justify-end">
+          <Button variant={"secondary"} onClick={() => navigate("/mentorship/history")}><History />History</Button>
+        </div>
         {loading ? (
           <div className="w-full min-h-screen flex flex-col items-center justify-center">
             <Loader2 className="animate-spin" />
           </div>
         ) : (
           <div className="flex flex-col gap-4">
-            <MentorshipStatusBarAsHacker />
-
             <div className="flex flex-col gap-8">
               <div id="upcoming-mentorships" className="flex flex-col gap-4 bg-white p-4 border-tertiary border rounded-xl">
                 <div className="flex items-center gap-2">
-                  <div className="bg-tertiary text-white p-2 rounded-xl w-fit">
+                  <div className="bg-tertiary/25 text-tertiary p-2 rounded-xl w-fit">
                     <Calendar />
                   </div>
                   <div className="flex flex-col items-start">
@@ -122,7 +122,7 @@ function Mentorship() {
                 {myMentorships && myMentorships.length > 0 ? (
                   <div className="flex flex-col gap-4">
                     {myMentorships.map((m) => (
-                      <MentorshipAppointmentCardComponent key={m.id} mentorshipAppointment={m} />
+                      <MentorshipAppointmentCardComponent key={m.id} mentorshipAppointment={m} needInstructions />
                     ))}
                   </div>
                 ) : (
@@ -131,22 +131,6 @@ function Mentorship() {
                   </div>
                 )}
               </div>
-
-              {myPastMentorships && myPastMentorships.length > 0 ? (
-                <div id="upcoming-mentorships" className="flex flex-col gap-4">
-                  <h2 className="font-semibold text-xl">Past Mentoring Requests</h2>
-                  <div className="flex flex-col gap-4">
-                    {myPastMentorships.map((m) => (
-                      <MentorshipAppointmentCardComponent key={m.id} mentorshipAppointment={m} />
-                    ))}
-                  </div>
-                  <div className="flex justify-end">
-                    <Button variant={"secondary"} onClick={() => navigate("/mentorship/history")}><History /> View All History</Button>
-                  </div>
-                </div>
-              ) : (
-                <></>
-              )}
 
               <div id="mentors-list" className="flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
