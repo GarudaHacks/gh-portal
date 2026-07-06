@@ -116,6 +116,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            
             {/* <Route
               path="/schedule"
               element={
@@ -124,7 +125,9 @@ function App() {
                 </ProtectedRoute>
               }
             /> */}
-            <Route
+
+            {/* Mentoring */}
+            {/* <Route
               path="/mentorship"
               element={
                 <ProtectedRoute>
@@ -163,15 +166,18 @@ function App() {
                   <MentorshipDetailPage />
                 </ProtectedRoute>
               }
-            />
-            <Route
+            /> */}
+
+
+            {/* <Route
               path="/schedules"
               element={
                 <ProtectedRoute>
                   <AllSchedulePage />
                 </ProtectedRoute>
               }
-            />
+            /> */}
+
             {/* <Route
               path="/faq"
               element={
