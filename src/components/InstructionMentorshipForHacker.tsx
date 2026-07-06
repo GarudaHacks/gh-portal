@@ -1,76 +1,24 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
 import { Button } from "./ui/button"
+import { BookOpen, ExternalLink } from "lucide-react"
+import { Link } from "react-router-dom"
 
 export default function InstructionMentorshipForHacker() {
   return (
-    <div>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button variant={"link"} className="text-white p-0">
-            📕 Read Mentorship Guide
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="text-white">
-          <DialogHeader>
-            <DialogTitle className="text-white">📋 Mentorship Guide</DialogTitle>
-          </DialogHeader>
-
-          <div className="flex flex-col gap-4 max-h-[70vh] overflow-y-auto text-sm">
-            <div className="p-4 border rounded-lg flex flex-col">
-              <h4 className="scroll-m-20 text-lg font-semibold tracking-tight">
-                General Instructions
-              </h4>
-
-              <div>
-                <ul className="my-6 ml-6 list-decimal [&>li]:mt-2">
-                  <li>Mentorship slots are available on a first-come, first-served basis.</li>
-                  <li>Only one team member needs to sign up for a mentorship slot, and the appointment will be booked under their name.</li>
-                  <li>Bookings must be made at least 30 minutes before the scheduled mentorship start time.</li>
-                  <li>You may book up to two slots at a time. Your quota resets after the scheduled time has passed.</li>
-                  <li>You may reserve two consecutive slots if available.</li>
-                  <li>Cancellations are allowed up to 45 minutes before the session starts. Failure to attend without canceling may result in being marked as absent (AFK), which could prevent you from booking future mentorship sessions.</li>
-                  <li>Some mentors are available online, while others are available in person. Discuss the meeting format with your mentor.</li>
-                  <li>Regardless of the mentor's availability, you may use our Zoom breakout rooms for virtual meetings if preferred.</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="p-4 border rounded-lg flex flex-col">
-              <h4 className="scroll-m-20 text-lg font-semibold tracking-tight">
-                🟢 Dos
-              </h4>
-
-              <div> {/* Removed max-h-screen overflow-y-scroll */}
-                <ul className="my-6 ml-6 list-decimal [&>li]:mt-2">
-                  <li>Be proactive in initiating the discussion. Reach out to mentors first through Discord.</li>
-                  <li>Prepare questions in advance to make the most of your limited time with the mentor.</li>
-                  <li>Be accountable for your booking, as mentors will confirm your attendance in our system.</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="p-4 border rounded-lg flex flex-col">
-              <h4 className="scroll-m-20 text-lg font-semibold tracking-tight">
-                🚩 Don'ts
-              </h4>
-
-              <div>
-                <ul className="my-6 ml-6 list-decimal [&>li]:mt-2">
-                  <li>Show disrespect toward mentors.</li>
-                  <li>Request direct contributions to your codebase, monetary support, tools, or similar assistance.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+    <div className="p-4 flex flex-col gap-4 lg:flex-row bg-white border border-tertiary rounded-xl items-center">
+      <div className="flex flex-row w-full gap-2 items-center">
+        <div className="p-2 bg-tertiary text-white rounded-xl w-fit aspect-square">
+          <BookOpen size={24} />
+        </div>
+        <div>
+          <p className="font-bold">Mentorship Guide</p>
+          <p className="text-muted-foreground text-sm">Check out our mentorship guide to learn how it works.</p>
+        </div>
+      </div>
+      <Link className="w-full lg:w-fit" target="_blank" rel="noopener noreferrer" to={`https://docs.google.com/document/d/1y0ct6AU4kHHNpkNEPp0B-6wagTM-xWcFV8NE9nzZTOs/edit?usp=sharing`}>
+        <Button variant={"outline"} className="w-full">
+          Read Mentorship Guide <ExternalLink />
+        </Button>
+      </Link>
     </div>
   )
 }

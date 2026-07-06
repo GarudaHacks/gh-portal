@@ -67,8 +67,10 @@ function Home() {
               ) && (
                   <ApplyProcessCard portalConfig={portalConfig} />
                 )}
-              {applicationStatus === UserApplicationStatus.SUBMITTED && 
-              <ApplicationSubmitted portalConfig={portalConfig} />}
+
+              {applicationStatus === UserApplicationStatus.SUBMITTED &&
+                <ApplicationSubmitted portalConfig={portalConfig} />}
+
               {applicationStatus === UserApplicationStatus.REJECTED && (
                 <ApplicationRejected />
               )}

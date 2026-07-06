@@ -25,10 +25,13 @@ import {
   ChevronsLeftRightEllipsis,
   Wifi,
   Info,
-  Image as ImageIcon,
   Camera,
+  Smartphone,
 } from "lucide-react"
 import { Link } from "react-router-dom"
+import { eventName } from "@/config"
+import ghAppVideo from "/assets/gh-app-web.mp4"
+import ghAppPoster from "/assets/gh-app-poster.jpg"
 
 export default function ApplicationConfirmedRSVP() {
   const { user } = useAuth()
@@ -152,12 +155,30 @@ export default function ApplicationConfirmedRSVP() {
                 </span>
               </li>
               <li className="flex items-start gap-2.5">
-                <Camera className="w-4 h-4 mt-0.5 text-accent shrink-0" />
+                <MessageCircle className="w-4 h-4 mt-0.5 text-accent shrink-0" />
                 <span>
-                  Let your friends know you're joining using our{" "}
+                  Join our{" "}
                   <Button asChild variant="link" className="h-auto p-0 text-sm text-accent">
-                    <Link to={"https://docs.google.com/document/d/1uH8KeqLuI8dNjxqUTIPlou2HX8c22pIh2NHPydlld7g/edit?usp=sharing"} target="_blank" rel="noopener noreferrer">
-                      Twibbon
+                    <Link to={"https://discord.gg/6Qu6vp6v3u"} target="_blank" rel="noopener noreferrer">
+                      official Discord server
+                    </Link>
+                  </Button>
+                  {" "}for important announcements or to get to know other hackers
+                </span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <Smartphone className="w-4 h-4 mt-0.5 text-accent shrink-0" />
+                <span>
+                  Download the official {eventName} App for{" "}
+                  <Button asChild variant="link" className="h-auto p-0 text-sm text-accent">
+                    <Link to={"https://apps.apple.com/id/app/garuda-hacks-7-0/id6504819018"} target="_blank" rel="noopener noreferrer">
+                      iOS
+                    </Link>
+                  </Button>
+                  {" "}or{" "}
+                  <Button asChild variant="link" className="h-auto p-0 text-sm text-accent">
+                    <Link to={"https://play.google.com/store/apps/details?id=com.garudahacks.app.garuda_hacks"} target="_blank" rel="noopener noreferrer">
+                      Android
                     </Link>
                   </Button>
                 </span>
@@ -169,6 +190,17 @@ export default function ApplicationConfirmedRSVP() {
                   <Button asChild variant="link" className="h-auto p-0 text-sm text-accent">
                     <Link to={"https://forms.gle/W15y3cR1VydtDSh66"} target="_blank" rel="noopener noreferrer">
                       here
+                    </Link>
+                  </Button>
+                </span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <Camera className="w-4 h-4 mt-0.5 text-accent shrink-0" />
+                <span>
+                  Let your friends know you're joining using our{" "}
+                  <Button asChild variant="link" className="h-auto p-0 text-sm text-accent">
+                    <Link to={"https://docs.google.com/document/d/1uH8KeqLuI8dNjxqUTIPlou2HX8c22pIh2NHPydlld7g/edit?usp=sharing"} target="_blank" rel="noopener noreferrer">
+                      Twibbon
                     </Link>
                   </Button>
                 </span>
@@ -198,6 +230,22 @@ export default function ApplicationConfirmedRSVP() {
                 <span>Mark your calendar for July 16-18th, 2026!</span>
               </li>
             </ul>
+
+            <Separator />
+
+            <div id="gh-app" className="rounded-xl border-2 border-accent/40 p-5 flex flex-col gap-3 bg-tertiary/10 lg:col-span-2 lg:sticky lg:top-4">
+              <p className="text-sm font-semibold">Introducing {eventName} Mobile App!</p>
+              <video
+                className="w-full h-auto rounded-lg border border-accent/20 bg-black"
+                controls
+                preload="none"
+                playsInline
+                poster={ghAppPoster}
+              >
+                <source src={ghAppVideo} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
           </div>
         </div>
 

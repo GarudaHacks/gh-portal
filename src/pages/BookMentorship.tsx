@@ -154,7 +154,7 @@ export default function BookMentorshipPage() {
       <div className="flex justify-center items-center min-h-screen w-full">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="animate-spin h-12 w-12" />
-          <p className="text-gray-300">Loading mentorship details...</p>
+          <p className="">Loading mentorship details...</p>
         </div>
       </div>
     );
@@ -162,7 +162,7 @@ export default function BookMentorshipPage() {
 
   if (!mentor) {
     return (
-      <div className="min-h-screen bg-blue-950 p-4 flex flex-col gap-4">
+      <div className="min-h-screen p-4 flex flex-col gap-4">
         <Button variant="outline" onClick={() => navigate(-1)} className="w-fit bg-gray-800 border-gray-700 text-white hover:bg-gray-700">
           <ChevronLeft className="w-4 h-4 mr-2" /> Back
         </Button>
@@ -180,8 +180,8 @@ export default function BookMentorshipPage() {
   return (
     <div className="flex flex-col h-screen ">
       {/* Header */}
-      <div className="sticky top-0 p-4 backdrop-blur-sm border-b border-gray-800 z-10">
-        <Button variant="outline" onClick={() => navigate(-1)} className="w-fit text-white ">
+      <div className="sticky top-0 p-4 backdrop-blur-sm border-b z-10">
+        <Button variant="outline" onClick={() => navigate(-1)} className="w-fit">
           <ChevronLeft className="w-4 h-4 mr-2" /> Back to Mentors
         </Button>
       </div>
@@ -191,7 +191,7 @@ export default function BookMentorshipPage() {
           {/* Left Panel - Mentor Profile */}
           <div className="lg:col-span-1">
             {/* Desktop View */}
-            <Card className="lg:block hidden bg-gray-800/30 backdrop-blur-sm">
+            <Card className="lg:block hidden  backdrop-blur-sm">
               <CardHeader className="text-center pb-4">
                 <div className="relative mx-auto w-32 h-32 mb-4">
                   <img
@@ -200,7 +200,7 @@ export default function BookMentorshipPage() {
                     className="w-full h-full rounded-full object-cover border"
                   />
                 </div>
-                <CardTitle className="text-2xl text-white font-bold">{mentor.name}</CardTitle>
+                <CardTitle className="text-2xl  font-bold">{mentor.name}</CardTitle>
                 {mentor.specialization && (
                   <CardDescription className=" font-medium text-lg">
                     {formatSpecialization(mentor.specialization)}
@@ -210,11 +210,11 @@ export default function BookMentorshipPage() {
               <CardContent className="px-6 pb-6">
                 <div className="space-y-4">
                   <div className="rounded-lg p-4">
-                    <h3 className="text-white font-semibold mb-2 flex items-center gap-2">
+                    <h3 className=" font-semibold mb-2 flex items-center gap-2">
                       <User className="w-4 h-4 " />
                       About
                     </h3>
-                    <p className="text-gray-300 text-sm leading-relaxed">{mentor.intro}</p>
+                    <p className=" text-sm leading-relaxed">{mentor.intro}</p>
                   </div>
                 </div>
               </CardContent>
@@ -233,13 +233,13 @@ export default function BookMentorshipPage() {
                       />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h2 className="text-lg font-bold text-white truncate">{mentor.name}</h2>
+                      <h2 className="text-lg font-bold  truncate">{mentor.name}</h2>
                       {mentor.specialization && (
                         <p className="text-sm font-medium mb-2">
                           {formatSpecialization(mentor.specialization)}
                         </p>
                       )}
-                      <p className="text-xs text-gray-300 line-clamp-3">{mentor.intro}</p>
+                      <p className="text-xs  line-clamp-3">{mentor.intro}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -251,7 +251,7 @@ export default function BookMentorshipPage() {
           <div className="lg:col-span-2 flex flex-col overflow-hidden pb-24 lg:pb-0">
             <div className="flex items-center gap-3 mb-6">
               <Calendar className="w-6 h-6 " />
-              <h1 className="text-2xl font-bold text-white">
+              <h1 className="text-2xl font-bold ">
                 Available Sessions
                 <span className="ml-2 text-lg font-normal text-gray-400">
                   ({mentorshipSlots?.length || 0} slots)
@@ -264,16 +264,16 @@ export default function BookMentorshipPage() {
                 <div className="flex justify-center items-center h-64">
                   <div className="flex flex-col items-center gap-3">
                     <Loader2 className="animate-spin h-8 w-8 " />
-                    <p className="text-gray-300">Loading available slots...</p>
+                    <p className="">Loading available slots...</p>
                   </div>
                 </div>
               ) : mentorshipSlots.length === 0 ? (
                 <div className="flex items-center justify-center h-64">
                   <Card className="bg-gray-800/30 border-gray-700">
                     <CardContent className="p-8 text-center">
-                      <Calendar className="w-12 h-12 text-gray-500 mx-auto mb-4" />
-                      <p className="text-gray-300 text-lg mb-2">No slots available</p>
-                      <p className="text-gray-500 text-sm">This mentor doesn't have any open time slots right now.</p>
+                      <Calendar className="w-12 h-12 mx-auto mb-4" />
+                      <p className="text-lg mb-2">No slots available</p>
+                      <p className="text-sm">This mentor doesn't have any open time slots right now.</p>
                     </CardContent>
                   </Card>
                 </div>
@@ -299,7 +299,7 @@ export default function BookMentorshipPage() {
         <div className="flex flex-col gap-4 max-w-4xl mx-auto">
           {/* Selection Summary */}
           <div className="flex items-center justify-center gap-4">
-            <div className="flex items-center gap-2 text-sm text-gray-300">
+            <div className="flex items-center gap-2 text-sm ">
               <CheckCircle2 className="w-4 h-4 " />
               <span>Selected <strong className="text-white">{selectedSlots.length}</strong> of <strong className="text-white">2</strong> slots</span>
             </div>
@@ -315,12 +315,12 @@ export default function BookMentorshipPage() {
               {selectedSlots.map((slot, index) => (
                 <div key={slot.id} className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
                   <div className="flex items-center gap-2 text-sm">
-                    <Clock className="w-3 h-3 text-blue-400" />
-                    <span className="text-white font-medium">
+                    <Clock className="w-3 h-3 " />
+                    <span className="font-medium">
                       {epochToStringDate(slot.startTime)} - {epochToStringDate(slot.endTime)}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-gray-400 mt-1">
+                  <div className="flex items-center gap-2 text-xs  mt-1">
                     <MapPin className="w-3 h-3" />
                     <span className="capitalize">{slot.location}</span>
                   </div>
@@ -334,7 +334,7 @@ export default function BookMentorshipPage() {
             <DialogTrigger asChild>
               <div className="flex flex-col items-center justify-center">
                 <Button
-                  className="w-full max-w-md text-white font-semibold py-3 px-8 rounded-xl transition-all duration-200 disabled:opacity-50"
+                  className="w-full max-w-md  font-semibold py-3 px-8 rounded-xl transition-all duration-200 disabled:opacity-50"
                   size="lg"
                   disabled={selectedSlots.length === 0}
                 >
@@ -342,7 +342,7 @@ export default function BookMentorshipPage() {
                 </Button>
               </div>
             </DialogTrigger>
-            <DialogContent className="bg-gray-900 border-gray-700 text-white max-w-md">
+            <DialogContent className="bg-gray-900 border-gray-700 max-w-md">
               <DialogHeader>
                 <DialogTitle className="text-xl">Complete Your Booking</DialogTitle>
                 <DialogDescription className="text-gray-400">
@@ -357,7 +357,7 @@ export default function BookMentorshipPage() {
                     name="teamName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white">Team Name</FormLabel>
+                        <FormLabel className="">Team Name</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="Enter your team name"
@@ -374,10 +374,10 @@ export default function BookMentorshipPage() {
                     name="hackerDescription"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white">What do you need help with?</FormLabel>
+                        <FormLabel className="">What do you need help with?</FormLabel>
                         <FormControl>
                           <Textarea
-                            className="bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-blue-500 min-h-[100px]"
+                            className="bg-gray-800 border-gray-600  placeholder-gray-400 focus:border-blue-500 min-h-[100px]"
                             placeholder="Describe what you'd like to discuss or get help with during the mentorship session..."
                             maxLength={1000}
                             {...field}
