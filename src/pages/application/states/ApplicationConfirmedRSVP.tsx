@@ -150,8 +150,12 @@ export default function ApplicationConfirmedRSVP() {
               <li className="flex items-start gap-2.5">
                 <CalendarCheck className="w-4 h-4 mt-0.5 text-accent shrink-0" />
                 <span>
-                  General Participant Briefing: <strong>Wednesday, July 8th, 2026</strong>{" "}
-                  (Sent via email).
+                  General Participant Briefing: <strong>Wednesday, July 8th, 2026 at 8 PM WIB</strong> through{" "}
+                  <Button asChild variant="link" className="h-auto p-0 text-sm text-accent">
+                    <Link to={"https://purdue-edu.zoom.us/j/5813052601?omn=96479315070"} target="_blank" rel="noopener noreferrer">
+                      Zoom
+                    </Link>
+                  </Button>
                 </span>
               </li>
               <li className="flex items-start gap-2.5">
