@@ -155,7 +155,7 @@ export default function ApplicationConfirmedRSVP() {
                 </span>
               </li>
               <li className="flex items-start gap-2.5">
-                <Smartphone className="w-4 h-4 mt-0.5 text-accent shrink-0" />
+                <MessageCircle className="w-4 h-4 mt-0.5 text-accent shrink-0" />
                 <span>
                   Join our{" "}
                   <Button asChild variant="link" className="h-auto p-0 text-sm text-accent">
