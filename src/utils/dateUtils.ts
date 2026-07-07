@@ -3,11 +3,14 @@ export function dateToStringTime(date: Date) {
 }
 
 export function epochToStringDate(epochSecond: number) {
-    const startDate = new Date(epochSecond * 1000)
-    const startDay = startDate.toLocaleDateString()
-    const startTimestamp = startDate.toLocaleString('en-US', { timeStyle: 'short' })
-    const start = `${startDay} ${startTimestamp}`
-    return start
+    const date = new Date(epochSecond * 1000)
+    const day = date.getDate()
+    const month = date.toLocaleString('en-US', { month: 'long' })
+    const year = date.getFullYear()
+    const hours = String(date.getHours()).padStart(2, '0')
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+    const timezone = date.toLocaleTimeString('en-US', { timeZoneName: 'short' }).split(' ').pop()
+    return `${day} ${month} ${year} ${hours}:${minutes} ${timezone}`
 }
 
 export function isTimeElapsed(epochSecond: number) {

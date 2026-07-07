@@ -1,4 +1,4 @@
-import MentorshipSlotAsHackerComponent from "@/components/MentorshipSlotAsHacker";
+import AvailableMentorshipSlotAsHackerComponent from "@/components/AvailableMentorshipSlotAsHacker";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { bookMentorshipAppointment, fetchMentorById, fetchMentorshipAppointmentsByMentorId } from "@/lib/http/mentorship";
@@ -6,7 +6,7 @@ import { FirestoreMentor, MentorshipAppointmentResponseAsHacker } from "@/types/
 import { getMentorProfilePicture } from "@/utils/firebaseUtils";
 import { formatSpecialization } from "@/utils/stringUtils";
 import { ChevronLeft, Loader2, Calendar, Clock, MapPin, User, CheckCircle2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import {
@@ -45,7 +45,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { useAuth } from "@/context/AuthContext";
 
-const formSchema = z.object({
+const baseFormSchema = z.object({
   teamName: z.string().min(1, "Team name is required"),
   hackerDescription: z.string().min(1, "Description is required").max(1000, "Description must be 1000 characters or less"),
   offlineLocation: z.string().optional(),
@@ -63,7 +63,23 @@ export default function BookMentorshipPage() {
   const [selectedSlots, setSelectedSlots] = useState<MentorshipAppointmentResponseAsHacker[]>([]);
   const [isBookingLoading, setIsBookingLoading] = useState(false)
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const hasOfflineSlot = selectedSlots.some((slot) => slot.location === "offline");
+
+  const formSchema = useMemo(
+    () =>
+      baseFormSchema.superRefine((data, ctx) => {
+        if (hasOfflineSlot && !data.offlineLocation?.trim()) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Offline location is required for offline sessions",
+            path: ["offlineLocation"],
+          });
+        }
+      }),
+    [hasOfflineSlot]
+  );
+
+  const form = useForm<z.infer<typeof baseFormSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       teamName: "",
@@ -122,7 +138,7 @@ export default function BookMentorshipPage() {
     });
   };
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof baseFormSchema>) {
     setIsBookingLoading(true)
     try {
       const payload = {
@@ -178,7 +194,7 @@ export default function BookMentorshipPage() {
   }
 
   return (
-    <div className="flex flex-col h-screen ">
+    <div className="flex flex-col h-screen container ">
       {/* Header */}
       <div className="sticky top-0 p-4 backdrop-blur-sm border-b z-10">
         <Button variant="outline" onClick={() => navigate(-1)} className="w-fit">
@@ -187,20 +203,20 @@ export default function BookMentorshipPage() {
       </div>
 
       <div className="flex-1 overflow-hidden">
-        <div className="p-4 grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
+        <div className="p-4 grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
           {/* Left Panel - Mentor Profile */}
           <div className="lg:col-span-1">
             {/* Desktop View */}
-            <Card className="lg:block hidden  backdrop-blur-sm">
+            <Card className="lg:block hidden backdrop-blur-sm lg:max-w-lg mx-auto">
               <CardHeader className="text-center pb-4">
-                <div className="relative mx-auto w-32 h-32 mb-4">
+                <div className="relative mx-auto w-52 aspect-auto mb-4">
                   <img
-                    src={profilePictureUrl || "/images/logo/gh_logo.svg"}
+                    src={profilePictureUrl || "/assets/garudie-laptop.png"}
                     alt="profile picture"
-                    className="w-full h-full rounded-full object-cover border"
+                    className="w-full h-full rounded-full object-cover"
                   />
                 </div>
-                <CardTitle className="text-2xl  font-bold">{mentor.name}</CardTitle>
+                <CardTitle className="text-2xl  font-bold">{mentor.displayName}</CardTitle>
                 {mentor.specialization && (
                   <CardDescription className=" font-medium text-lg">
                     {formatSpecialization(mentor.specialization)}
@@ -222,7 +238,7 @@ export default function BookMentorshipPage() {
 
             {/* Mobile View */}
             <div className="lg:hidden">
-              <Card className="bg-gray-800/30 border-gray-700 backdrop-blur-sm">
+              <Card className=" backdrop-blur-sm">
                 <CardContent className="p-4">
                   <div className="flex items-start gap-4">
                     <div className="relative">
@@ -233,12 +249,7 @@ export default function BookMentorshipPage() {
                       />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h2 className="text-lg font-bold  truncate">{mentor.name}</h2>
-                      {mentor.specialization && (
-                        <p className="text-sm font-medium mb-2">
-                          {formatSpecialization(mentor.specialization)}
-                        </p>
-                      )}
+                      <h2 className="text-lg font-bold  truncate">{mentor.displayName}</h2>
                       <p className="text-xs  line-clamp-3">{mentor.intro}</p>
                     </div>
                   </div>
@@ -248,17 +259,7 @@ export default function BookMentorshipPage() {
           </div>
 
           {/* Right Panel - Mentoring Slots */}
-          <div className="lg:col-span-2 flex flex-col overflow-hidden pb-24 lg:pb-0">
-            <div className="flex items-center gap-3 mb-6">
-              <Calendar className="w-6 h-6 " />
-              <h1 className="text-2xl font-bold ">
-                Available Sessions
-                <span className="ml-2 text-lg font-normal text-gray-400">
-                  ({mentorshipSlots?.length || 0} slots)
-                </span>
-              </h1>
-            </div>
-
+          <div className="flex flex-col overflow-hidden pb-24 lg:pb-0">
             <div className="flex-1 overflow-y-auto">
               {mentorshipSlots === null ? (
                 <div className="flex justify-center items-center h-64">
@@ -268,19 +269,14 @@ export default function BookMentorshipPage() {
                   </div>
                 </div>
               ) : mentorshipSlots.length === 0 ? (
-                <div className="flex items-center justify-center h-64">
-                  <Card className="bg-gray-800/30 border-gray-700">
-                    <CardContent className="p-8 text-center">
-                      <Calendar className="w-12 h-12 mx-auto mb-4" />
-                      <p className="text-lg mb-2">No slots available</p>
-                      <p className="text-sm">This mentor doesn't have any open time slots right now.</p>
-                    </CardContent>
-                  </Card>
+                <div className="flex flex-col items-center text-muted-foreground border p-4 rounded-xl">
+                  <p className="text-lg mb-2">No slots available</p>
+                  <p className="text-sm">This mentor doesn't have any open time slots right now.</p>
                 </div>
               ) : (
                 <div className="grid gap-4 pb-4">
                   {mentorshipSlots.map((slot) => (
-                    <MentorshipSlotAsHackerComponent
+                    <AvailableMentorshipSlotAsHackerComponent
                       key={slot.id}
                       mentorshipAppointment={slot}
                       selectedSlots={selectedSlots}
@@ -301,7 +297,7 @@ export default function BookMentorshipPage() {
           <div className="flex items-center justify-center gap-4">
             <div className="flex items-center gap-2 text-sm ">
               <CheckCircle2 className="w-4 h-4 " />
-              <span>Selected <strong className="text-white">{selectedSlots.length}</strong> of <strong className="text-white">2</strong> slots</span>
+              <span>Selected <strong className="">{selectedSlots.length}</strong> of <strong className="">2</strong> slots</span>
             </div>
             {selectedSlots.length > 0 && (
               <div className="text-xs text-gray-500">
@@ -311,9 +307,9 @@ export default function BookMentorshipPage() {
           </div>
 
           {selectedSlots.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
+            <div className="flex flex-col lg:flex-row items-center justify-center flex-wrap gap-2 mb-2">
               {selectedSlots.map((slot, index) => (
-                <div key={slot.id} className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
+                <div key={slot.id} className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 lg:w-fit">
                   <div className="flex items-center gap-2 text-sm">
                     <Clock className="w-3 h-3 " />
                     <span className="font-medium">
@@ -338,14 +334,14 @@ export default function BookMentorshipPage() {
                   size="lg"
                   disabled={selectedSlots.length === 0}
                 >
-                  {selectedSlots.length === 0 ? 'Select slots to continue' : `Book ${selectedSlots.length} Session${selectedSlots.length > 1 ? 's' : ''}`}
+                  {selectedSlots.length === 0 ? 'Select slots to continue' : `Book ${selectedSlots.length} slot${selectedSlots.length > 1 ? 's' : ''}`}
                 </Button>
               </div>
             </DialogTrigger>
-            <DialogContent className="bg-gray-900 border-gray-700 max-w-md">
+            <DialogContent className="">
               <DialogHeader>
                 <DialogTitle className="text-xl">Complete Your Booking</DialogTitle>
-                <DialogDescription className="text-gray-400">
+                <DialogDescription className="">
                   Fill in your team details to book the selected mentorship sessions
                 </DialogDescription>
               </DialogHeader>
@@ -361,11 +357,11 @@ export default function BookMentorshipPage() {
                         <FormControl>
                           <Input
                             placeholder="Enter your team name"
-                            className="bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-primary"
+                            className=""
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage />
+                        <FormMessage className="text-red-400" />
                       </FormItem>
                     )}
                   />
@@ -377,13 +373,13 @@ export default function BookMentorshipPage() {
                         <FormLabel className="">What do you need help with?</FormLabel>
                         <FormControl>
                           <Textarea
-                            className="bg-gray-800 border-gray-600  placeholder-gray-400 focus:border-blue-500 min-h-[100px]"
+                            className=""
                             placeholder="Describe what you'd like to discuss or get help with during the mentorship session..."
                             maxLength={1000}
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage />
+                        <FormMessage className="text-red-400" />
                       </FormItem>
                     )}
                   />
@@ -394,22 +390,22 @@ export default function BookMentorshipPage() {
                       name="offlineLocation"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-white">Offline Location</FormLabel>
+                          <FormLabel className="">Offline Location</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="Enter the offline location"
-                              className="bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-primary"
+                              placeholder="Enter your meetup location"
+                              className=""
                               {...field}
                             />
                           </FormControl>
-                          <FormMessage />
+                          <FormMessage className="text-red-400" />
                         </FormItem>
                       )}
                     />
                   )}
 
                   <div className="rounded-lg p-4">
-                    <p className="text-sm text-gray-300 text-center">
+                    <p className="text-sm text-gray-400 text-center">
                       Please honor your booking. Mentors may mark you as absent if you fail to attend the scheduled session.
                     </p>
                   </div>
@@ -431,7 +427,7 @@ export default function BookMentorshipPage() {
                         )}
                       </Button>
                     </AlertDialogTrigger>
-                    <AlertDialogContent className="bg-gray-900 border-gray-700 text-white">
+                    <AlertDialogContent className="">
                       <AlertDialogHeader>
                         <AlertDialogTitle className="flex items-center gap-2">
                           <CheckCircle2 className="w-5 h-5 text-green-500" />
@@ -444,18 +440,18 @@ export default function BookMentorshipPage() {
 
                       <div className="space-y-3 my-4">
                         {selectedSlots.map((slot, index) => (
-                          <div key={slot.id} className=" border border-gray-700 rounded-lg p-4">
+                          <div key={slot.id} className="rounded-xl p-4 border border-tertiary bg-white">
                             <div className="flex items-center gap-2 mb-2">
                               <Calendar className="w-4 h-4 " />
                               <span className="font-medium">Session {index + 1}</span>
                             </div>
                             <div className="text-sm space-y-1">
                               <div className="flex items-center gap-2">
-                                <Clock className="w-3 h-3 text-gray-400" />
+                                <Clock className="w-3 h-3 " />
                                 <span>{epochToStringDate(slot.startTime)} - {epochToStringDate(slot.endTime)}</span>
                               </div>
                               <div className="flex items-center gap-2">
-                                <MapPin className="w-3 h-3 text-gray-400" />
+                                <MapPin className="w-3 h-3 " />
                                 <span className="capitalize">{slot.location}</span>
                               </div>
                             </div>
@@ -464,7 +460,7 @@ export default function BookMentorshipPage() {
                       </div>
 
                       <AlertDialogFooter>
-                        <AlertDialogCancel className="bg-gray-800 border-gray-600 text-white hover:bg-gray-700">
+                        <AlertDialogCancel className="">
                           Cancel
                         </AlertDialogCancel>
                         <AlertDialogAction

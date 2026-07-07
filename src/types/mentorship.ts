@@ -10,7 +10,8 @@ export interface MentorshipConfig {
 export interface FirestoreMentor {
   id?: string;
   email: string;
-  name: string;
+  displayName: string;
+  mentorTitle: string;
   mentor: boolean;
   specialization: string;
   discordUsername: string;

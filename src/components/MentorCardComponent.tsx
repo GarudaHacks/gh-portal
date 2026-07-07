@@ -33,48 +33,24 @@ export default function MentorCardComponent(
   const [profilePictureUrl, setProfilePictureUrl] = useState('')
 
   useEffect(() => {
-    getMentorProfilePicture(mentor.name).then((res) => setProfilePictureUrl(res))
+    getMentorProfilePicture(mentor.displayName).then((res) => setProfilePictureUrl(res))
   }, [mentor])
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Card className="">
-          <CardHeader className="text-center">
-            <CardTitle className="flex flex-col gap-2 items-center">
-              <img src={profilePictureUrl || '/images/logo/gh_logo.svg'} width={500} height={500} alt="profile picture" className="rounded-full w-2/3 md:w-3/5 aspect-square border" />
-              <p className="text-xl">{mentor.name}</p>
-            </CardTitle>
-            {mentor.specialization && <CardDescription className="text-gray-400">{formatSpecialization(mentor.specialization)}</CardDescription>}
-          </CardHeader>
-          <CardContent>
-            <p className="text-center text-sm line-clamp-4 text-pretty">{mentor.intro}</p>
-          </CardContent>
-        </Card>
-      </DialogTrigger>
-      <DialogContent >
-        <DialogHeader>
-          <DialogTitle>
-            <CardTitle className="flex flex-col gap-2 items-center">
-              <img src={profilePictureUrl || '/images/logo/gh_logo.svg'} width={500} height={500} alt="profile picture" className="rounded-full w-2/3 md:w-3/5 aspect-square border" />
-              <p className="text-xl text-white">{mentor.name}</p>
-              {mentor.specialization && <CardDescription className="text-gray-400">{formatSpecialization(mentor.specialization)}</CardDescription>}
-              <p className="text-sm">Email: <span className="font-mono">{mentor.email}</span></p>
-              <p className="text-sm">Discord Username: <span className="font-mono">{mentor.discordUsername}</span></p>
-            </CardTitle>
-          </DialogTitle>
-          <DialogDescription className="text-center text-white">
-            {mentor.intro}
-          </DialogDescription>
-        </DialogHeader>
-
-        {isMentorshipOpen && (
-          <Link to={`/mentors/${mentor.id}`}>
-            <Button className="w-full">Book Mentor</Button>
-          </Link>
-        )}
-      </DialogContent>
-    </Dialog>
-
+    <Card className="">
+      <CardHeader className="text-center">
+        <CardTitle className="flex flex-col gap-2 items-center">
+          <img src={profilePictureUrl || '/assets/garudie-laptop.png'} width={500} height={500} alt="profile picture" className="rounded-full w-2/3 md:w-3/5 aspect-square border" />
+          <p className="text-xl">{mentor.displayName}</p>
+          <p>{mentor.mentorTitle}</p>
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
+        <p className="text-center text-sm line-clamp-4 text-pretty">{mentor.intro}</p>
+        <Link to={`/mentors/${mentor.id}`}>
+          <Button className="w-full">Book Mentor</Button>
+        </Link>
+      </CardContent>
+    </Card>
   )
 }

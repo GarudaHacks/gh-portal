@@ -27,6 +27,7 @@ import {
   Info,
   Camera,
   Smartphone,
+  Presentation,
 } from "lucide-react"
 import { Link } from "react-router-dom"
 import { eventName } from "@/config"
@@ -213,6 +214,12 @@ export default function ApplicationConfirmedRSVP() {
                 <Info className="w-4 h-4 mt-0.5 text-accent shrink-0" />
                 <span>
                   Check your email inbox regularly for the rest of pre-flight checklist
+                </span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <Presentation className="w-4 h-4 mt-0.5 text-accent shrink-0" />
+                <span>
+                  Watch out for updates from instagram or email about pre-event online workshops held by Generation Girl!
                 </span>
               </li>
               <li className="flex items-start gap-2.5">
