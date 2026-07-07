@@ -1,4 +1,4 @@
-import MentorshipSlotAsHackerComponent from "@/components/MentorshipSlotAsHacker";
+import AvailableMentorshipSlotAsHackerComponent from "@/components/AvailableMentorshipSlotAsHacker";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { bookMentorshipAppointment, fetchMentorById, fetchMentorshipAppointmentsByMentorId } from "@/lib/http/mentorship";
@@ -178,7 +178,7 @@ export default function BookMentorshipPage() {
   }
 
   return (
-    <div className="flex flex-col h-screen ">
+    <div className="flex flex-col h-screen container ">
       {/* Header */}
       <div className="sticky top-0 p-4 backdrop-blur-sm border-b z-10">
         <Button variant="outline" onClick={() => navigate(-1)} className="w-fit">
@@ -187,20 +187,20 @@ export default function BookMentorshipPage() {
       </div>
 
       <div className="flex-1 overflow-hidden">
-        <div className="p-4 grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
+        <div className="p-4 grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
           {/* Left Panel - Mentor Profile */}
           <div className="lg:col-span-1">
             {/* Desktop View */}
-            <Card className="lg:block hidden  backdrop-blur-sm">
+            <Card className="lg:block hidden backdrop-blur-sm lg:max-w-lg mx-auto">
               <CardHeader className="text-center pb-4">
-                <div className="relative mx-auto w-32 h-32 mb-4">
+                <div className="relative mx-auto w-52 aspect-auto mb-4">
                   <img
-                    src={profilePictureUrl || "/images/logo/gh_logo.svg"}
+                    src={profilePictureUrl || "/assets/garudie-laptop.png"}
                     alt="profile picture"
-                    className="w-full h-full rounded-full object-cover border"
+                    className="w-full h-full rounded-full object-cover"
                   />
                 </div>
-                <CardTitle className="text-2xl  font-bold">{mentor.name}</CardTitle>
+                <CardTitle className="text-2xl  font-bold">{mentor.displayName}</CardTitle>
                 {mentor.specialization && (
                   <CardDescription className=" font-medium text-lg">
                     {formatSpecialization(mentor.specialization)}
@@ -222,7 +222,7 @@ export default function BookMentorshipPage() {
 
             {/* Mobile View */}
             <div className="lg:hidden">
-              <Card className="bg-gray-800/30 border-gray-700 backdrop-blur-sm">
+              <Card className=" backdrop-blur-sm">
                 <CardContent className="p-4">
                   <div className="flex items-start gap-4">
                     <div className="relative">
@@ -233,12 +233,7 @@ export default function BookMentorshipPage() {
                       />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h2 className="text-lg font-bold  truncate">{mentor.name}</h2>
-                      {mentor.specialization && (
-                        <p className="text-sm font-medium mb-2">
-                          {formatSpecialization(mentor.specialization)}
-                        </p>
-                      )}
+                      <h2 className="text-lg font-bold  truncate">{mentor.displayName}</h2>
                       <p className="text-xs  line-clamp-3">{mentor.intro}</p>
                     </div>
                   </div>
@@ -248,17 +243,7 @@ export default function BookMentorshipPage() {
           </div>
 
           {/* Right Panel - Mentoring Slots */}
-          <div className="lg:col-span-2 flex flex-col overflow-hidden pb-24 lg:pb-0">
-            <div className="flex items-center gap-3 mb-6">
-              <Calendar className="w-6 h-6 " />
-              <h1 className="text-2xl font-bold ">
-                Available Sessions
-                <span className="ml-2 text-lg font-normal text-gray-400">
-                  ({mentorshipSlots?.length || 0} slots)
-                </span>
-              </h1>
-            </div>
-
+          <div className="flex flex-col overflow-hidden pb-24 lg:pb-0">
             <div className="flex-1 overflow-y-auto">
               {mentorshipSlots === null ? (
                 <div className="flex justify-center items-center h-64">
@@ -268,19 +253,14 @@ export default function BookMentorshipPage() {
                   </div>
                 </div>
               ) : mentorshipSlots.length === 0 ? (
-                <div className="flex items-center justify-center h-64">
-                  <Card className="bg-gray-800/30 border-gray-700">
-                    <CardContent className="p-8 text-center">
-                      <Calendar className="w-12 h-12 mx-auto mb-4" />
-                      <p className="text-lg mb-2">No slots available</p>
-                      <p className="text-sm">This mentor doesn't have any open time slots right now.</p>
-                    </CardContent>
-                  </Card>
+                <div className="flex flex-col items-center text-muted-foreground border p-4 rounded-xl">
+                  <p className="text-lg mb-2">No slots available</p>
+                  <p className="text-sm">This mentor doesn't have any open time slots right now.</p>
                 </div>
               ) : (
                 <div className="grid gap-4 pb-4">
                   {mentorshipSlots.map((slot) => (
-                    <MentorshipSlotAsHackerComponent
+                    <AvailableMentorshipSlotAsHackerComponent
                       key={slot.id}
                       mentorshipAppointment={slot}
                       selectedSlots={selectedSlots}
@@ -301,7 +281,7 @@ export default function BookMentorshipPage() {
           <div className="flex items-center justify-center gap-4">
             <div className="flex items-center gap-2 text-sm ">
               <CheckCircle2 className="w-4 h-4 " />
-              <span>Selected <strong className="text-white">{selectedSlots.length}</strong> of <strong className="text-white">2</strong> slots</span>
+              <span>Selected <strong className="">{selectedSlots.length}</strong> of <strong className="">2</strong> slots</span>
             </div>
             {selectedSlots.length > 0 && (
               <div className="text-xs text-gray-500">
@@ -311,9 +291,9 @@ export default function BookMentorshipPage() {
           </div>
 
           {selectedSlots.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
+            <div className="flex flex-col lg:flex-row items-center justify-center flex-wrap gap-2 mb-2">
               {selectedSlots.map((slot, index) => (
-                <div key={slot.id} className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
+                <div key={slot.id} className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3 lg:w-fit">
                   <div className="flex items-center gap-2 text-sm">
                     <Clock className="w-3 h-3 " />
                     <span className="font-medium">

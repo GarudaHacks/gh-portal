@@ -132,16 +132,19 @@ function Mentorship() {
                 )}
               </div>
 
-              <div id="mentors-list" className="flex flex-col gap-4">
+              <div id="mentors-list" className="flex flex-col gap-4 mt-8">
                 <div className="flex flex-col gap-2">
-                  <h2 className="font-semibold text-xl">{eventName} Mentors</h2>
+                  <div className="flex flex-col">
+                    <h2 className="font-semibold text-xl">{eventName} Mentors</h2>
+                    <p>Look for mentors and book a session that fits your needs.</p>
+                  </div>
 
                   <div id="mentorship-categories" className="w-full max-w-full overflow-x-auto overflow-y-hidden pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 scroll-smooth mb-4">
                     <div className="flex flex-nowrap gap-2 min-w-max">
                       {CATEGORIES.map((category, i) => (
                         <Badge
                           className="whitespace-nowrap flex-shrink-0 cursor-pointer"
-                          variant={filterCategories?.includes(category) ? 'default' : 'outline'}
+                          variant={filterCategories?.includes(category) ? 'outline' : 'default'}
                           key={i}
                           onClick={() => handleSelectCategory(category)}
                         >

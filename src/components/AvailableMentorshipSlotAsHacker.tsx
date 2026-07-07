@@ -2,7 +2,7 @@ import { MentorshipAppointmentResponseAsHacker } from "@/types/mentorship";
 import { epochToStringDate, isTimeElapsed } from "@/utils/dateUtils";
 import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
-import { Clock, MapPin, Monitor, User, CheckCircle2 } from "lucide-react";
+import { Clock, MapPin, Monitor, User } from "lucide-react";
 
 interface MentorshipSlotAsHackerComponentProps {
   mentorshipAppointment: MentorshipAppointmentResponseAsHacker;
@@ -10,7 +10,7 @@ interface MentorshipSlotAsHackerComponentProps {
   onClick: () => void;
 }
 
-export default function MentorshipSlotAsHackerComponent({
+export default function AvailableMentorshipSlotAsHackerComponent({
   mentorshipAppointment,
   selectedSlots,
   onClick,
@@ -20,11 +20,10 @@ export default function MentorshipSlotAsHackerComponent({
   const isBooked = !!mentorshipAppointment.hackerId;
   const isTimeElapsedCheck = isTimeElapsed(mentorshipAppointment.startTime);
   const duration = (mentorshipAppointment.endTime - mentorshipAppointment.startTime) / 60;
-  
+
   // Format time range
   const startTime = epochToStringDate(mentorshipAppointment.startTime);
-  const endTime = epochToStringDate(mentorshipAppointment.endTime);
-  
+
   // Get status info
   const getStatusInfo = () => {
     if (isBooked) {
@@ -40,7 +39,7 @@ export default function MentorshipSlotAsHackerComponent({
       };
     }
     return {
-      badge: <Badge className="bg-emerald-600 text-white hover:bg-emerald-700">Available</Badge>,
+      badge: <></>,
       text: "Ready to book"
     };
   };
@@ -48,47 +47,51 @@ export default function MentorshipSlotAsHackerComponent({
   const statusInfo = getStatusInfo();
 
   return (
-    <div 
+    <div
       className={`
         relative overflow-hidden border rounded-2xl transition-all duration-200 cursor-pointer
-        ${isSelected ? 'ring-2 ring-blue-400 border-blue-500 shadow-lg shadow-blue-500/20' : 'border-gray-700 hover:border-gray-600 hover:shadow-md'}
+        ${isSelected ? 'bg-tertiary/20 border-tertiary' : 'hover:bg-tertiary/15'}
         ${isDisabled ? 'opacity-60 cursor-not-allowed' : ''}
-        ${isBooked ? 'bg-gradient-to-br from-gray-800 to-gray-900' : 'bg-gray-800/50 hover:bg-gray-800/70'}
+        ${isBooked ? 'bg-gradient-to-br from-gray-800 to-gray-900' : 'bg-white border border-tertiary'}
       `}
       onClick={!isDisabled ? onClick : undefined}
     >
-
-      
-      <div className="p-6">
+      <div className="p-4">
         {/* Header with status */}
-        <div className="flex items-start justify-between mb-4">
+        {/* <div className="flex items-start justify-between mb-4">
           <div className="space-y-2">
             {statusInfo.badge}
             <p className="text-sm text-gray-400">{statusInfo.text}</p>
           </div>
-        </div>
+        </div> */}
 
         {/* Time information */}
         <div className="space-y-3 mb-4">
           <div className="flex items-center gap-3 text-gray-900">
-            <Clock className="w-5 h-5 text-gray-400" />
+            <div className="p-2 rounded-xl bg-tertiary">
+              <Clock className="w-5 h-5 text-white" />
+            </div>
             <div>
-              <p className="font-semibold text-lg text-white">{startTime} - {endTime}</p>
-              <p className="text-sm text-gray-400">{duration} minutes session</p>
+              <p className="font-semibold text-lg">{startTime}</p>
+              <p className="text-sm text-gray-400">{duration} minutes</p>
             </div>
           </div>
 
           {/* Location information */}
           <div className="flex items-center gap-3 text-gray-300">
             {mentorshipAppointment.location.toLowerCase() === 'online' ? (
-              <Monitor className="w-5 h-5 text-gray-400" />
+              <div className="p-2 rounded-xl bg-tertiary">
+                <Monitor className="w-5 h-5 text-white" />
+              </div>
             ) : (
-              <MapPin className="w-5 h-5 text-gray-500" />
+              <div className="p-2 rounded-xl bg-tertiary">
+                <MapPin className="w-5 h-5 text-white" />
+              </div>
             )}
             <div>
-              <p className="font-medium capitalize text-white">{mentorshipAppointment.location}</p>
+              <p className="font-medium capitalize text-tertiary">{mentorshipAppointment.location}</p>
               {mentorshipAppointment.offlineLocation && (
-                <p className="text-sm text-gray-400">{mentorshipAppointment.offlineLocation}</p>
+                <p className="text-sm">{mentorshipAppointment.offlineLocation}</p>
               )}
             </div>
           </div>
@@ -114,7 +117,7 @@ export default function MentorshipSlotAsHackerComponent({
           <Input
             type="checkbox"
             checked={isSelected}
-            onChange={() => {}} // Controlled by onClick
+            onChange={() => { }} // Controlled by onClick
             className="w-5 h-5 rounded border-2 border-gray-500 text-blue-400 focus:ring-blue-500 bg-gray-800"
             tabIndex={-1}
           />

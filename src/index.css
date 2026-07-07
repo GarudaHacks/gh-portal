@@ -20,8 +20,8 @@
   --background: #f9f5ff;
   --background-secondary: #020617;
   --foreground: #221139;
-  --card: #0f172a;
-  --card-foreground: #fff;
+  --card: #fdfdff;
+  --card-foreground: #221139;
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
   --primary: #67339c;
