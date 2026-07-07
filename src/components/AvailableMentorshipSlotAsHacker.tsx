@@ -48,15 +48,14 @@ export default function AvailableMentorshipSlotAsHackerComponent({
 
   return (
     <div
-      className={`
-        relative overflow-hidden border rounded-2xl transition-all duration-200 cursor-pointer
+      className={`p-4 relative overflow-hidden border rounded-2xl transition-all duration-200 cursor-pointer
         ${isSelected ? 'bg-tertiary/20 border-tertiary' : 'hover:bg-tertiary/15'}
         ${isDisabled ? 'opacity-60 cursor-not-allowed' : ''}
         ${isBooked ? 'bg-gradient-to-br from-gray-800 to-gray-900' : 'bg-white border border-tertiary'}
       `}
       onClick={!isDisabled ? onClick : undefined}
     >
-      <div className="p-4">
+      <div className="">
         {/* Header with status */}
         {/* <div className="flex items-start justify-between mb-4">
           <div className="space-y-2">
@@ -78,14 +77,14 @@ export default function AvailableMentorshipSlotAsHackerComponent({
           </div>
 
           {/* Location information */}
-          <div className="flex items-center gap-3 text-gray-300">
+          <div className="flex items-center gap-2 text-gray-300 border p-2 border-gray-400 rounded-xl">
             {mentorshipAppointment.location.toLowerCase() === 'online' ? (
-              <div className="p-2 rounded-xl bg-tertiary">
-                <Monitor className="w-5 h-5 text-white" />
+              <div className="p-2 rounded-xl">
+                <Monitor className="w-6 aspect-square text-tertiary" />
               </div>
             ) : (
-              <div className="p-2 rounded-xl bg-tertiary">
-                <MapPin className="w-5 h-5 text-white" />
+              <div className="p-2 rounded-xl">
+                <MapPin className="w-6 aspect-square text-tertiary" />
               </div>
             )}
             <div>
@@ -113,7 +112,7 @@ export default function AvailableMentorshipSlotAsHackerComponent({
 
       {/* Selection checkbox */}
       {!isDisabled && (
-        <div className="absolute bottom-4 right-4">
+        <div className="flex justify-end px-4">
           <Input
             type="checkbox"
             checked={isSelected}

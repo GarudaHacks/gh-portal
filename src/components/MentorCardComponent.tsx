@@ -40,7 +40,7 @@ export default function MentorCardComponent(
     <Card className="">
       <CardHeader className="text-center">
         <CardTitle className="flex flex-col gap-2 items-center">
-          <img src={profilePictureUrl || '/images/logo/gh_logo.svg'} width={500} height={500} alt="profile picture" className="rounded-full w-2/3 md:w-3/5 aspect-square border" />
+          <img src={profilePictureUrl || '/assets/garudie-laptop.png'} width={500} height={500} alt="profile picture" className="rounded-full w-2/3 md:w-3/5 aspect-square border" />
           <p className="text-xl">{mentor.displayName}</p>
           <p>{mentor.mentorTitle}</p>
         </CardTitle>

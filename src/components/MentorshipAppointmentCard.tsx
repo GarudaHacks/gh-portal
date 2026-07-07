@@ -52,7 +52,8 @@ export default function MentorshipAppointmentCardComponent(
   const startDate = new Date(mentorshipAppointment.startTime * 1000);
   const endDate = new Date(mentorshipAppointment.endTime * 1000);
   const dateLabel = startDate.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
-  const timeLabel = `${startDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })} - ${endDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`;
+  const timezoneLabel = startDate.toLocaleTimeString('en-US', { timeZoneName: 'short' }).split(' ').pop();
+  const timeLabel = `${startDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })} - ${endDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })} ${timezoneLabel}`;
 
   const handleCancelAppointment = async () => {
     setLoading(true)
@@ -104,7 +105,7 @@ export default function MentorshipAppointmentCardComponent(
         <div className="flex-1 flex flex-col gap-3 justify-between bg-tertiary/5 p-4">
           <p className="text-xs text-muted-foreground">ID {mentorshipAppointment.id}</p>
           <div className="flex flex-col gap-3">
-            <p className="text-sm">Session starts in</p>
+            {!isPast && <p className="text-sm">Session starts in</p>}
             <Countdown date={mentorshipAppointment.startTime * 1000} renderer={countdownRenderer} />
             <div className="flex flex-col gap-2">
               <Badge variant="outline" className="border-0 bg-tertiary/10 text-tertiary flex items-center gap-1">

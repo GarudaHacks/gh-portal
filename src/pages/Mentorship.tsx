@@ -17,7 +17,6 @@ function Mentorship() {
   const [loading, setLoading] = useState(false)
   const [mentorshipConfig, setMentorshipConfig] = useState<MentorshipConfig>()
   const [myMentorships, setMyMentorships] = useState<MentorshipAppointmentResponseAsHacker[]>()
-  const [myPastMentorships, setMyPastMentorships] = useState<MentorshipAppointmentResponseAsHacker[]>()
   const [allMentors, setAllMentors] = useState<FirestoreMentor[]>([])
   const [filteredMentors, setFilteredMentors] = useState<FirestoreMentor[]>([])
   const [filterCategories, setFilterCategories] = useState<string[]>([])
@@ -37,15 +36,13 @@ function Mentorship() {
     setLoading(true);
 
     Promise.all([
-      fetchMyMentorships(),
-      fetchMyMentorships(false, true),
+      fetchMyMentorships(true, false),
       fetchAllMentors(),
       fetchMentorshipConfig(),
     ])
-      .then(([myMentorshipsRes, myPastMentorships, allMentorsRes, mentorshipConfig]) => {
+      .then(([myMentorshipsRes, allMentorsRes, mentorshipConfig]) => {
         if (isMounted) {
           setMyMentorships(myMentorshipsRes);
-          setMyPastMentorships(myPastMentorships)
           setAllMentors(allMentorsRes);
           setMentorshipConfig(mentorshipConfig)
           setLoading(false);

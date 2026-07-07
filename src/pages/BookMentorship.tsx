@@ -6,7 +6,7 @@ import { FirestoreMentor, MentorshipAppointmentResponseAsHacker } from "@/types/
 import { getMentorProfilePicture } from "@/utils/firebaseUtils";
 import { formatSpecialization } from "@/utils/stringUtils";
 import { ChevronLeft, Loader2, Calendar, Clock, MapPin, User, CheckCircle2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import {
@@ -45,7 +45,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { useAuth } from "@/context/AuthContext";
 
-const formSchema = z.object({
+const baseFormSchema = z.object({
   teamName: z.string().min(1, "Team name is required"),
   hackerDescription: z.string().min(1, "Description is required").max(1000, "Description must be 1000 characters or less"),
   offlineLocation: z.string().optional(),
@@ -63,7 +63,23 @@ export default function BookMentorshipPage() {
   const [selectedSlots, setSelectedSlots] = useState<MentorshipAppointmentResponseAsHacker[]>([]);
   const [isBookingLoading, setIsBookingLoading] = useState(false)
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const hasOfflineSlot = selectedSlots.some((slot) => slot.location === "offline");
+
+  const formSchema = useMemo(
+    () =>
+      baseFormSchema.superRefine((data, ctx) => {
+        if (hasOfflineSlot && !data.offlineLocation?.trim()) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Offline location is required for offline sessions",
+            path: ["offlineLocation"],
+          });
+        }
+      }),
+    [hasOfflineSlot]
+  );
+
+  const form = useForm<z.infer<typeof baseFormSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       teamName: "",
@@ -122,7 +138,7 @@ export default function BookMentorshipPage() {
     });
   };
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof baseFormSchema>) {
     setIsBookingLoading(true)
     try {
       const payload = {
@@ -318,14 +334,14 @@ export default function BookMentorshipPage() {
                   size="lg"
                   disabled={selectedSlots.length === 0}
                 >
-                  {selectedSlots.length === 0 ? 'Select slots to continue' : `Book ${selectedSlots.length} Session${selectedSlots.length > 1 ? 's' : ''}`}
+                  {selectedSlots.length === 0 ? 'Select slots to continue' : `Book ${selectedSlots.length} slot${selectedSlots.length > 1 ? 's' : ''}`}
                 </Button>
               </div>
             </DialogTrigger>
-            <DialogContent className="bg-gray-900 border-gray-700 max-w-md">
+            <DialogContent className="">
               <DialogHeader>
                 <DialogTitle className="text-xl">Complete Your Booking</DialogTitle>
-                <DialogDescription className="text-gray-400">
+                <DialogDescription className="">
                   Fill in your team details to book the selected mentorship sessions
                 </DialogDescription>
               </DialogHeader>
@@ -341,11 +357,11 @@ export default function BookMentorshipPage() {
                         <FormControl>
                           <Input
                             placeholder="Enter your team name"
-                            className="bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-primary"
+                            className=""
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage />
+                        <FormMessage className="text-red-400" />
                       </FormItem>
                     )}
                   />
@@ -357,13 +373,13 @@ export default function BookMentorshipPage() {
                         <FormLabel className="">What do you need help with?</FormLabel>
                         <FormControl>
                           <Textarea
-                            className="bg-gray-800 border-gray-600  placeholder-gray-400 focus:border-blue-500 min-h-[100px]"
+                            className=""
                             placeholder="Describe what you'd like to discuss or get help with during the mentorship session..."
                             maxLength={1000}
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage />
+                        <FormMessage className="text-red-400" />
                       </FormItem>
                     )}
                   />
@@ -374,22 +390,22 @@ export default function BookMentorshipPage() {
                       name="offlineLocation"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-white">Offline Location</FormLabel>
+                          <FormLabel className="">Offline Location</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="Enter the offline location"
-                              className="bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-primary"
+                              placeholder="Enter your meetup location"
+                              className=""
                               {...field}
                             />
                           </FormControl>
-                          <FormMessage />
+                          <FormMessage className="text-red-400" />
                         </FormItem>
                       )}
                     />
                   )}
 
                   <div className="rounded-lg p-4">
-                    <p className="text-sm text-gray-300 text-center">
+                    <p className="text-sm text-gray-400 text-center">
                       Please honor your booking. Mentors may mark you as absent if you fail to attend the scheduled session.
                     </p>
                   </div>
@@ -411,7 +427,7 @@ export default function BookMentorshipPage() {
                         )}
                       </Button>
                     </AlertDialogTrigger>
-                    <AlertDialogContent className="bg-gray-900 border-gray-700 text-white">
+                    <AlertDialogContent className="">
                       <AlertDialogHeader>
                         <AlertDialogTitle className="flex items-center gap-2">
                           <CheckCircle2 className="w-5 h-5 text-green-500" />
@@ -424,18 +440,18 @@ export default function BookMentorshipPage() {
 
                       <div className="space-y-3 my-4">
                         {selectedSlots.map((slot, index) => (
-                          <div key={slot.id} className=" border border-gray-700 rounded-lg p-4">
+                          <div key={slot.id} className="rounded-xl p-4 border border-tertiary bg-white">
                             <div className="flex items-center gap-2 mb-2">
                               <Calendar className="w-4 h-4 " />
                               <span className="font-medium">Session {index + 1}</span>
                             </div>
                             <div className="text-sm space-y-1">
                               <div className="flex items-center gap-2">
-                                <Clock className="w-3 h-3 text-gray-400" />
+                                <Clock className="w-3 h-3 " />
                                 <span>{epochToStringDate(slot.startTime)} - {epochToStringDate(slot.endTime)}</span>
                               </div>
                               <div className="flex items-center gap-2">
-                                <MapPin className="w-3 h-3 text-gray-400" />
+                                <MapPin className="w-3 h-3 " />
                                 <span className="capitalize">{slot.location}</span>
                               </div>
                             </div>
@@ -444,7 +460,7 @@ export default function BookMentorshipPage() {
                       </div>
 
                       <AlertDialogFooter>
-                        <AlertDialogCancel className="bg-gray-800 border-gray-600 text-white hover:bg-gray-700">
+                        <AlertDialogCancel className="">
                           Cancel
                         </AlertDialogCancel>
                         <AlertDialogAction

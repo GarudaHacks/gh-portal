@@ -9,7 +9,8 @@ export function epochToStringDate(epochSecond: number) {
     const year = date.getFullYear()
     const hours = String(date.getHours()).padStart(2, '0')
     const minutes = String(date.getMinutes()).padStart(2, '0')
-    return `${day} ${month} ${year} ${hours}:${minutes}`
+    const timezone = date.toLocaleTimeString('en-US', { timeZoneName: 'short' }).split(' ').pop()
+    return `${day} ${month} ${year} ${hours}:${minutes} ${timezone}`
 }
 
 export function isTimeElapsed(epochSecond: number) {
