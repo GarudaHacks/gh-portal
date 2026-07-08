@@ -98,7 +98,7 @@ export default function BookMentorshipPage() {
 
     Promise.all([
       fetchMentorById(mentorId),
-      fetchMentorById(mentorId).then((mentorData) => getMentorProfilePicture(mentorData.name)),
+      fetchMentorById(mentorId).then((mentorData) => getMentorProfilePicture(mentorData.displayName)),
       fetchMentorshipAppointmentsByMentorId(mentorId),
     ])
       .then(([mentorData, pictureUrl, slots]) => {
@@ -240,17 +240,17 @@ export default function BookMentorshipPage() {
             <div className="lg:hidden">
               <Card className=" backdrop-blur-sm">
                 <CardContent className="p-4">
-                  <div className="flex items-start gap-4">
+                  <div className="flex items-center gap-4">
                     <div className="relative">
                       <img
                         src={profilePictureUrl || "/images/logo/gh_logo.svg"}
                         alt="profile picture"
-                        className="w-16 h-16 rounded-full object-cover border flex-shrink-0"
+                        className="w-20 h-20 rounded-full object-cover border flex-shrink-0"
                       />
                     </div>
                     <div className="min-w-0 flex-1">
                       <h2 className="text-lg font-bold  truncate">{mentor.displayName}</h2>
-                      <p className="text-xs  line-clamp-3">{mentor.intro}</p>
+                      {mentor.intro && <p className="text-xs  line-clamp-3">{mentor.intro}</p>}
                     </div>
                   </div>
                 </CardContent>
