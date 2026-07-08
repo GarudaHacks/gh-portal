@@ -1,7 +1,7 @@
 export interface MentorshipConfig {
   isMentorshipOpen: boolean;
-  mentoringStart: number;
-  mentoringEnd: number;
+  startDate: Date;
+  endDate: Date;
 }
 
 /**

@@ -98,7 +98,7 @@ export default function ApplicationAccepted() {
       </div>
       <div ref={rsvpRef} className="text-center flex flex-col gap-2 p-4  bg-cover bg-center rounded-xl">
         <p className="text-2xl font-semibold mb-4">Your spot is waiting — are you in?</p>
-        <p className="text-pretty max-w-2xl mx-auto">Hit confirm below to lock in your spot by 13th of July. Please note that we unfortunately won't be able to hold spots that aren't confirmed <b>by July 13th</b>.</p>
+        <p className="text-pretty max-w-2xl mx-auto">Hit confirm below to lock in your spot by 14th of July at 23.59 WIB. Please note that we unfortunately won't be able to hold spots that aren't confirmed <b>by July 13th</b>.</p>
         <div className="h-6" />
         <Button size={"lg"} className="animate-pulse-border w-full max-w-lg mx-auto" onClick={handleConfirmRsvp} disabled={submitting}>
           {submitting ? <>Confirming...<Loader2 className="animate-spin mr-2" /></> : <>Confirm RSVP<CheckCircleIcon /></>}

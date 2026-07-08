@@ -41,15 +41,19 @@ export default function MentorCardComponent(
       <CardHeader className="text-center">
         <CardTitle className="flex flex-col gap-2 items-center">
           <img src={profilePictureUrl || '/assets/garudie-laptop.png'} width={500} height={500} alt="profile picture" className="rounded-full w-2/3 md:w-3/5 aspect-square border" />
-          <p className="text-xl">{mentor.displayName}</p>
-          <p>{mentor.mentorTitle}</p>
+          <p className="text-2xl pt-4">{mentor.displayName}</p>
+          <p className="tex font-extralight">{mentor.mentorTitle}</p>
         </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <p className="text-center text-sm line-clamp-4 text-pretty">{mentor.intro}</p>
-        <Link to={`/mentors/${mentor.id}`}>
-          <Button className="w-full">Book Mentor</Button>
-        </Link>
+        <p className="text-center text-sm line-clamp-2 text-pretty">{mentor.intro}</p>
+        {isMentorshipOpen ? (
+          <Link to={`/mentors/${mentor.id}`}>
+            <Button className="w-full">Book Mentor</Button>
+          </Link>
+        ) : (
+          <Button className="w-full" disabled>Mentorship Closed</Button>
+        )}
       </CardContent>
     </Card>
   )

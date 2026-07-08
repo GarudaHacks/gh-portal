@@ -11,6 +11,18 @@ import { Badge } from "@/components/ui/badge";
 import { eventName } from "@/config";
 import { Button } from "@/components/ui/button";
 import InstructionMentorshipForHacker from "@/components/InstructionMentorshipForHacker";
+import { isMentorshipOpenNow } from "@/utils/mentorshipUtils";
+
+const CATEGORIES = [
+  "backend",
+  "frontend",
+  "developer",
+  "designer",
+  "data scientist",
+  "product manager",
+  "entrepreneur",
+  "others",
+]
 
 function Mentorship() {
   const navigate = useNavigate()
@@ -19,17 +31,7 @@ function Mentorship() {
   const [myMentorships, setMyMentorships] = useState<MentorshipAppointmentResponseAsHacker[]>()
   const [allMentors, setAllMentors] = useState<FirestoreMentor[]>([])
   const [filteredMentors, setFilteredMentors] = useState<FirestoreMentor[]>([])
-  const [filterCategories, setFilterCategories] = useState<string[]>([])
-
-  const CATEGORIES = [
-    "backend",
-    "frontend",
-    "developer",
-    "designer",
-    "data scientist",
-    "product manager",
-    "entrepreneur",
-  ]
+  const [filterCategories, setFilterCategories] = useState<string[]>(CATEGORIES)
 
   useEffect(() => {
     let isMounted = true;
@@ -62,13 +64,21 @@ function Mentorship() {
   }, []);
 
   useEffect(() => {
-    if (filterCategories.length === 0) {
+    if (filterCategories.length === CATEGORIES.length) {
       setFilteredMentors(allMentors);
     } else {
+      const namedCategories = CATEGORIES.filter((c) => c !== "others");
+      const matchesNamedCategory = (mentor: FirestoreMentor) =>
+        namedCategories.some((category) =>
+          mentor.specialization?.toLowerCase().includes(category.toLowerCase())
+        );
+
       setFilteredMentors(
         allMentors.filter((mentor) =>
           filterCategories.some((category) =>
-            mentor.specialization?.toLowerCase().includes(category.toLowerCase())
+            category === "others"
+              ? !matchesNamedCategory(mentor)
+              : mentor.specialization?.toLowerCase().includes(category.toLowerCase())
           )
         )
       );
@@ -141,7 +151,7 @@ function Mentorship() {
                       {CATEGORIES.map((category, i) => (
                         <Badge
                           className="whitespace-nowrap flex-shrink-0 cursor-pointer"
-                          variant={filterCategories?.includes(category) ? 'outline' : 'default'}
+                          variant={filterCategories?.includes(category) ? 'default' : 'outline'}
                           key={i}
                           onClick={() => handleSelectCategory(category)}
                         >
@@ -155,13 +165,15 @@ function Mentorship() {
                   {filteredMentors.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                       {filteredMentors.map((m) => (
-                        <MentorCardComponent key={m.id} mentor={m} isMentorshipOpen={mentorshipConfig?.isMentorshipOpen || false} />
+                        <MentorCardComponent key={m.id} mentor={m} isMentorshipOpen={isMentorshipOpenNow(mentorshipConfig)} />
                       ))}
                     </div>
                   ) : (
                     <div>
                       <p className="text-muted-foreground">
-                        {filterCategories.length > 0
+                        {filterCategories.length === 0
+                          ? "No categories selected."
+                          : filterCategories.length < CATEGORIES.length
                           ? "No mentors match the selected categories."
                           : "No mentors available."}
                       </p>
