@@ -47,9 +47,13 @@ export default function MentorCardComponent(
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <p className="text-center text-sm line-clamp-2 text-pretty">{mentor.intro}</p>
-        <Link to={`/mentors/${mentor.id}`}>
-          <Button className="w-full">Book Mentor</Button>
-        </Link>
+        {isMentorshipOpen ? (
+          <Link to={`/mentors/${mentor.id}`}>
+            <Button className="w-full">Book Mentor</Button>
+          </Link>
+        ) : (
+          <Button className="w-full" disabled>Mentorship Closed</Button>
+        )}
       </CardContent>
     </Card>
   )

@@ -1,10 +1,11 @@
 import AvailableMentorshipSlotAsHackerComponent from "@/components/AvailableMentorshipSlotAsHacker";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { bookMentorshipAppointment, fetchMentorById, fetchMentorshipAppointmentsByMentorId } from "@/lib/http/mentorship";
-import { FirestoreMentor, MentorshipAppointmentResponseAsHacker } from "@/types/mentorship";
+import { bookMentorshipAppointment, fetchMentorById, fetchMentorshipAppointmentsByMentorId, fetchMentorshipConfig } from "@/lib/http/mentorship";
+import { FirestoreMentor, MentorshipAppointmentResponseAsHacker, MentorshipConfig } from "@/types/mentorship";
 import { getMentorProfilePicture } from "@/utils/firebaseUtils";
 import { formatSpecialization } from "@/utils/stringUtils";
+import { isMentorshipOpenNow } from "@/utils/mentorshipUtils";
 import { ChevronLeft, Loader2, Calendar, Clock, MapPin, User, CheckCircle2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
@@ -60,6 +61,7 @@ export default function BookMentorshipPage() {
   const [mentor, setMentor] = useState<FirestoreMentor | null>(null);
   const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(null);
   const [mentorshipSlots, setMentorshipSlots] = useState<MentorshipAppointmentResponseAsHacker[] | null>(null);
+  const [mentorshipConfig, setMentorshipConfig] = useState<MentorshipConfig | null>(null);
   const [selectedSlots, setSelectedSlots] = useState<MentorshipAppointmentResponseAsHacker[]>([]);
   const [isBookingLoading, setIsBookingLoading] = useState(false)
 
@@ -100,8 +102,9 @@ export default function BookMentorshipPage() {
       fetchMentorById(mentorId),
       fetchMentorById(mentorId).then((mentorData) => getMentorProfilePicture(mentorData.displayName)),
       fetchMentorshipAppointmentsByMentorId(mentorId),
+      fetchMentorshipConfig(),
     ])
-      .then(([mentorData, pictureUrl, slots]) => {
+      .then(([mentorData, pictureUrl, slots, config]) => {
         if (isMounted) {
           const sortedSlots = slots!.sort((a: MentorshipAppointmentResponseAsHacker, b: MentorshipAppointmentResponseAsHacker) =>
             new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
@@ -109,6 +112,7 @@ export default function BookMentorshipPage() {
           setMentor(mentorData);
           setProfilePictureUrl(pictureUrl);
           setMentorshipSlots(sortedSlots);
+          setMentorshipConfig(config);
           setLoading(false);
         }
       })
@@ -186,6 +190,24 @@ export default function BookMentorshipPage() {
           <Card className=" border-gray-700">
             <CardContent className="p-8 text-center">
               <p className="text-gray-300 text-lg">Mentor not found.</p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isMentorshipOpenNow(mentorshipConfig)) {
+    return (
+      <div className="min-h-screen p-4 flex flex-col gap-4">
+        <Button variant="outline" onClick={() => navigate(-1)} className="w-fit">
+          <ChevronLeft className="w-4 h-4 mr-2" /> Back to Mentors
+        </Button>
+        <div className="flex-1 flex items-center justify-center">
+          <Card>
+            <CardContent className="p-8 text-center">
+              <p className="text-lg">Mentorship booking is currently closed.</p>
+              <p className="text-sm text-muted-foreground mt-2">Check back once the mentorship booking window opens.</p>
             </CardContent>
           </Card>
         </div>

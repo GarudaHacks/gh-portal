@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { eventName } from "@/config";
 import { Button } from "@/components/ui/button";
 import InstructionMentorshipForHacker from "@/components/InstructionMentorshipForHacker";
+import { isMentorshipOpenNow } from "@/utils/mentorshipUtils";
 
 const CATEGORIES = [
   "backend",
@@ -164,7 +165,7 @@ function Mentorship() {
                   {filteredMentors.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                       {filteredMentors.map((m) => (
-                        <MentorCardComponent key={m.id} mentor={m} isMentorshipOpen={mentorshipConfig?.isMentorshipOpen || false} />
+                        <MentorCardComponent key={m.id} mentor={m} isMentorshipOpen={isMentorshipOpenNow(mentorshipConfig)} />
                       ))}
                     </div>
                   ) : (
