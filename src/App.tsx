@@ -127,7 +127,7 @@ function App() {
             /> */}
 
             {/* Mentoring */}
-            {/* <Route
+            <Route
               path="/mentorship"
               element={
                 <ProtectedRoute>
@@ -166,7 +166,7 @@ function App() {
                   <MentorshipDetailPage />
                 </ProtectedRoute>
               }
-            /> */}
+            />
 
 
             {/* <Route

@@ -64,7 +64,7 @@ export function AppSidebar() {
       : [
         { name: "Home", path: "/home", icon: <House /> },
         // { name: "Schedule", path: "/schedule", icon: "/images/icons/calendar_month.svg", restricted: true },
-        // { name: "Mentorship", path: "/mentorship", icon: <Handshake />, restricted: true },
+        { name: "Mentorship", path: "/mentorship", icon: <Handshake />, restricted: true },
         // { name: "FAQ", path: "/faq", icon: "/images/icons/contact_support.svg" },
         { name: "Account", path: "/account", icon: <User /> },
       ];
