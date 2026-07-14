@@ -37,7 +37,7 @@ export default function MentoringPage() {
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
               <h1 className="text-xl font-bold">Upcoming Mentoring Schedules</h1>
-              <p>All of your upcoming schedules will be shown here.</p>
+              <p>All of your upcoming booked schedules will be shown here.</p>
             </div>
 
             <p className="text-sm text-muted">Showing {upcomingMentorshipAppointments?.length} results</p>
@@ -50,7 +50,7 @@ export default function MentoringPage() {
               </div>
             ) : (
               <div className="flex flex-col items-center w-full">
-                <p className="text-muted text-sm">You have no upcoming mentorships.</p>
+                <p className="text-muted text-sm">You have no upcoming booked mentorships.</p>
               </div>
             )}
           </div>

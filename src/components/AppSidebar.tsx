@@ -57,8 +57,8 @@ export function AppSidebar() {
     role === UserRole.MENTOR
       ? [
         { name: "Home", path: "/home", icon: <House /> },
-        { name: "Mentoring", path: "/mentoring", icon: <Handshake />, restricted: true },
-        { name: "Schedules", path: "/schedules", icon: <Calendar />, restricted: true },
+        { name: "Mentoring", path: "/mentoring", icon: <Handshake /> },
+        { name: "Schedules", path: "/schedules", icon: <Calendar /> },
         // { name: "Account", path: "/account", icon: <User /> }, // mentor account is involuntary made
       ]
       : [
