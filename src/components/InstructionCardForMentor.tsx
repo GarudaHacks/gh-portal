@@ -22,7 +22,7 @@ export default function InstructionCardForMentorComponent(
             <li>Check all schedules in the <Link to={"/schedules"} className="underline text-tertiary">Schedules</Link> tab.</li>
             <li>Hackers must book a slot at least 30 minutes in advance. You will receive an email notification when a hacker books a slot with you.</li>
             <li>Hackers may cancel an appointment at least 45 minutes in advance. You will receive an email notification if a hacker cancels.</li>
-            <li>Do not forget to join our Discord channel! <a href="https://discord.gg/Ag8tB3tQ" className="underline">https://discord.gg/Ag8tB3tQ</a></li>
+            <li>Do not forget to join our Discord channel! <a href="https://discord.gg/6Qu6vp6v3u" className="underline">https://discord.gg/6Qu6vp6v3u</a></li>
           </ul>
         </div>
 
