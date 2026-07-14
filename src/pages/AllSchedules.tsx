@@ -5,7 +5,7 @@ import { MentorshipAppointmentResponseAsMentor } from "@/types/mentorship";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
-export default function AllSchedulePage() {
+export default function MentorAllSchedulesPage() {
   const [loading, setLoading] = useState(false)
   const [mentoringSchedules, setMentoringSchedules] = useState<MentorshipAppointmentResponseAsMentor[]>([])
 

@@ -15,7 +15,7 @@ import { UserApplicationStatus } from "./types/applicationStatus";
 import Rsvp from "./pages/Rsvp";
 import MentoringPage from "./pages/Mentoring";
 import BookMentorshipPage from "./pages/BookMentorship";
-import AllSchedulePage from "./pages/AllSchedules";
+import MentorAllSchedulesPage from "./pages/AllSchedules";
 import MentorshipDetailPage from "./pages/MentorshipDetail";
 import MentorshipHistoryPage from "./pages/MentorshipHistory";
 import { SidebarProvider, SidebarInset } from "./components/ui/sidebar";
@@ -169,14 +169,14 @@ function App() {
             />
 
 
-            {/* <Route
+            <Route
               path="/schedules"
               element={
                 <ProtectedRoute>
-                  <AllSchedulePage />
+                  <MentorAllSchedulesPage />
                 </ProtectedRoute>
               }
-            /> */}
+            />
 
             {/* <Route
               path="/faq"
