@@ -23,6 +23,7 @@ import { AppSidebar } from "./components/AppSidebar";
 import DiscordCallback from "./components/DiscordCallback";
 import Application from "./pages/Application";
 import Account from "./pages/Account";
+import MyTable from "./pages/MyTable";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import { AnnouncementBanner } from "./components/AnnouncementBanner";
@@ -194,6 +195,15 @@ function App() {
                 </ProtectedRoute>
               }
             /> */}
+
+            <Route
+              path="/my-table"
+              element={
+                <ProtectedRoute>
+                  <MyTable />
+                </ProtectedRoute>
+              }
+            />
 
             <Route
               path="/account"

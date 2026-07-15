@@ -2,7 +2,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { UserApplicationStatus } from "../types/applicationStatus";
 import { UserRole } from "@/types/auth";
-import { Calendar, Handshake, House, LogOut, User } from "lucide-react";
+import { BetweenVerticalEnd, Calendar, Handshake, House, LogOut, User } from "lucide-react";
 import toast from "react-hot-toast";
 import {
   Sidebar,
@@ -66,6 +66,7 @@ export function AppSidebar() {
         // { name: "Schedule", path: "/schedule", icon: "/images/icons/calendar_month.svg", restricted: true },
         { name: "Mentorship", path: "/mentorship", icon: <Handshake /> },
         // { name: "FAQ", path: "/faq", icon: "/images/icons/contact_support.svg" },
+        { name: "Find My Table", path: "/my-table", icon: <BetweenVerticalEnd /> },
         { name: "Account", path: "/account", icon: <User /> },
       ];
 
