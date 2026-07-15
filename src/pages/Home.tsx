@@ -16,6 +16,7 @@ import ApplicationSubmitted from "./application/ApplicationSubmitted";
 import ApplicationAccepted from "./application/states/ApplicationAccepted";
 import ApplicationConfirmedRSVP from "./application/states/ApplicationConfirmedRSVP";
 import ApplicationRejected from "./application/states/ApplicationRejected";
+import ApplicationCanceled from "./application/states/ApplicationCanceled";
 
 function Home() {
   const { user, role, applicationStatus } = useAuth();
@@ -74,6 +75,11 @@ function Home() {
               {applicationStatus === UserApplicationStatus.REJECTED && (
                 <ApplicationRejected />
               )}
+
+              {applicationStatus === UserApplicationStatus.CANCELED && (
+                <ApplicationCanceled />
+              )}
+
             </div>
           )}
         </>
