@@ -95,6 +95,9 @@ function TableNumberCard({
   result: MyTableResult;
   onRetry: () => void;
 }) {
+  const showCanteenMap =
+    (result.location ?? "").trim().toLowerCase() !== "function hall";
+
   return (
     <div className="flex flex-col gap-4">
       <div className="relative overflow-hidden rounded-2xl border border-tertiary bg-gradient-to-br from-primary to-tertiary text-white shadow-sm">
@@ -122,6 +125,22 @@ function TableNumberCard({
           <RefreshCw className="size-4" /> Refresh
         </Button>
       </div>
+
+      {showCanteenMap ? (
+        <div className="flex flex-col gap-2 bg-white rounded-xl p-4 border border-tertiary">
+          <h3 className="font-bold text-lg flex items-center gap-2">
+            <MapPin size={18} className="text-tertiary" /> Canteen Hall Map
+          </h3>
+          <p className="text-sm text-muted">
+            Use this map to find your way to {result.location}.
+          </p>
+          <img
+            src="/assets/canteen-hall-map.png"
+            alt="Canteen hall map"
+            className="w-full h-auto rounded-lg border border-tertiary"
+          />
+        </div>
+      ) : null}
     </div>
   );
 }
