@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { MentorshipAppointmentResponseAsHacker } from "@/types/mentorship"
 import { Badge } from "./ui/badge"
-import { Calendar, ChevronDown, Clock, Loader2, MapPin, Video, X } from "lucide-react"
+import { Calendar, ChevronDown, Clock, Loader2, MapPin, MessageSquareText, Video, X } from "lucide-react"
 import { titleCase } from "title-case";
 import Countdown, { zeroPad } from 'react-countdown';
 import { Button } from "./ui/button"
@@ -151,8 +151,16 @@ export default function MentorshipAppointmentCardComponent(
         </div>
       </div>
 
-      {/* Instructions */}
-      {needInstructions &&
+      {/* Mentor's comments take the place of the instructions once the mentor has left feedback */}
+      {mentorshipAppointment.mentorNotes ? (
+        <div className="flex flex-col gap-2 p-4 border-t border-tertiary/20">
+          <div className="flex items-center gap-2">
+            <MessageSquareText size={16} className="text-tertiary shrink-0" />
+            <p className="font-semibold text-sm">Mentor's Comments</p>
+          </div>
+          <p className="text-sm text-muted-foreground whitespace-pre-line">{mentorshipAppointment.mentorNotes}</p>
+        </div>
+      ) : needInstructions ? (
         <div className="flex flex-col gap-2 p-4 border-t border-tertiary/20">
           <button
             type="button"
@@ -179,7 +187,7 @@ export default function MentorshipAppointmentCardComponent(
             )
           )}
         </div>
-      }
+      ) : null}
     </div>
   )
 }
