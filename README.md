@@ -1,35 +1,28 @@
 # Garuda Hacks Portal 🚀
 
-The official portal for Garuda Hacks 6.0, a premier hackathon event. Built with modern web technologies to provide a seamless experience for participants.
+The official portal for Garuda Hacks 6.0-7.0. The app serves various functions, before and during the hackathon.
 
-## 🛠️ Tech Stack
 
-- **Frontend**
+## Functionality
+1. Hackathon registration: collecting profile, data, consent, rejection, RSVP, up until ready to attend with a boarding pass generated uniquely for a hacker.
+2. Account management: connect Discord account, delete account data for privacy compliance.
+3. Table lookup: a convenient place to check a dynamic assignment of hacker's table in the event day.
+4. Mentoring platform: integrated mentoring for both Mentor and Hacker. The app will show a different interface for the designated role. The mentoring system is by slot-booking system which initiated by the Hacker.
 
-  - React 18
-  - TypeScript
-  - Vite
-  - TailwindCSS
-  - React Router
-  - React Hot Toast
 
-- **Backend**
+## High-level Architecture
 
-  - Firebase Cloud Functions
-  - Firebase Authentication
-  - Firebase Firestore
+- This app is designated as part of the frontend built with React Vite which deployed to Vercel.
+- The backend is a separate app within `GarudaHacks/web-be` repository. The backend is deployed to Firebase Functions.
+- As of 7.0, it is a good practice to have 3 different environment:
+  - Local: where every changes is done only locally, indicated with any feature branch `feat/...`
+  - Dev: where changes is tested before going live, indicated by `dev` branch.
+  - Production: where all tested changes in Dev can finally go live, indicated by `main` branch.
+  
+  These means there are 2 deployments for backend and also frontend, as well as the database connected to the backend. Please refer to the backend repository.
+- Start exploring the project by taking a look at `pages` which contains all interface for logged in user as a Hacker or  Mentor.
+- Upon succesful login, the backend will send a cookie that will be persisted for the entire session. All auth states is defined in `src/context/AuthContext.tsx`.
 
-- **Deployment**
-  - Vercel
-  - Vercel Analytics
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Node.js (v18 or higher)
-- npm or yarn
-- Firebase account
 
 ### Installation
 
@@ -64,21 +57,6 @@ npm run dev
 
 ```bash
 npm run build
-```
-
-## 📁 Project Structure
-
-```
-gh-portal/
-├── src/
-│   ├── components/    # Reusable UI components
-│   ├── context/       # React context providers
-│   ├── lib/           # Utility functions
-│   ├── pages/         # Page components
-│   ├── types/         # TypeScript type definitions
-│   └── utils/         # Helper functions
-├── public/            # Static assets
-└── vite.config.ts     # Vite configuration
 ```
 
 ## 🔧 Configuration
@@ -124,13 +102,6 @@ Required environment variables:
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- [Vite](https://vitejs.dev/)
-- [React](https://reactjs.org/)
-- [Firebase](https://firebase.google.com/)
-- [TailwindCSS](https://tailwindcss.com/)
 
 ---
 
